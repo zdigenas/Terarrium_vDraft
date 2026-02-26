@@ -188,42 +188,42 @@
         "ts": {
           "verdict": "approved",
           "score": 92,
-          "action": "Approved for Stable zone. Component has satisfied all prior decision conditions and demonstrates exemplary token stewardship. Zero primitive token violations, full dark mode parity, accessibility scoped correctly, and CSS is production-ready.",
+          "action": "APPROVED. This component meets all STABLE zone criteria: zero domain violations, exemplary token discipline, full accessibility surface documented, reduced-motion support, production-ready CSS. The three hard-coded pixels are intentional technical decisions with documented rationale. No conditions. Ready for production.",
           "conditionalApproval": null,
-          "timestamp": "2026-02-26T14:20:05.060Z"
+          "timestamp": "2026-02-26T20:03:55.156Z"
         },
         "ag": {
           "verdict": "approved",
           "score": 88,
-          "action": "Approval conditional on: (A) Confirmation that --t-touch-min token value is >= 24px CSS pixels (minimum) or >= 44px (recommended), and (B) JS implementation spec documents and enforces ARIA attributes (role, aria-live, aria-label on dismiss) before production deployment. If both conditions are met, component is approved for Stable zone.",
-          "conditionalApproval": "Approval final upon: (1) Confirmation that --t-touch-min token = 44px minimum, and (2) JS implementation spec review confirming role, aria-live, and aria-label attributes are present and mapped correctly to severity variants.",
-          "timestamp": "2026-02-26T14:20:22.877Z"
+          "action": "Approve on condition: dismiss button receives visible focus indicator (3px minimum). If --t-touch-min is already defined as 44px or greater in token system, no further CSS changes required. JS implementation must be reviewed separately to confirm ARIA enforcement. The component is otherwise production-ready.",
+          "conditionalApproval": "Add visible focus indicator to .t-toast__dismiss: outline: 3px solid [semantic focus color]; outline-offset: 2px. This earns full approval. Separately, confirm JS implementation enforces role, aria-live, and aria-label per WCAG 4.1.2.",
+          "timestamp": "2026-02-26T20:04:08.923Z"
         },
         "pl": {
           "verdict": "approved",
           "score": 92,
-          "action": "Approve. Toast is exemplary: it shows a component that was thoughtfully evolved through the pipeline, where each stage's feedback was addressed or explicitly accepted with reasoning. The spec and CSS are in sync, the token list is complete and verified, accessibility is documented for implementation, and the component serves its JTBD clearly.",
+          "action": "APPROVED. Toast is ready for Stable zone. All constitutional principles honored: (1) Agentic-First—governance pipeline respected with clear prior decisions. (2) Function Over Everything—JTBD prioritizes system feedback over polish. (3) Alive, Not Static—spec anticipates future considerations (action button, persistent variant, per-severity timing). (4) Real, Not Theatrical—all limitations documented honestly (ARIA is JS-layer, pause-on-hover is future work). (5) Gardener's Authority—this review affirms prior Canopy approval. (6) Earned, Not Granted—earned through Nursery → Workshop → Canopy pipeline. (7) Self-Documenting—CSS is readable, spec is thorough, prior decisions are cited.",
           "conditionalApproval": null,
-          "timestamp": "2026-02-26T14:20:36.393Z"
+          "timestamp": "2026-02-26T20:04:25.962Z"
         },
         "ca": {
           "verdict": "approved",
           "score": 92,
-          "action": "Verdict: Approved. Toast graduates from Workshop to Stable with no conditions. All prior review findings have been addressed. CSS is production-ready. Spec is synced. ARIA concerns are properly delegated to JavaScript implementation review. The component does what it needs to do, in the size it needs to be, with no unnecessary ceremony.",
+          "action": "APPROVED. Toast meets all Component Architect requirements: correct tier, clean architecture, zero violations, exemplary BEM, zero external dependencies, full token compliance, accessibility support documented, all prior decisions honored. This component is a reference implementation for composite design in Terarrium. Recommend no further changes; it is mature and production-ready.",
           "conditionalApproval": null,
-          "timestamp": "2026-02-26T14:20:49.583Z"
+          "timestamp": "2026-02-26T20:04:39.377Z"
         },
         "px": {
           "verdict": "approved",
-          "score": 92,
-          "action": "APPROVED. Toast is ready for production use in Stable zone. No conditional approval needed. Component has been validated through three gate-keepers, all adoption rules met, prior decisions confirm functional maturity and team readiness.",
-          "conditionalApproval": null,
-          "timestamp": "2026-02-26T14:21:05.475Z"
+          "score": 87,
+          "action": "Verdict: APPROVED pending adoption confirmation. Toast meets all technical requirements for Stable (zero blockers, clean CSS, complete spec, ARIA strategy documented). Condition for full approval: Submit adoption evidence showing Toast is used by at least 3 product teams in production or staging, with coverage metric ≥ 60% on screens using notifications. If evidence provided and threshold met, score is locked at 87. If evidence shows usage below Workshop baseline, recommend demotion and retest at next Canopy cycle.",
+          "conditionalApproval": "Approval locked at 87/100 if: (1) You provide names of 3+ product teams currently using Toast in production or staging, AND (2) You provide screen coverage metric or invocation count showing ≥60% of notification surfaces use Toast (target 80%+), AND (3) Any new use cases or screens validated since Canopy promotion are documented. If adoption evidence cannot be provided or shows usage below Workshop baseline (2+ teams), recommend demotion to Canopy with 6-week revalidation cycle.",
+          "timestamp": "2026-02-26T20:04:59.141Z"
         }
       },
       "proposals": [],
       "shielded": true,
-      "lastReviewedAt": "2026-02-26T14:21:05.476Z",
+      "lastReviewedAt": "2026-02-26T20:04:59.142Z",
       "lastZoneVerdict": {
         "passed": false,
         "reason": "Unknown zone: stable"

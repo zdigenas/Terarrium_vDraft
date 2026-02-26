@@ -20,6 +20,7 @@ const BLOCKED_FILES = [
   'src/data/decisions.jsonl',
   'src/data/activity-log.jsonl',
   'src/data/changes.jsonl',
+  'src/data/initiatives.jsonl',
   'src/data/pipeline-state.json',
   'src/library/storybook.js',
   'src/library/storybook.html',
@@ -79,6 +80,9 @@ export function validateWritePath(relPath, mode = 'full') {
 
   // Wiki: src/data/wiki.json
   if (normalized === 'src/data/wiki.json') return { allowed: true };
+
+  // Gardener's Memory: src/data/gardeners-memory.json
+  if (normalized === 'src/data/gardeners-memory.json') return { allowed: true };
 
   // terrarium.css: src/library/terrarium.css
   if (normalized === 'src/library/terrarium.css') return { allowed: true };

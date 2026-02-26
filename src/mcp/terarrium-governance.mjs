@@ -52,6 +52,8 @@ async function getDeps() {
     await import('../governance/agents/token-steward.mjs');
   const { recordGardenersWords } =
     await import('../governance/gardeners-memory.mjs');
+  const { appendInitiative, queryInitiatives, getInitiativeSummary } =
+    await import('../governance/root-system/initiative-registry.mjs');
 
   // Data helpers (same as proxy.mjs)
   function readJSON(relPath) {
@@ -81,6 +83,7 @@ async function getDeps() {
     logActivity, appendChange, queryChanges, addWikiEntry,
     validateWritePath, validateReadPath,
     auditTokenCompliance, recordGardenersWords,
+    appendInitiative, queryInitiatives, getInitiativeSummary,
     projectRoot: PROJECT_ROOT
   };
 
@@ -152,6 +155,55 @@ const NEW_TOOLS = [
       },
       required: ['topic', 'words']
     }
+  },
+  {
+    name: 'get_initiatives',
+    description: 'Query the Initiative Registry — non-component work items tracked with append-only JSONL. Filter by status (proposed, active, completed, archived) or category (infrastructure, component, governance, tooling, documentation). Returns derived current state.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', description: 'Filter by status: proposed|active|completed|archived' },
+        category: { type: 'string', description: 'Filter by category: infrastructure|component|governance|tooling|documentation' },
+        id: { type: 'string', description: 'Get a specific initiative by ID (e.g. INIT-001)' }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'create_initiative',
+    description: 'Create a new initiative (status: proposed). Appends a created event to initiatives.jsonl.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Initiative title' },
+        category: { type: 'string', description: 'Category: infrastructure|component|governance|tooling|documentation' },
+        description: { type: 'string', description: 'What this initiative is about' },
+        origin: { type: 'string', description: 'Where this initiative came from' }
+      },
+      required: ['title', 'category', 'description']
+    }
+  },
+  {
+    name: 'update_initiative',
+    description: 'Transition an initiative status. Appends a new event to initiatives.jsonl. Valid transitions: proposed→active, active→completed, any→archived.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: 'Initiative ID (e.g. INIT-001)' },
+        status: { type: 'string', description: 'New status: proposed|active|completed|archived' },
+        notes: { type: 'string', description: 'Notes about this status transition' }
+      },
+      required: ['id', 'status']
+    }
+  },
+  {
+    name: 'generate_handoff',
+    description: 'Auto-generate a handoff document from live data: pipeline state, initiative summary, wiki counts, decision counts, and active/proposed initiatives.',
+    input_schema: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
   }
 ];
 
@@ -214,6 +266,90 @@ async function executeNewTool(toolName, toolInput, deps) {
     case 'record_gardener_words': {
       deps.recordGardenersWords(toolInput.topic, toolInput.words);
       return JSON.stringify({ success: true, topic: toolInput.topic, recorded: true });
+    }
+
+    case 'get_initiatives': {
+      const filter = {};
+      if (toolInput.status) filter.status = toolInput.status;
+      if (toolInput.category) filter.category = toolInput.category;
+      if (toolInput.id) filter.id = toolInput.id;
+      const initiatives = deps.queryInitiatives(filter);
+      return JSON.stringify(initiatives);
+    }
+
+    case 'create_initiative': {
+      const entry = deps.appendInitiative({
+        event: 'created',
+        title: toolInput.title,
+        category: toolInput.category,
+        status: 'proposed',
+        description: toolInput.description,
+        origin: toolInput.origin || 'gardener',
+        actor: 'gardener'
+      });
+      deps.logActivity('initiative-created', null, entry.id, 'gardener', toolInput.title);
+      return JSON.stringify({ success: true, initiative: entry });
+    }
+
+    case 'update_initiative': {
+      const current = deps.queryInitiatives({ id: toolInput.id });
+      if (current.length === 0) {
+        return JSON.stringify({ error: `Initiative '${toolInput.id}' not found` });
+      }
+      const prev = current[0];
+      const eventMap = {
+        active: 'activated',
+        completed: 'completed',
+        archived: 'archived',
+        proposed: 'updated'
+      };
+      const entry = deps.appendInitiative({
+        id: toolInput.id,
+        event: eventMap[toolInput.status] || 'updated',
+        title: prev.title,
+        category: prev.category,
+        status: toolInput.status,
+        description: prev.description,
+        origin: prev.origin,
+        links: prev.links,
+        actor: 'gardener',
+        notes: toolInput.notes || ''
+      });
+      deps.logActivity('initiative-updated', null, toolInput.id, 'gardener', `${prev.status} → ${toolInput.status}`);
+      return JSON.stringify({ success: true, initiative: entry });
+    }
+
+    case 'generate_handoff': {
+      const pipeline = deps.loadPipeline();
+      const summary = deps.getInitiativeSummary();
+      const active = deps.queryInitiatives({ status: 'active' });
+      const proposed = deps.queryInitiatives({ status: 'proposed' });
+      const wiki = deps.readJSON('src/data/wiki.json') || {};
+      const decisionCount = deps.readJSONL('src/data/decisions.jsonl', 1000).length;
+
+      let doc = `# Terarrium — Live Handoff\n\nGenerated: ${new Date().toISOString()}\n\n`;
+      doc += `## Pipeline\n`;
+      for (const zone of ['nursery', 'workshop', 'canopy', 'stable']) {
+        const comps = pipeline[zone] || [];
+        doc += `- **${zone}**: ${comps.length === 0 ? 'empty' : comps.map(c => c.name).join(', ')}\n`;
+      }
+      doc += `\n## Initiatives (${summary.total} total)\n`;
+      doc += `- Completed: ${summary.byStatus.completed || 0}\n`;
+      doc += `- Active: ${summary.byStatus.active || 0}\n`;
+      doc += `- Proposed: ${summary.byStatus.proposed || 0}\n`;
+      doc += `- Archived: ${summary.byStatus.archived || 0}\n`;
+      if (active.length > 0) {
+        doc += `\n### Active\n`;
+        active.forEach(i => { doc += `- **${i.id}**: ${i.title}\n`; });
+      }
+      if (proposed.length > 0) {
+        doc += `\n### Proposed\n`;
+        proposed.forEach(i => { doc += `- **${i.id}**: ${i.title}\n`; });
+      }
+      doc += `\n## System Stats\n`;
+      doc += `- Wiki entries: ${Object.keys(wiki).length}\n`;
+      doc += `- Decisions recorded: ${decisionCount}\n`;
+      return JSON.stringify({ handoff: doc });
     }
 
     default:

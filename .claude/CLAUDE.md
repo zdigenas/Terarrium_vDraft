@@ -40,6 +40,7 @@ Authority does not flow from the top down (tree), nor is it distributed equally 
         |  Decision Memory      |
         |  Change Registry      |
         |  Living Reference     |
+        |  Initiative Registry  |
         +-----------+-----------+
                     |
              Documented Truth
@@ -57,6 +58,8 @@ Authority does not flow from the top down (tree), nor is it distributed equally 
 **Change Registry** — Every modification to the system with its dependency chain. Token changed -> these components affected -> these pages impacted. When something breaks, trace the chain backward. Stored in `src/data/changes.jsonl`.
 
 **Living Reference** — The self-teaching layer. Wiki entries, patterns, terminology, component documentation. When a new concept emerges, it gets captured here. When terminology evolves, references update. Stored in `src/data/wiki.json`.
+
+**Initiative Registry** — Tracks non-component system work items (infrastructure, governance, tooling, documentation) with append-only JSONL discipline. Status transitions append new events; current state derived by grouping by ID. Stored in `src/data/initiatives.jsonl`.
 
 ### Domain Agents
 
@@ -212,7 +215,8 @@ Component   ->  --t-{component}-{property}     (component-specific overrides)
 | Gardener override | Human can approve despite missing approvals |
 | Push Live = human action | No automatic deployment without gardener |
 | Seed Vault preservation | Full context preserved, quarterly review |
-| Append-only logs | decisions.jsonl and changes.jsonl never modified |
+| Append-only logs | decisions.jsonl, changes.jsonl, initiatives.jsonl never modified |
+| Initiative tracking | Non-component work tracked in Initiative Registry |
 
 ---
 
@@ -231,5 +235,7 @@ Component   ->  --t-{component}-{property}     (component-specific overrides)
 | `src/data/changes.jsonl` | Change Registry (append-only) |
 | `src/data/wiki.json` | Living Reference |
 | `src/data/spark-queue.jsonl` | Pre-Nursery signals |
+| `src/data/initiatives.jsonl` | Initiative Registry (append-only) |
+| `src/data/gardeners-memory.json` | Gardener's Memory (session persistence) |
 | `src/data/seed-vault.json` | Archived components |
 | `src/data/pipeline-state.json` | Current pipeline state |

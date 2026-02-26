@@ -278,6 +278,18 @@ app.get('/api/changes', (req, res) => {
   res.json(readJSONL('src/data/changes.jsonl', limit));
 });
 
+app.get('/api/initiatives', async (req, res) => {
+  try {
+    const { queryInitiatives } = await import('../governance/root-system/initiative-registry.mjs');
+    const filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.category) filter.category = req.query.category;
+    res.json(queryInitiatives(filter));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Gardener config endpoints ───────────────────────────────────────────────
 
 app.get('/api/gardener-config', (req, res) => {
@@ -394,6 +406,12 @@ function summarizeToolResult(toolName, parsed) {
       return `updated wiki: ${parsed.key}`;
     case 'update_terrarium_css':
       return `${parsed.action || 'updated'} import for ${parsed.name}`;
+    case 'get_initiatives':
+      return `${Array.isArray(parsed) ? parsed.length : 0} initiatives`;
+    case 'create_initiative':
+      return `created ${parsed.initiative?.id}: ${parsed.initiative?.title}`;
+    case 'update_initiative':
+      return `updated ${parsed.initiative?.id} → ${parsed.initiative?.status}`;
     default:
       return 'done';
   }
@@ -574,5 +592,6 @@ app.listen(PORT, async () => {
   console.log(`     GET  /api/wiki`);
   console.log(`     GET  /api/seed-vault`);
   console.log(`     GET  /api/decisions`);
-  console.log(`     GET  /api/activity\n`);
+  console.log(`     GET  /api/activity`);
+  console.log(`     GET  /api/initiatives\n`);
 });

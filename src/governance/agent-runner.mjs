@@ -11,6 +11,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { getSessionBrief } from './gardeners-memory.mjs';
 
 const PROJECT_ROOT = resolve(import.meta.dirname, '..', '..');
 
@@ -190,6 +191,19 @@ export const CHAT_TOOLS = [
       required: []
     }
   },
+  {
+    name: 'get_initiatives',
+    description: 'Query the Initiative Registry — non-component work items tracked with append-only JSONL. Filter by status or category. Returns derived current state.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', description: 'Filter by status: proposed|active|completed|archived' },
+        category: { type: 'string', description: 'Filter by category: infrastructure|component|governance|tooling|documentation' },
+        id: { type: 'string', description: 'Get a specific initiative by ID (e.g. INIT-001)' }
+      },
+      required: []
+    }
+  },
   // Action tools
   {
     name: 'run_governance_review',
@@ -248,6 +262,33 @@ export const CHAT_TOOLS = [
         reason: { type: 'string', description: 'Reason for archiving' }
       },
       required: ['componentId', 'reason']
+    }
+  },
+  {
+    name: 'create_initiative',
+    description: 'Create a new initiative (status: proposed). Tracks non-component system work items.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Initiative title' },
+        category: { type: 'string', description: 'Category: infrastructure|component|governance|tooling|documentation' },
+        description: { type: 'string', description: 'What this initiative is about' },
+        origin: { type: 'string', description: 'Where this initiative came from' }
+      },
+      required: ['title', 'category', 'description']
+    }
+  },
+  {
+    name: 'update_initiative',
+    description: 'Transition an initiative status. Valid transitions: proposed→active, active→completed, any→archived.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: 'Initiative ID (e.g. INIT-001)' },
+        status: { type: 'string', description: 'New status: proposed|active|completed|archived' },
+        notes: { type: 'string', description: 'Notes about this status transition' }
+      },
+      required: ['id', 'status']
     }
   },
   // File read/write tools
@@ -464,6 +505,54 @@ export async function executeTool(toolName, toolInput, deps) {
       case 'seed_vault_component': {
         const result = deps.seedVaultComponent(toolInput.componentId, toolInput.reason);
         return JSON.stringify(result);
+      }
+
+      case 'get_initiatives': {
+        const { queryInitiatives } = await import('./root-system/initiative-registry.mjs');
+        const filter = {};
+        if (toolInput.status) filter.status = toolInput.status;
+        if (toolInput.category) filter.category = toolInput.category;
+        if (toolInput.id) filter.id = toolInput.id;
+        return JSON.stringify(queryInitiatives(filter));
+      }
+
+      case 'create_initiative': {
+        const { appendInitiative } = await import('./root-system/initiative-registry.mjs');
+        const entry = appendInitiative({
+          event: 'created',
+          title: toolInput.title,
+          category: toolInput.category,
+          status: 'proposed',
+          description: toolInput.description,
+          origin: toolInput.origin || 'gardener',
+          actor: 'gardener'
+        });
+        deps.logActivity('initiative-created', null, entry.id, 'gardener', toolInput.title);
+        return JSON.stringify({ success: true, initiative: entry });
+      }
+
+      case 'update_initiative': {
+        const { appendInitiative: append, queryInitiatives: query } = await import('./root-system/initiative-registry.mjs');
+        const current = query({ id: toolInput.id });
+        if (current.length === 0) {
+          return JSON.stringify({ error: `Initiative '${toolInput.id}' not found` });
+        }
+        const prev = current[0];
+        const eventMap = { active: 'activated', completed: 'completed', archived: 'archived', proposed: 'updated' };
+        const entry = append({
+          id: toolInput.id,
+          event: eventMap[toolInput.status] || 'updated',
+          title: prev.title,
+          category: prev.category,
+          status: toolInput.status,
+          description: prev.description,
+          origin: prev.origin,
+          links: prev.links,
+          actor: 'gardener',
+          notes: toolInput.notes || ''
+        });
+        deps.logActivity('initiative-updated', null, toolInput.id, 'gardener', `${prev.status} → ${toolInput.status}`);
+        return JSON.stringify({ success: true, initiative: entry });
       }
 
       // ── File read/write tools ──────────────────────────────────────────
@@ -984,6 +1073,14 @@ All claims must be verifiable. No synthetic verdicts. If you don't know, say so.
     });
   }
 
+  // Inject gardener's memory if data exists
+  try {
+    const brief = getSessionBrief();
+    if (brief && !brief.startsWith('No previous session')) {
+      prompt += `\n\nGARDENER'S MEMORY:\n${brief}`;
+    }
+  } catch { /* non-fatal — gardener's memory not yet initialized */ }
+
   prompt += `\n\nYou can help the Gardener:
 - Understand any component's governance status and what each agent found
 - Explain what each agent would look for in a review (cite their specific domain rules)
@@ -995,12 +1092,14 @@ All claims must be verifiable. No synthetic verdicts. If you don't know, say so.
 TOOLS:
 You have tools available to query live data, take governance actions, and write code files. Use them!
 
-READ TOOLS: get_pipeline_state, get_component_details, get_recent_decisions, get_activity_log, get_wiki, read_file
+READ TOOLS: get_pipeline_state, get_component_details, get_recent_decisions, get_activity_log, get_wiki, get_initiatives, read_file
 - Use these to answer questions with current data instead of relying solely on context.
 - Use read_file to inspect any file under src/ before modifying it.
+- Use get_initiatives to query the Initiative Registry for non-component work items.
 
-GOVERNANCE TOOLS: run_governance_review, run_single_agent_review, promote_component, create_component, seed_vault_component
+GOVERNANCE TOOLS: run_governance_review, run_single_agent_review, promote_component, create_component, seed_vault_component, create_initiative, update_initiative
 - Use when the Gardener requests a governance action.
+- Use create_initiative/update_initiative to track system-level work items.
 
 FILE WRITING TOOLS: write_component_css, write_component_spec, patch_css, write_token_file, update_wiki, update_terrarium_css
 - Use to create or modify component CSS, specs, tokens, wiki entries, and terrarium.css imports.

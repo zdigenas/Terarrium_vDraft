@@ -1,3 +1,4 @@
+<!-- ARCHIVED: Ingested into Initiative Registry as INIT-003. See src/data/initiatives.jsonl. -->
 # Terarrium Agent Activation — Results
 
 **Activated:** 2026-02-26T12:47:30Z  

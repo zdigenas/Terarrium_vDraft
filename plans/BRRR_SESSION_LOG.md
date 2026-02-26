@@ -1,3 +1,4 @@
+<!-- ARCHIVED: Ingested into Initiative Registry as INIT-002. See src/data/initiatives.jsonl. -->
 # BRRR Mode — Session Log
 
 > **Started:** 2026-02-26T06:04:00.000Z (01:04 EST)  

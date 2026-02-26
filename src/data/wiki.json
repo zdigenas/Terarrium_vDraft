@@ -264,5 +264,12 @@
     "def": "The practice of tending to the Spark Queue — reviewing nascent ideas, asking clarifying questions, and deciding which sparks are ready to be planted into the Nursery as formal component proposals",
     "source": "Constitutional Document",
     "updatedAt": "2026-02-26T16:20:22.562Z"
+  },
+  "initiative-registry": {
+    "term": "Initiative Registry",
+    "category": "Agents",
+    "def": "The 4th Root System documentation agent. Tracks non-component system work items (infrastructure, governance, tooling, documentation) with append-only JSONL discipline. Status transitions (proposed → active → completed → archived) append new events; current state derived by grouping by ID, taking the latest timestamp. Provides the same audit trail for system-level work that Decision Memory provides for governance decisions.",
+    "source": "CLAUDE.md",
+    "rule": "Initiative events are append-only. Status transitions must be recorded, never overwritten."
   }
 }

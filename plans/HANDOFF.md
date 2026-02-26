@@ -1,3 +1,4 @@
+<!-- ARCHIVED: Ingested into Initiative Registry as INIT-004. See src/data/initiatives.jsonl. -->
 # Terarrium — MVP Handoff Document
 
 **Built:** 2026-02-26  

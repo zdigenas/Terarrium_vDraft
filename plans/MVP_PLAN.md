@@ -1,3 +1,4 @@
+<!-- ARCHIVED: Ingested into Initiative Registry as INIT-001. See src/data/initiatives.jsonl. -->
 # Terarrium — Overnight MVP Plan
 > Generated: 2026-02-26 | Session: Architect → Code handoff
 > Goal: True, full MVP to react to in the morning — real agent reviews + full storybook UI wearing its own output
