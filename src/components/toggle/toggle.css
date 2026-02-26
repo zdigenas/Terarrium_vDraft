@@ -1,7 +1,8 @@
 /* ============================================================
    COMPONENT: Toggle / Switch
-   Maturity: Candidate | Tier: Primitive
+   Maturity: Workshop/Candidate | Tier: Primitive
    Job: Binary on/off control with clear state indication
+   HTML: <label class="t-toggle"><input type="checkbox" role="switch" class="t-toggle__input"><span class="t-toggle__track"><span class="t-toggle__thumb"></span></span><span class="t-toggle__label">Label</span></label>
    ============================================================ */
 
 .t-toggle {
@@ -9,7 +10,19 @@
   display: inline-flex;
   align-items: center;
   gap: var(--t-space-2);
+  min-height: var(--t-touch-min);
   cursor: pointer;
+}
+
+/* Label placement variant — label before track */
+.t-toggle--label-leading {
+  flex-direction: row-reverse;
+}
+
+/* Disabled parent — prevent interaction on entire toggle */
+.t-toggle:has(:disabled) {
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .t-toggle__input {
@@ -20,9 +33,16 @@
 }
 
 .t-toggle__track {
+  /* Local custom properties — hard-coded pending --t-size-* tokens (INIT-014) */
+  --_track-w: 44px;
+  --_track-h: 24px;
+  --_thumb-size: 20px;
+  --_thumb-inset: 2px;
+
   position: relative;
-  width: 44px;
-  height: 24px;
+  width: var(--_track-w);
+  height: var(--_track-h);
+
   /* Token Steward approved: semantic token only — primitive fallback removed per BRRR review */
   background-color: var(--t-border-strong);
   border-radius: var(--t-radius-full);
@@ -31,10 +51,11 @@
 
 .t-toggle__thumb {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
+  top: var(--_thumb-inset);
+  left: var(--_thumb-inset);
+  width: var(--_thumb-size);
+  height: var(--_thumb-size);
+
   /* Token Steward approved: semantic token only — primitive fallback removed per BRRR review */
   background-color: var(--t-fg-inverse);
   border-radius: var(--t-radius-full);
@@ -46,11 +67,13 @@
   background-color: var(--t-interactive-default);
 }
 .t-toggle__input:checked + .t-toggle__track .t-toggle__thumb {
-  transform: translateX(20px);
+  transform: translateX(calc(var(--_track-w) - var(--_thumb-size) - var(--_thumb-inset) * 2));
 }
 
+/* AG requirement: outline-based focus ring — 3px+ width, 3:1 contrast, 2px offset */
 .t-toggle__input:focus-visible + .t-toggle__track {
-  box-shadow: var(--t-focus-ring);
+  outline: 3px solid var(--t-border-focus);
+  outline-offset: 2px;
 }
 
 .t-toggle__input:disabled + .t-toggle__track {
@@ -62,6 +85,12 @@
   font-size: var(--t-text-sm);
   font-weight: var(--t-weight-medium);
   color: var(--t-fg-primary);
+}
+
+/* Dim label when toggle is disabled */
+.t-toggle__input:disabled ~ .t-toggle__label {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (prefers-reduced-motion: reduce) {

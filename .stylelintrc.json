@@ -3,7 +3,7 @@
   "plugins": ["stylelint-selector-bem-pattern"],
   "rules": {
     "selector-class-pattern": "^t-[a-z][a-z0-9-]*(?:__[a-z][a-z0-9-]*)?(?:--[a-z][a-z0-9-]*)?$",
-    "custom-property-pattern": "^t-[a-z][a-z0-9-]*$",
+    "custom-property-pattern": "^(t-[a-z][a-z0-9-]*|_[a-z][a-z0-9-]*)$",
     "declaration-no-important": true,
     "declaration-empty-line-before": null,
     "rule-empty-line-before": null,
