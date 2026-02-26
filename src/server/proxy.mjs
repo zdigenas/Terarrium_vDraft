@@ -340,7 +340,66 @@ app.post('/api/governance-review/agent', async (req, res) => {
   }
 });
 
-// ── Governance chat endpoint (SSE streaming) ─────────────────────────────────
+// ── Tool deps builder for agentic chat ────────────────────────────────────────
+
+async function buildToolDeps() {
+  const { loadPipeline, findComponent, createComponent, promoteComponent, seedVaultComponent, logActivity } = await getPipeline();
+  const { runGovernanceReview, runSingleAgentReview } = await getOrchestrator();
+  const { appendChange } = await import('../governance/root-system/change-registry.mjs');
+  const { addEntry: addWikiEntry } = await import('../governance/root-system/living-reference.mjs');
+  const { validateWritePath, validateReadPath } = await import('../governance/file-safety.mjs');
+  return {
+    loadPipeline, findComponent, createComponent, promoteComponent, seedVaultComponent,
+    runGovernanceReview, runSingleAgentReview,
+    readJSON, readJSONL,
+    logActivity, appendChange, addWikiEntry, validateWritePath, validateReadPath,
+    projectRoot: PROJECT_ROOT
+  };
+}
+
+function summarizeToolResult(toolName, parsed) {
+  if (parsed.error) return parsed.error;
+  switch (toolName) {
+    case 'get_pipeline_state': {
+      const zones = ['nursery', 'workshop', 'canopy', 'stable'];
+      return zones.map(z => `${z}: ${(parsed[z] || []).length}`).join(', ');
+    }
+    case 'get_component_details':
+      return `${parsed.name || parsed.id} (${parsed.zone}, ${parsed.maturity})`;
+    case 'get_recent_decisions':
+      return `${Array.isArray(parsed) ? parsed.length : 0} decisions`;
+    case 'get_activity_log':
+      return `${Array.isArray(parsed) ? parsed.length : 0} entries`;
+    case 'get_wiki':
+      return `${Object.keys(parsed).length} entries`;
+    case 'run_governance_review':
+      return `${parsed.component}: ${parsed.zoneVerdict?.passed ? 'PASSED' : 'NEEDS WORK'}`;
+    case 'run_single_agent_review':
+      return `${parsed.agent}: ${parsed.verdict} (${parsed.score}/100)`;
+    case 'promote_component':
+      return parsed.component ? `${parsed.component.name}: ${parsed.from} → ${parsed.to}` : 'promoted';
+    case 'create_component':
+      return `${parsed.name} created (${parsed.id})`;
+    case 'seed_vault_component':
+      return `archived${parsed.name ? ': ' + parsed.name : ''}`;
+    case 'read_file':
+      return `read ${parsed.path} (${parsed.lines} lines)`;
+    case 'write_component_css':
+    case 'write_component_spec':
+    case 'patch_css':
+      return `${parsed.action || 'wrote'} ${parsed.path}`;
+    case 'write_token_file':
+      return `${parsed.action || 'wrote'} ${parsed.path}`;
+    case 'update_wiki':
+      return `updated wiki: ${parsed.key}`;
+    case 'update_terrarium_css':
+      return `${parsed.action || 'updated'} import for ${parsed.name}`;
+    default:
+      return 'done';
+  }
+}
+
+// ── Governance chat endpoint (SSE streaming with tool use) ────────────────────
 
 app.post('/api/chat', async (req, res) => {
   const { messages, context } = req.body;
@@ -361,7 +420,7 @@ app.post('/api/chat', async (req, res) => {
   };
 
   try {
-    const { streamChatResponse, buildChatSystemPrompt } = await getAgentRunner();
+    const { agenticChatResponse, buildChatSystemPrompt } = await getAgentRunner();
 
     // Load live context for the system prompt
     let pipelineState = null;
@@ -382,11 +441,25 @@ app.post('/api/chat', async (req, res) => {
       recentDecisions
     });
 
-    await streamChatResponse({
+    // Build tool dependencies
+    const deps = await buildToolDeps();
+
+    await agenticChatResponse({
       systemPrompt,
       messages,
+      deps,
       onToken: (token) => {
         sendEvent({ type: 'token', token });
+      },
+      onToolStart: ({ toolName, toolInput, toolUseId }) => {
+        sendEvent({ type: 'tool_start', toolName, toolInput, toolUseId });
+      },
+      onToolResult: ({ toolName, toolUseId, success, result }) => {
+        const preview = summarizeToolResult(toolName, result);
+        sendEvent({
+          type: 'tool_result', toolName, toolUseId, success,
+          preview, error: success ? undefined : (result.error || undefined)
+        });
       },
       onDone: (fullText) => {
         sendEvent({ type: 'done', fullText });

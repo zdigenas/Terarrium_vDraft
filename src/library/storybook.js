@@ -481,7 +481,70 @@ function showToast(severity, title, message) {
   setTimeout(() => { if (toast.parentNode) toast.remove(); }, 5000);
 }
 
-/* ── Governance Chat (SSE) ────────────────────────────────────────────── */
+/* ── Tool display mapping ─────────────────────────────────────────────── */
+const TOOL_DISPLAY = {
+  get_pipeline_state:    { label: 'Checking pipeline',    icon: '📊' },
+  get_component_details: { label: 'Loading component',    icon: '🔍' },
+  get_recent_decisions:  { label: 'Reading decisions',    icon: '📋' },
+  get_activity_log:      { label: 'Reading activity',     icon: '📜' },
+  get_wiki:              { label: 'Searching wiki',       icon: '📖' },
+  run_governance_review: { label: 'Running review',       icon: '🔬' },
+  run_single_agent_review: { label: 'Running agent review', icon: '🤖' },
+  promote_component:     { label: 'Promoting component',  icon: '⬆️' },
+  create_component:      { label: 'Creating component',   icon: '✨' },
+  seed_vault_component:  { label: 'Archiving component',  icon: '🌱' },
+  read_file:             { label: 'Reading file',         icon: '📄' },
+  write_component_css:   { label: 'Writing CSS',          icon: '🎨' },
+  write_component_spec:  { label: 'Writing spec',         icon: '📐' },
+  patch_css:             { label: 'Patching CSS',         icon: '🔧' },
+  write_token_file:      { label: 'Writing tokens',       icon: '🪙' },
+  update_wiki:           { label: 'Updating wiki',        icon: '📖' },
+  update_terrarium_css:  { label: 'Updating imports',     icon: '📦' }
+};
+
+function formatToolInput(toolName, input) {
+  if (!input) return '';
+  switch (toolName) {
+    case 'get_component_details':
+    case 'run_governance_review':
+    case 'promote_component':
+    case 'seed_vault_component':
+      return input.componentId || '';
+    case 'run_single_agent_review':
+      return (input.agentId || '') + ' on ' + (input.componentId || '');
+    case 'create_component':
+      return input.name || '';
+    case 'get_recent_decisions':
+      return input.componentId ? 'for ' + input.componentId : '';
+    case 'get_wiki':
+      return input.term || '';
+    case 'read_file':
+      return input.path || '';
+    case 'write_component_css':
+    case 'write_component_spec':
+      return input.name || '';
+    case 'patch_css':
+      return input.path || '';
+    case 'write_token_file':
+      return input.filename || '';
+    case 'update_wiki':
+      return input.term || input.key || '';
+    case 'update_terrarium_css':
+      return (input.action || '') + ' ' + (input.name || '');
+    default:
+      return '';
+  }
+}
+
+/* Action tools that mutate state — trigger pipeline refresh after completion */
+const ACTION_TOOLS = new Set([
+  'run_governance_review', 'run_single_agent_review',
+  'promote_component', 'create_component', 'seed_vault_component',
+  'write_component_css', 'write_component_spec', 'patch_css',
+  'write_token_file', 'update_wiki', 'update_terrarium_css'
+]);
+
+/* ── Governance Chat (SSE with tool use) ──────────────────────────────── */
 let chatController = null;
 
 async function sendChat() {
@@ -507,17 +570,19 @@ async function sendChat() {
   if (sendBtn) sendBtn.disabled = true;
   if (status) status.textContent = 'Thinking…';
 
-  // Create assistant message placeholder
-  const assistantEl = document.createElement('div');
-  assistantEl.className = 'gov-msg gov-msg--assistant';
-  assistantEl.textContent = '';
-  messagesEl.appendChild(assistantEl);
+  // Create assistant message container (holds tool indicators + text)
+  const assistantContainer = document.createElement('div');
+  assistantContainer.className = 'gov-msg gov-msg--assistant';
+  const textSpan = document.createElement('span');
+  assistantContainer.appendChild(textSpan);
+  messagesEl.appendChild(assistantContainer);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
   let fullResponse = '';
+  let needsPipelineRefresh = false;
+  const toolDivs = {};  // toolUseId → DOM element
 
   try {
-    // Fix 10: send messages array, not message string
     const res = await fetch(API + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -532,15 +597,14 @@ async function sendChat() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: 'Server error ' + res.status }));
-      assistantEl.className = 'gov-msg gov-msg--error';
-      assistantEl.textContent = err.error || 'Server error';
-      chatHistory.pop(); // remove failed user message
+      assistantContainer.className = 'gov-msg gov-msg--error';
+      textSpan.textContent = err.error || 'Server error';
+      chatHistory.pop();
       if (status) status.textContent = '';
       if (sendBtn) sendBtn.disabled = false;
       return;
     }
 
-    // Fix 10: parse SSE — server sends { type: 'token', token } not { delta }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
@@ -558,33 +622,78 @@ async function sendChat() {
         if (raw === '[DONE]') continue;
         try {
           const parsed = JSON.parse(raw);
+
           if (parsed.type === 'token' && parsed.token) {
             fullResponse += parsed.token;
-            assistantEl.textContent = fullResponse;
+            textSpan.textContent = fullResponse;
             messagesEl.scrollTop = messagesEl.scrollHeight;
+
+          } else if (parsed.type === 'tool_start') {
+            const display = TOOL_DISPLAY[parsed.toolName] || { label: parsed.toolName, icon: '⚙️' };
+            const detail = formatToolInput(parsed.toolName, parsed.toolInput);
+            const toolDiv = document.createElement('div');
+            toolDiv.className = 'gov-tool-call gov-tool-call--running';
+            toolDiv.innerHTML =
+              '<span class="gov-tool-call__icon">' + display.icon + '</span>' +
+              '<span class="gov-tool-call__label">' + escHtml(display.label) + '</span>' +
+              (detail ? '<span class="gov-tool-call__detail">' + escHtml(detail) + '</span>' : '') +
+              '<span class="spinner--sm"></span>';
+            // Insert before text span
+            assistantContainer.insertBefore(toolDiv, textSpan);
+            toolDivs[parsed.toolUseId] = toolDiv;
+            if (status) status.textContent = display.label + '…';
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+
+          } else if (parsed.type === 'tool_result') {
+            const toolDiv = toolDivs[parsed.toolUseId];
+            if (toolDiv) {
+              toolDiv.classList.remove('gov-tool-call--running');
+              toolDiv.classList.add(parsed.success ? 'gov-tool-call--success' : 'gov-tool-call--error');
+              // Remove spinner
+              const spinner = toolDiv.querySelector('.spinner--sm');
+              if (spinner) spinner.remove();
+              // Add result preview
+              if (parsed.preview || parsed.error) {
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'gov-tool-call__result';
+                resultSpan.textContent = parsed.success ? parsed.preview : (parsed.error || 'Error');
+                toolDiv.appendChild(resultSpan);
+              }
+            }
+            if (ACTION_TOOLS.has(parsed.toolName)) needsPipelineRefresh = true;
+            if (status) status.textContent = 'Thinking…';
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+
           } else if (parsed.type === 'done') {
             fullResponse = parsed.fullText || fullResponse;
-            assistantEl.textContent = fullResponse;
+            textSpan.textContent = fullResponse;
+
           } else if (parsed.type === 'error') {
-            assistantEl.className = 'gov-msg gov-msg--error';
-            assistantEl.textContent = parsed.message || 'Agent error';
+            assistantContainer.className = 'gov-msg gov-msg--error';
+            textSpan.textContent = parsed.message || 'Agent error';
           }
         } catch (_) {
           fullResponse += raw;
-          assistantEl.textContent = fullResponse;
+          textSpan.textContent = fullResponse;
           messagesEl.scrollTop = messagesEl.scrollHeight;
         }
       }
     }
 
+    // Store only final text in chat history (tool loop state is server-side)
     if (fullResponse) {
       chatHistory.push({ role: 'assistant', content: fullResponse });
     }
 
+    // Refresh pipeline if any action tools were used
+    if (needsPipelineRefresh && pipelineData !== null) {
+      await loadPipeline();
+    }
+
   } catch (e) {
     if (e.name !== 'AbortError') {
-      assistantEl.className = 'gov-msg gov-msg--error';
-      assistantEl.textContent = 'Connection error: ' + e.message;
+      assistantContainer.className = 'gov-msg gov-msg--error';
+      textSpan.textContent = 'Connection error: ' + e.message;
       chatHistory.pop();
     }
   } finally {

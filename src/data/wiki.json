@@ -257,5 +257,12 @@
     "def": "Material 3-inspired elevation system. Surfaces are differentiated through both color tint and shadow depth, creating a layered interface hierarchy. Five levels (0-4) from base to highest elevation.",
     "source": "foundation.css",
     "rule": "Elevation must combine tonal shift + shadow. Color-only or shadow-only is insufficient."
+  },
+  "spark-gardening": {
+    "term": "Spark Gardening",
+    "category": "Ecosystem",
+    "def": "The practice of tending to the Spark Queue — reviewing nascent ideas, asking clarifying questions, and deciding which sparks are ready to be planted into the Nursery as formal component proposals",
+    "source": "Constitutional Document",
+    "updatedAt": "2026-02-26T16:20:22.562Z"
   }
 }
