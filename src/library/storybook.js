@@ -8,6 +8,78 @@ const API = 'http://localhost:3001';
 // Conversation history for chat (maintains context across turns)
 let chatHistory = [];
 
+// Session management
+let chatSessionId = sessionStorage.getItem('t-chat-session') || null;
+let chatSessionStart = chatSessionId ? parseInt(sessionStorage.getItem('t-chat-session-start') || '0') : 0;
+let sessionDurationInterval = null;
+
+function ensureSession() {
+  if (!chatSessionId) {
+    chatSessionId = crypto.randomUUID();
+    chatSessionStart = Date.now();
+    sessionStorage.setItem('t-chat-session', chatSessionId);
+    sessionStorage.setItem('t-chat-session-start', String(chatSessionStart));
+  }
+  updateSessionIndicator();
+  return chatSessionId;
+}
+
+function updateSessionIndicator() {
+  const indicator = document.getElementById('chat-session-indicator');
+  const durationEl = document.getElementById('chat-session-duration');
+  if (!indicator) return;
+  if (chatSessionId && chatSessionStart) {
+    indicator.style.display = 'inline-flex';
+    const mins = Math.floor((Date.now() - chatSessionStart) / 60000);
+    if (durationEl) durationEl.textContent = mins < 1 ? '<1m' : mins + 'm';
+    if (!sessionDurationInterval) {
+      sessionDurationInterval = setInterval(updateSessionIndicator, 60000);
+    }
+  } else {
+    indicator.style.display = 'none';
+  }
+}
+
+async function clearChat() {
+  if (chatSessionId) {
+    try {
+      await fetch(API + '/api/chat/clear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: chatSessionId })
+      });
+    } catch (_) { /* non-fatal */ }
+  }
+  chatHistory = [];
+  chatSessionId = null;
+  chatSessionStart = 0;
+  sessionStorage.removeItem('t-chat-session');
+  sessionStorage.removeItem('t-chat-session-start');
+  if (sessionDurationInterval) { clearInterval(sessionDurationInterval); sessionDurationInterval = null; }
+  updateSessionIndicator();
+  const messagesEl = document.getElementById('gov-messages');
+  if (messagesEl) {
+    messagesEl.innerHTML = '<div class="gov-msg gov-msg--system">Ask about any component, governance rule, or agent. I can also trigger reviews.</div>';
+  }
+}
+
+function getCurrentComponentContext() {
+  const activePage = document.querySelector('.nav-item--active')?.getAttribute('data-target');
+  let currentComponent = null;
+  if (pipelineData && activePage) {
+    for (const zone of ['nursery', 'workshop', 'canopy', 'stable']) {
+      const comp = (pipelineData[zone] || []).find(c => c.name.toLowerCase() === activePage);
+      if (comp) { currentComponent = comp; break; }
+    }
+  }
+  return { currentPage: activePage, currentComponent };
+}
+
+function fmtTimestamp() {
+  const now = new Date();
+  return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
 /* ── Theme ────────────────────────────────────────────────────────────── */
 function toggleTheme() {
   const html = document.documentElement;
@@ -544,7 +616,7 @@ const ACTION_TOOLS = new Set([
   'write_token_file', 'update_wiki', 'update_terrarium_css'
 ]);
 
-/* ── Governance Chat (SSE with tool use) ──────────────────────────────── */
+/* ── Governance Chat (SSE with tool use + sessions) ──────────────────── */
 let chatController = null;
 
 async function sendChat() {
@@ -561,10 +633,13 @@ async function sendChat() {
   if (chatController) chatController.abort();
   chatController = new AbortController();
 
-  // Add to history
+  // Ensure session exists
+  const sid = ensureSession();
+
+  // Add to local history
   chatHistory.push({ role: 'user', content: text });
 
-  // Append user message to UI
+  // Append user message to UI with timestamp
   appendChatMsg('user', text);
   input.value = '';
   if (sendBtn) sendBtn.disabled = true;
@@ -573,6 +648,12 @@ async function sendChat() {
   // Create assistant message container (holds tool indicators + text)
   const assistantContainer = document.createElement('div');
   assistantContainer.className = 'gov-msg gov-msg--assistant';
+
+  // Metadata bar (timestamp + copy button, shown on hover)
+  const metaBar = document.createElement('div');
+  metaBar.className = 'gov-msg__meta';
+  assistantContainer.appendChild(metaBar);
+
   const textSpan = document.createElement('span');
   assistantContainer.appendChild(textSpan);
   messagesEl.appendChild(assistantContainer);
@@ -583,14 +664,14 @@ async function sendChat() {
   const toolDivs = {};  // toolUseId → DOM element
 
   try {
+    const ctx = getCurrentComponentContext();
     const res = await fetch(API + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        messages: chatHistory,
-        context: {
-          currentPage: document.querySelector('.nav-item--active')?.getAttribute('data-target'),
-        }
+        sessionId: sid,
+        message: text,
+        context: ctx
       }),
       signal: chatController.signal
     });
@@ -659,6 +740,28 @@ async function sendChat() {
                 resultSpan.textContent = parsed.success ? parsed.preview : (parsed.error || 'Error');
                 toolDiv.appendChild(resultSpan);
               }
+              // Add expand button for full result data
+              if (parsed.fullResult && parsed.success) {
+                const expandBtn = document.createElement('button');
+                expandBtn.className = 'gov-tool-call__expand';
+                expandBtn.textContent = '+';
+                expandBtn.title = 'Show full result';
+                expandBtn.onclick = function() {
+                  const existing = toolDiv.querySelector('.gov-tool-call__detail-full');
+                  if (existing) {
+                    existing.remove();
+                    expandBtn.textContent = '+';
+                    return;
+                  }
+                  const pre = document.createElement('pre');
+                  pre.className = 'gov-tool-call__detail-full';
+                  pre.textContent = JSON.stringify(parsed.fullResult, null, 2);
+                  toolDiv.appendChild(pre);
+                  expandBtn.textContent = '−';
+                  messagesEl.scrollTop = messagesEl.scrollHeight;
+                };
+                toolDiv.appendChild(expandBtn);
+              }
             }
             if (ACTION_TOOLS.has(parsed.toolName)) needsPipelineRefresh = true;
             if (status) status.textContent = 'Thinking…';
@@ -680,10 +783,16 @@ async function sendChat() {
       }
     }
 
-    // Store only final text in chat history (tool loop state is server-side)
+    // Store only final text in local history
     if (fullResponse) {
       chatHistory.push({ role: 'assistant', content: fullResponse });
     }
+
+    // Add timestamp + copy button to meta bar
+    const ts = fmtTimestamp();
+    metaBar.innerHTML =
+      '<span class="gov-msg__timestamp">' + ts + '</span>' +
+      '<button class="gov-msg__copy" title="Copy" aria-label="Copy message" onclick="copyMessage(this)">&#x2398;</button>';
 
     // Refresh pipeline if any action tools were used
     if (needsPipelineRefresh && pipelineData !== null) {
@@ -709,9 +818,33 @@ function appendChatMsg(role, text) {
   if (!messagesEl) return;
   const el = document.createElement('div');
   el.className = 'gov-msg gov-msg--' + role;
-  el.textContent = text;
+
+  // Add timestamp for user messages
+  const ts = fmtTimestamp();
+  const meta = document.createElement('div');
+  meta.className = 'gov-msg__meta';
+  meta.innerHTML = '<span class="gov-msg__timestamp">' + ts + '</span>';
+  el.appendChild(meta);
+
+  const span = document.createElement('span');
+  span.textContent = text;
+  el.appendChild(span);
+
   messagesEl.appendChild(el);
   messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function copyMessage(btn) {
+  const msg = btn.closest('.gov-msg');
+  if (!msg) return;
+  // Get the text content (skip meta bar)
+  const spans = msg.querySelectorAll(':scope > span');
+  const text = Array.from(spans).map(s => s.textContent).join('');
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.textContent = '✓';
+    setTimeout(() => { btn.innerHTML = orig; }, 1500);
+  });
 }
 
 /* ── API health check ─────────────────────────────────────────────────── */
@@ -810,4 +943,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadWelcomeActivity();
   checkApiHealth();
   setInterval(checkApiHealth, 30000);
+  // Restore session indicator if session exists
+  updateSessionIndicator();
 })();

@@ -12,47 +12,47 @@
       "movedAt": "2026-02-26T05:00:00.000Z",
       "agentReviews": {
         "ts": {
-          "verdict": "approved",
-          "score": 87,
-          "action": "APPROVED. The component meets all token steward requirements: zero primitive token violations, full semantic token coverage, correct dark mode architecture, and proper motion reduction handling. The CSS is production-ready. Documentation debt remains: update the spec to reflect that the primitive token issues have been resolved.",
-          "conditionalApproval": null,
-          "timestamp": "2026-02-26T15:27:04.752Z"
+          "verdict": "needs-work",
+          "score": 72,
+          "action": "Approved with conditions: (1) Provide evidence that --t-border-strong and --t-fg-inverse are defined with [data-theme=\"dark\"] equivalents and dark mode rendering is correct. (2) Confirm single-size philosophy (document why 44×24px is the canonical size, or commit to a token-driven size variant system before exit). (3) Test keyboard + screen reader: Space toggles state, Tab focuses, aria-checked updates correctly. If all three conditions are met, score rises to 85 (approved). If dark mode tokens are missing, score drops to 60 (needs work).",
+          "conditionalApproval": "Approval granted if: (1) --t-border-strong and --t-fg-inverse are confirmed to have [data-theme=\"dark\"] counterparts in the token definitions with correct contrast and readability, and dark mode rendering is tested and passes; (2) keyboard interaction (Space/Tab) and aria-checked state are verified with a screen reader; (3) size-variant strategy is documented (single size locked, or token system planned for future maturity). If condition (1) is unmet, revert to needs-work with score 60.",
+          "timestamp": "2026-02-26T16:26:04.637Z"
         },
         "ag": {
           "verdict": "needs-work",
           "score": 62,
-          "action": "Conditional approval: This component moves to APPROVED only if the component spec is updated to (a) explicitly state that role='switch' must be present in the HTML (not implied by native checkbox), (b) mandate that every toggle instance either has a visible .t-toggle__label OR an aria-label on the input, with violation of this rule treated as a component misuse (not a component failure), and (c) document the interactive area as the full .t-toggle container, confirming that users can click anywhere within it. The CSS itself is compliant and requires no changes. Without these clarifications, the component cannot graduate because implementers may produce unlabeled toggles that fail WCAG 4.1.2.",
-          "conditionalApproval": "Update component spec to: (1) explicitly require role='switch' in the HTML on the .t-toggle__input element; (2) mandate that every toggle either has a visible .t-toggle__label with proper text content OR has aria-label on the input; (3) mark the 'default' variant as 'internal/demo use only' or require aria-label as a precondition. Once spec is updated, CSS approves without changes.",
-          "timestamp": "2026-02-26T15:27:22.057Z"
+          "action": "Needs work. Approval requires: (a) explicit aria-label or mandatory visible label pattern for all variants, with no unlabeled 'default' export; (b) clarity on role (switch vs. checkbox) and implementation of whichever is chosen; (c) verification that focus ring meets 2.4.7 visual requirements (3px+ thickness, 3:1 contrast); (d) confirmation that all touch target sizes meet or exceed 24px CSS px on all variants.",
+          "conditionalApproval": "Approval requires: (1) Update spec to mandate aria-label or visible label for all variants. Remove the unlabeled 'default' variant or add aria-label as a required property. (2) Clarify role intent: if role=switch is required, specify the implementation method (custom element or JS override); if the native checkbox role is acceptable, update spec to declare this as a 'checkbox-styled toggle' and remove the switch role claim. (3) Add verification step in the CSS review that --t-focus-ring is at least 3px thick and meets 3:1 contrast against the unfocused track color (--t-border-strong). (4) Document touch target dimensions for all size variants (if added) and confirm all meet or exceed 24px minimum.",
+          "timestamp": "2026-02-26T16:26:21.734Z"
         },
         "pl": {
           "verdict": "needs-work",
           "score": 68,
-          "action": "NEEDS-WORK. Approval condition: (1) API surface documented with prop names, types, defaults, and event signatures; (2) 3+ runnable usage examples showing variants and states; (3) Do/Don't guidelines with 4+ paired recommendations; (4) zone reconciliation (spec says 'nursery', request says 'workshop'); (5) changelog entry. Once these four sections are added and API naming is validated against naming conventions, resubmit for approval.",
-          "conditionalApproval": "Add: (1) API surface section with prop definitions (name, type, default, required); (2) 3+ usage examples (minimal, with-label, disabled); (3) Do/Don't guidelines (4+ paired examples); (4) Changelog noting BRRR token migration and workshop review dates; (5) Update spec zone to 'workshop' or clarify 'nursery' status. Once submitted with these sections, will approve if naming conventions are followed and examples are runnable.",
-          "timestamp": "2026-02-26T15:27:39.875Z"
+          "action": "Verdict: needs-work. Approval condition: Deliver the four changes above with the following specific outcomes: (a) maturity field unified to single value; (b) 3 runnable HTML examples in a 'Usage' section with code blocks; (c) 5+ itemized Do/Don't guidelines; (d) a 'Changelog' or 'Approvals' section citing the Token Steward decision with ID; (e) a 'Prior feedback' note acknowledging the three failed reviews and documenting specific changes made. Once these are present and coherent, this moves to approved.",
+          "conditionalApproval": "Add (1) unified maturity field; (2) 3+ HTML usage examples with code blocks covering default, label-trailing, label-leading, and disabled variants; (3) 5+ itemized Do/Don't guidelines in a dedicated section; (4) a Changelog entry documenting the Token Steward approval of semantic token usage with decision ID and date; (5) a 'Feedback incorporated' section summarizing what changed in response to the three prior workshop reviews (mm32ebpn, mm3gnfox, mm3mb4va). With these four deliverables in place and internally consistent, the component earns approval.",
+          "timestamp": "2026-02-26T16:26:38.834Z"
         },
         "ca": {
           "verdict": "needs-work",
-          "score": 68,
-          "action": "Approve when: (A) HTML structure in spec is updated so thumb is nested inside track, CSS selector is corrected, and thumb transform still works; OR CSS selector is rewritten to correctly target sibling thumb. Verify with concrete markup. (B) Spec's accessibility section explicitly states whether role=switch and aria-checked are applied via native checkbox (if input has role=checkbox native behavior) or must be added by implementer (recommended: add both to input and wrap label in role=switch element). (C) Size variants are documented as Nursery exit blocker with specific dimensions (sm: 36×20, lg: 52×28). Component cannot exit draft without these three changes.",
-          "conditionalApproval": "Correct CSS selector to match actual thumb position (nested or sibling); explicitly document ARIA role=switch and aria-checked implementation in spec anatomy or reference implementation; document size variants (sm/lg) as Nursery exit blocker with concrete pixel dimensions. Resubmit with corrected markup example.",
-          "timestamp": "2026-02-26T15:27:54.151Z"
+          "score": 62,
+          "action": "Needs-work: this component cannot advance without (a) confirmation that prior workshop feedback has been addressed, and (b) CSS support for label-leading and label-trailing variants via modifier classes. The architecture itself is sound and the core control is well-built, but the three failed reviews indicate unresolved concerns. Resubmit with: (1) a summary of which prior feedback was addressed, (2) modifier classes for label positioning, and (3) a note in the spec confirming that role=switch is applied at the host element level (not CSS-enforced). With those changes, this earns approval.",
+          "conditionalApproval": "Add .t-toggle--label-leading modifier to .t-toggle that reverses flex order (order: -1 on track) so label appears first. Confirm prior workshop feedback has been addressed and provide summary. Add explicit note in spec: 'ARIA role=switch must be applied to .t-toggle container element; CSS does not enforce this.' Resubmit with these changes.",
+          "timestamp": "2026-02-26T16:26:55.633Z"
         },
         "px": {
           "verdict": "needs-work",
           "score": 62,
-          "action": "NEEDS WORK. This component will be approved for Workshop when you provide: (a) written validation from 2+ named product teams confirming active prototyping intent or current use case, with team name, feature, and screen count; (b) documented reasons the prior two votes failed, and how you addressed them; (c) decision on size variants (commit now or defer); (d) migration guide for ad-hoc toggle users. Resubmit with these artifacts. Without adoption evidence, this remains a well-crafted ideal, not a load-bearing component.",
-          "conditionalApproval": "Provide: (1) written validation from 2+ named product teams with active prototyping intent or use case (team name, feature, screen count); (2) documented analysis of prior two failed votes and specific changes made to address feedback; (3) decision on size variants (commit to sm/lg or defer and remove from futureConsiderations); (4) migration guide for teams currently using ad-hoc toggles. Resubmit with these artifacts.",
-          "timestamp": "2026-02-26T15:28:11.108Z"
+          "action": "Verdict: needs-work. Condition for approval: Provide adoption evidence (2+ named teams prototyping, prototype dates, screen examples) and a migration guide. Without evidence of real need, this remains a well-built component with zero adoption risk — because there is zero adoption. Technical spec is sound; the gate is adoption validation, not code quality.",
+          "conditionalApproval": "Provide: (1) Names and dates of 2+ product teams actively prototyping with Toggle or building ad-hoc binary controls. (2) 3+ concrete product screen examples with real workflow context (governance, settings, feature flags, etc.). (3) Migration guide for teams with existing toggle implementations. (4) Developer feedback from prototype cycle showing API alignment with team needs. (5) Explicit response to why three consecutive reviews failed — address reviewer concerns by name if possible.",
+          "timestamp": "2026-02-26T16:27:09.661Z"
         }
       },
       "proposals": [],
       "shielded": false,
-      "lastReviewedAt": "2026-02-26T15:28:11.108Z",
+      "lastReviewedAt": "2026-02-26T16:27:09.662Z",
       "lastZoneVerdict": {
         "passed": false,
-        "reason": "Majority required: 1/5 (need 3)"
+        "reason": "Majority required: 0/5 (need 3)"
       }
     },
     {

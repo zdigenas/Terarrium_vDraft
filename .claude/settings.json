@@ -7,6 +7,10 @@
     "a11y": {
       "command": "npx",
       "args": ["-y", "a11y-mcp"]
+    },
+    "terarrium-governance": {
+      "command": "node",
+      "args": ["src/mcp/terarrium-governance.mjs"]
     }
   },
   "hooks": {

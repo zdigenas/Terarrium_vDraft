@@ -640,7 +640,7 @@ export async function executeTool(toolName, toolInput, deps) {
  * @param {function} opts.onToolResult - Called when tool execution completes
  * @param {function} opts.onDone - Called with full response text when complete
  * @param {function} [opts.onError] - Called with error if request fails
- * @returns {Promise<void>}
+ * @returns {Promise<{finalMessages: object[], finalText: string}>}
  */
 export async function agenticChatResponse(opts) {
   const { systemPrompt, messages, deps, onToken, onToolStart, onToolResult, onDone, onError } = opts;
@@ -707,7 +707,9 @@ export async function agenticChatResponse(opts) {
         loopMessages.push({ role: 'assistant', content: assistantContent });
         loopMessages.push({ role: 'user', content: toolResults });
       } else {
-        // Model produced a final text response — stream it out
+        // Model produced a final text response — push onto loopMessages for session persistence
+        loopMessages.push({ role: 'assistant', content: response.content });
+
         const textBlock = response.content.find(b => b.type === 'text');
         if (textBlock?.text) {
           const text = textBlock.text;
@@ -728,6 +730,8 @@ export async function agenticChatResponse(opts) {
           messages: loopMessages
           // No tools — forces text response
         });
+        loopMessages.push({ role: 'assistant', content: finalResponse.content });
+
         const textBlock = finalResponse.content.find(b => b.type === 'text');
         if (textBlock?.text) {
           const text = textBlock.text;
@@ -740,6 +744,7 @@ export async function agenticChatResponse(opts) {
     }
 
     onDone(finalText);
+    return { finalMessages: loopMessages, finalText };
   } catch (err) {
     console.error('[agent-runner] agentic chat failed:', err.message);
     if (onError) {
@@ -747,6 +752,7 @@ export async function agenticChatResponse(opts) {
     } else {
       onDone(`Error: ${err.message}`);
     }
+    return { finalMessages: [], finalText: '' };
   }
 }
 

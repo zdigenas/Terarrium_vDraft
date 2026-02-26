@@ -399,13 +399,50 @@ function summarizeToolResult(toolName, parsed) {
   }
 }
 
-// ── Governance chat endpoint (SSE streaming with tool use) ────────────────────
+// ── Session store for chat persistence ────────────────────────────────────────
+
+const SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+/**
+ * @type {Map<string, { messages: object[], createdAt: number, lastAccessedAt: number }>}
+ */
+const sessions = new Map();
+
+// Periodic session cleanup (every 5 minutes)
+setInterval(() => {
+  const now = Date.now();
+  for (const [id, session] of sessions) {
+    if (now - session.lastAccessedAt > SESSION_TTL_MS) {
+      sessions.delete(id);
+      console.log(`[proxy] Session ${id.slice(0, 8)}... expired after 30m inactivity`);
+    }
+  }
+}, 5 * 60 * 1000);
+
+// ── Governance chat endpoint (SSE streaming with tool use + sessions) ─────────
 
 app.post('/api/chat', async (req, res) => {
-  const { messages, context } = req.body;
+  const { messages, context, sessionId, message } = req.body;
 
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: 'messages array is required' });
+  // Determine conversation messages — session mode or legacy mode
+  let conversationMessages;
+  let activeSessionId = sessionId || null;
+
+  if (sessionId && message) {
+    // Session mode: append new message to server-side session
+    let session = sessions.get(sessionId);
+    if (!session) {
+      session = { messages: [], createdAt: Date.now(), lastAccessedAt: Date.now() };
+      sessions.set(sessionId, session);
+    }
+    session.lastAccessedAt = Date.now();
+    session.messages.push({ role: 'user', content: message });
+    conversationMessages = session.messages;
+  } else if (messages && Array.isArray(messages)) {
+    // Legacy mode: full messages array from client
+    conversationMessages = messages;
+  } else {
+    return res.status(400).json({ error: 'Either {sessionId, message} or {messages} is required' });
   }
 
   // Set up SSE headers
@@ -444,9 +481,9 @@ app.post('/api/chat', async (req, res) => {
     // Build tool dependencies
     const deps = await buildToolDeps();
 
-    await agenticChatResponse({
+    const { finalMessages } = await agenticChatResponse({
       systemPrompt,
-      messages,
+      messages: conversationMessages,
       deps,
       onToken: (token) => {
         sendEvent({ type: 'token', token });
@@ -458,11 +495,12 @@ app.post('/api/chat', async (req, res) => {
         const preview = summarizeToolResult(toolName, result);
         sendEvent({
           type: 'tool_result', toolName, toolUseId, success,
-          preview, error: success ? undefined : (result.error || undefined)
+          preview, fullResult: result,
+          error: success ? undefined : (result.error || undefined)
         });
       },
       onDone: (fullText) => {
-        sendEvent({ type: 'done', fullText });
+        sendEvent({ type: 'done', fullText, sessionId: activeSessionId });
         res.end();
       },
       onError: (err) => {
@@ -470,10 +508,31 @@ app.post('/api/chat', async (req, res) => {
         res.end();
       }
     });
+
+    // Persist finalMessages to session if session mode is active
+    if (activeSessionId && finalMessages.length > 0) {
+      const session = sessions.get(activeSessionId);
+      if (session) {
+        session.messages = finalMessages;
+        session.lastAccessedAt = Date.now();
+      }
+    }
   } catch (err) {
     console.error('[proxy] chat error:', err);
     sendEvent({ type: 'error', message: err.message });
     res.end();
+  }
+});
+
+// ── Clear chat session ────────────────────────────────────────────────────────
+
+app.post('/api/chat/clear', (req, res) => {
+  const { sessionId } = req.body;
+  if (sessionId && sessions.has(sessionId)) {
+    sessions.delete(sessionId);
+    res.json({ success: true, cleared: true });
+  } else {
+    res.json({ success: true, cleared: false, note: 'Session not found or already expired' });
   }
 });
 
@@ -510,7 +569,8 @@ app.listen(PORT, async () => {
   console.log(`     POST /api/pipeline/create`);
   console.log(`     POST /api/pipeline/promote/:id`);
   console.log(`     POST /api/governance-review`);
-  console.log(`     POST /api/chat  (SSE streaming)`);
+  console.log(`     POST /api/chat  (SSE streaming + sessions)`);
+  console.log(`     POST /api/chat/clear`);
   console.log(`     GET  /api/wiki`);
   console.log(`     GET  /api/seed-vault`);
   console.log(`     GET  /api/decisions`);

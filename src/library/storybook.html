@@ -581,8 +581,17 @@
   <!-- ═══ GOVERNANCE CHAT PANEL (shell__panel — 3rd grid column) ═══════ -->
   <aside class="shell__panel" id="gov-panel" aria-label="Governance chat">
     <div class="panel-section" style="display:flex;align-items:center;justify-content:space-between;padding:var(--t-space-3) var(--t-space-3)">
-      <span style="font-size:var(--t-text-sm);font-weight:var(--t-weight-semibold);color:var(--t-fg-primary)">Governance Chat</span>
-      <span class="t-badge t-badge--neutral" id="api-status-badge">checking…</span>
+      <div style="display:flex;align-items:center;gap:var(--t-space-2)">
+        <span style="font-size:var(--t-text-sm);font-weight:var(--t-weight-semibold);color:var(--t-fg-primary)">Governance Chat</span>
+        <span class="chat-session" id="chat-session-indicator" style="display:none" title="Session active">
+          <span class="chat-session__dot"></span>
+          <span class="chat-session__duration" id="chat-session-duration"></span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--t-space-2)">
+        <span class="t-badge t-badge--neutral" id="api-status-badge">checking…</span>
+        <button class="t-btn t-btn--ghost t-btn--sm" onclick="clearChat()" id="btn-chat-clear" title="Clear chat" aria-label="Clear chat" style="padding:2px 6px;font-size:14px;line-height:1">&#x1F5D1;</button>
+      </div>
     </div>
     <div id="gov-messages" style="flex:1;overflow-y:auto;padding:var(--t-space-3);display:flex;flex-direction:column;gap:var(--t-space-2);min-height:0">
       <div class="gov-msg gov-msg--system">Ask about any component, governance rule, or agent. I can also trigger reviews.</div>
