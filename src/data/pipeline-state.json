@@ -2,6 +2,20 @@
   "nursery": [],
   "workshop": [],
   "canopy": [],
-  "stable": [],
-  "nextId": 1
+  "stable": [
+    {
+      "id": "COMP-001",
+      "name": "Toast",
+      "type": "composite",
+      "description": "Non-blocking feedback about system actions (success, error, warning, info) that auto-dismisses without interrupting workflow. JTBD: When I perform an action, I want immediate confirmation that the system responded, so I can continue my task with confidence.",
+      "zone": "stable",
+      "maturity": "stable",
+      "createdAt": "2026-02-25T21:35:00.000Z",
+      "movedAt": "2026-02-26T04:30:00.000Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": true
+    }
+  ],
+  "nextId": 2
 }

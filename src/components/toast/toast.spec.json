@@ -2,20 +2,20 @@
   "name": "Toast",
   "id": "toast",
   "type": "composite",
-  "maturity": "candidate",
-  "zone": "nursery",
+  "maturity": "stable",
+  "zone": "stable",
   "jtbd": {
     "functional": "Provide non-blocking feedback about system actions (success, error, warning, info) that auto-dismisses without interrupting the user's workflow.",
     "affordance": "Recognizable notification pattern — appears at screen edge, contains icon + message + optional dismiss action. Users immediately understand this is transient feedback.",
     "emotional": "Confirms the system responded to their action. Reduces anxiety about whether an operation succeeded."
   },
   "anatomy": {
-    "container": ".t-toast-container — Fixed position container at bottom-right",
-    "toast": ".t-toast — Individual notification with slide-in animation",
-    "icon": ".t-toast__icon — Status icon (info/success/warning/error)",
+    "container": ".t-toast-container — Fixed position container at bottom-right, stacks toasts in reverse column order with gap spacing",
+    "toast": ".t-toast — Individual notification with slide-in animation (disabled under prefers-reduced-motion)",
+    "icon": ".t-toast__icon — Status icon (inherits parent color, severity-neutral)",
     "content": ".t-toast__content — Message body area",
     "title": ".t-toast__title — Optional bold title line",
-    "dismiss": ".t-toast__dismiss — Close button"
+    "dismiss": ".t-toast__dismiss — Close button with minimum 44px touch target"
   },
   "variants": {
     "severity": ["info", "success", "warning", "error"],
@@ -26,39 +26,57 @@
     "uses": [
       "--t-surface-2",
       "--t-border-default",
+      "--t-border-info",
+      "--t-border-success",
+      "--t-border-warning",
+      "--t-border-danger",
       "--t-radius-lg",
+      "--t-radius-sm",
       "--t-shadow-3",
       "--t-text-sm",
       "--t-leading-normal",
       "--t-fg-primary",
+      "--t-fg-tertiary",
+      "--t-fg-success",
+      "--t-fg-warning",
+      "--t-fg-danger",
       "--t-icon-lg",
       "--t-weight-semibold",
       "--t-space-1",
-      "--t-fg-tertiary",
-      "--t-radius-sm",
+      "--t-space-2",
+      "--t-space-3",
+      "--t-space-4",
+      "--t-space-6",
       "--t-bg-secondary",
+      "--t-touch-min",
+      "--t-z-toast",
       "--t-duration-slow",
-      "--t-ease-spring"
+      "--t-ease-spring",
+      "--t-interactive-default"
     ],
-    "primitiveRefs": [
-      "--t-raw-blue-600",
-      "--t-raw-green-600",
-      "--t-raw-amber-600",
-      "--t-raw-red-600"
-    ]
+    "primitiveRefs": []
   },
   "accessibility": {
     "role": "alert or status",
     "ariaLive": "polite (info/success) or assertive (warning/error)",
-    "keyboard": "Dismiss button focusable, auto-dismiss can be paused on hover/focus",
+    "keyboard": "Dismiss button focusable with 44px touch target, auto-dismiss can be paused on hover/focus",
     "screenReader": "Toast content announced automatically via aria-live region",
     "motionReduced": "slide-in animation disabled when prefers-reduced-motion: reduce"
   },
   "knownIssues": [
-    "Toast severity variants use primitive tokens (--t-raw-*) for left border color — needs semantic token mapping",
     "No pause-on-hover behavior for auto-dismiss implemented in CSS",
-    "Multiple simultaneous toasts need stack management"
+    "Multiple simultaneous toasts stack via column-reverse but have no max-count limit",
+    "ARIA attributes (role, aria-live, aria-label on dismiss) require JS implementation — CSS cannot enforce"
+  ],
+  "futureConsiderations": [
+    "Action button variant (e.g., Undo link inside toast)",
+    "Persistent toast variant that requires explicit dismiss",
+    "Configurable auto-dismiss timing per severity level",
+    "Icon color propagation per severity modifier"
   ],
   "relatedComponents": ["badge", "dialog"],
-  "createdAt": "2026-02-25T00:00:00.000Z"
+  "createdAt": "2026-02-25T00:00:00.000Z",
+  "workshopPromotedAt": "2026-02-26T03:00:00.000Z",
+  "canopyPromotedAt": "2026-02-26T04:00:00.000Z",
+  "stablePromotedAt": "2026-02-26T04:30:00.000Z"
 }
