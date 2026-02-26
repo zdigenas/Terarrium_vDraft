@@ -1,0 +1,73 @@
+/* ============================================================
+   COMPONENT: Toast / Notification
+   Maturity: Candidate | Tier: Composite
+   Job: Surface transient feedback without interrupting flow
+   ============================================================ */
+
+.t-toast-container {
+  position: fixed;
+  bottom: var(--t-space-6);
+  right: var(--t-space-6);
+  z-index: var(--t-z-toast);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--t-space-2);
+}
+
+.t-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--t-space-3);
+
+  min-width: 320px;
+  max-width: 480px;
+  padding: var(--t-space-3) var(--t-space-4);
+
+  background-color: var(--t-surface-0);
+  border: 1px solid var(--t-border-default);
+  border-radius: var(--t-radius-lg);
+  box-shadow: var(--t-shadow-3);
+
+  font-size: var(--t-text-sm);
+  line-height: var(--t-leading-normal);
+  color: var(--t-fg-primary);
+
+  animation: t-slide-in var(--t-duration-slow) var(--t-ease-spring);
+}
+
+.t-toast--info    { border-left: 3px solid var(--t-raw-blue-600); }
+.t-toast--success { border-left: 3px solid var(--t-raw-green-600); }
+.t-toast--warning { border-left: 3px solid var(--t-raw-amber-600); }
+.t-toast--error   { border-left: 3px solid var(--t-raw-red-600); }
+
+.t-toast__icon {
+  flex-shrink: 0;
+  width: var(--t-icon-lg);
+  height: var(--t-icon-lg);
+}
+.t-toast__content {
+  flex: 1;
+  min-width: 0;
+}
+.t-toast__title {
+  font-weight: var(--t-weight-semibold);
+  margin-bottom: var(--t-space-1);
+}
+.t-toast__dismiss {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--t-fg-tertiary);
+  padding: var(--t-space-1);
+  border-radius: var(--t-radius-sm);
+}
+.t-toast__dismiss:hover {
+  color: var(--t-fg-primary);
+  background-color: var(--t-bg-secondary);
+}
+
+@keyframes t-slide-in {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}

@@ -1,0 +1,89 @@
+/* ============================================================
+   COMPONENT: Input
+   Maturity: Stable | Tier: Primitive
+   Job: Capture user text input with validation feedback
+   ============================================================ */
+
+.t-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--t-space-1);
+}
+
+.t-label {
+  font-family: var(--t-font-sans);
+  font-size: var(--t-text-sm);
+  font-weight: var(--t-weight-medium);
+  line-height: var(--t-leading-tight);
+  letter-spacing: var(--t-tracking-wide);
+  color: var(--t-fg-primary);
+}
+
+.t-label--required::after {
+  content: ' *';
+  color: var(--t-fg-danger);
+}
+
+.t-input {
+  display: block;
+  width: 100%;
+  min-height: var(--t-touch-min);
+  padding: var(--t-space-2) var(--t-space-3);
+
+  font-family: var(--t-font-sans);
+  font-size: var(--t-text-base);
+  font-weight: var(--t-weight-regular);
+  line-height: var(--t-leading-normal);
+  color: var(--t-fg-primary);
+
+  background-color: var(--t-surface-0);
+  border: 1px solid var(--t-border-default);
+  border-radius: var(--t-radius-md);
+
+  transition:
+    border-color var(--t-duration-fast) var(--t-ease-default),
+    box-shadow var(--t-duration-fast) var(--t-ease-default);
+}
+
+.t-input::placeholder {
+  color: var(--t-fg-tertiary);
+}
+
+.t-input:hover {
+  border-color: var(--t-border-strong);
+}
+
+.t-input:focus-visible {
+  border-color: var(--t-border-focus);
+  box-shadow: var(--t-focus-ring);
+}
+
+.t-input--error {
+  border-color: var(--t-border-danger);
+}
+.t-input--error:focus-visible {
+  border-color: var(--t-border-danger);
+  box-shadow: 0 0 0 2px var(--t-bg-primary), 0 0 0 4px var(--t-border-danger);
+}
+
+.t-input--success {
+  border-color: var(--t-border-success);
+}
+
+.t-input:disabled {
+  background-color: var(--t-bg-secondary);
+  color: var(--t-fg-disabled);
+  cursor: not-allowed;
+}
+
+.t-helper {
+  font-size: var(--t-text-xs);
+  line-height: var(--t-leading-normal);
+  color: var(--t-fg-secondary);
+}
+.t-helper--error {
+  color: var(--t-fg-danger);
+}
+.t-helper--success {
+  color: var(--t-fg-success);
+}

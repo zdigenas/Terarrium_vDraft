@@ -1,0 +1,166 @@
+{
+  "$schema": "agentic-ds/philosophy/v1",
+  "$description": "Foundational philosophy of the Agentic Design System — the 'why' behind every structural decision",
+
+  "core": {
+    "name": "Emergent Functional Design",
+    "thesis": "A design system exists to get a job done. It emerges from a need for repeatable solutions, not from top-down specification. We cannot know what specific components we need until we start building with the system. Therefore, the system must be designed to discover its own shape through use — not predict it in advance.",
+    "origin": "This philosophy is grounded in the Jobs to Be Done (JTBD) framework, adapted specifically for design system architecture."
+  },
+
+  "jobsToBeDone": {
+    "$description": "Applying the JTBD framework to design systems themselves — treating the system as a product that its consumers (designers, developers, product teams) hire to do a job.",
+
+    "primaryJob": "Enable teams to build consistent, high-quality interfaces repeatably and efficiently, without reinventing solutions for problems the system has already solved.",
+
+    "dimensions": {
+      "functional": {
+        "label": "Functional Dimension",
+        "priority": "primary",
+        "description": "The functional job is the core reason anyone reaches for a design system. It answers: 'Does this component do what I need it to do?' Functional completeness means a component handles its use case correctly, accessibly, and performantly. This is the non-negotiable foundation.",
+        "examples": [
+          "A Button submits a form when clicked",
+          "An Input captures and validates user text",
+          "A Dialog focuses attention and traps keyboard navigation",
+          "A DataTable sorts, filters, and paginates records"
+        ],
+        "designPrinciple": "Function first, always. A component that looks beautiful but doesn't do its job is a liability. A component that does its job but looks rough is still useful. Prioritize the functional dimension in every design decision."
+      },
+
+      "emotional": {
+        "label": "Emotional Dimension",
+        "priority": "secondary — but not absent",
+        "description": "Traditional JTBD gives equal weight to emotional jobs ('How does it make me feel?'). In design systems, the emotional dimension is real but subordinate. A design system rarely fails because it didn't pull on heartstrings. However, the emotional dimension surfaces in trust and confidence: when developers trust the system, they adopt it. When designers feel it respects their craft, they contribute to it. Emotion lives in the quality of the experience, not in the components themselves.",
+        "examples": [
+          "Developer confidence: 'I trust this component handles edge cases'",
+          "Designer respect: 'This system doesn't fight my creative intent'",
+          "Team morale: 'We ship faster because the hard parts are solved'"
+        ],
+        "designPrinciple": "Emotional resonance is earned through functional excellence. Don't design for feelings — design for competence, and the feelings follow."
+      },
+
+      "consistency": {
+        "label": "The Third Dimension: Consistency as Affordance",
+        "priority": "emergent — bridges functional and emotional",
+        "description": "This is the insight that traditional JTBD doesn't fully capture for design systems. There's a dimension that isn't purely functional (it doesn't 'do' anything new) and isn't purely emotional (it isn't about feelings) — it's about pattern recognition and affordance. When I look at a button, I know it's a button. I know I can tap it. I don't need to read the label to understand that this element is interactive and will give me something when I press it. This consistency of visual language — the ability to move from point A to point B using learned patterns — is the unique value proposition of a design system. It's the reason the system exists beyond just reusable code.",
+        "subDimensions": {
+          "interactionAffordance": {
+            "description": "A user can identify what an element does just by looking at it, without reading text or prompts. A button looks tappable. An input looks writable. A card looks navigable.",
+            "principle": "Every component must carry its affordance visually. If a user can't tell what to do with it at a glance, the design has failed."
+          },
+          "patternContinuity": {
+            "description": "The patterns a user learns in one part of the product transfer to every other part. The mental model is portable. Navigation works the same everywhere. Forms behave the same everywhere. Feedback appears the same everywhere.",
+            "principle": "Consistency is not about making things look the same — it's about making learned behavior transferable."
+          },
+          "brandCoherence": {
+            "description": "The visual system creates a unified identity. Components don't just function consistently — they feel like they belong to the same family. This is where the design system intersects with brand.",
+            "principle": "Brand coherence is a byproduct of systematic consistency, not a goal applied on top of it."
+          }
+        },
+        "designPrinciple": "Consistency is the bridge between function and emotion. It's what makes a collection of components into a system. Without it, you have a component library. With it, you have a design language."
+      }
+    },
+
+    "priorityModel": {
+      "description": "When dimensions conflict, this is the priority order:",
+      "order": [
+        {
+          "rank": 1,
+          "dimension": "Functional",
+          "rationale": "A component must work correctly. Nothing else matters if it doesn't."
+        },
+        {
+          "rank": 2,
+          "dimension": "Consistency (Affordance)",
+          "rationale": "A component must be recognizable and behave predictably within the system."
+        },
+        {
+          "rank": 3,
+          "dimension": "Emotional",
+          "rationale": "A component should inspire confidence and feel crafted, but never at the expense of function or consistency."
+        }
+      ]
+    }
+  },
+
+  "emergentDiscovery": {
+    "$description": "The principle that the design system discovers its own shape through use",
+
+    "thesis": "We cannot know what specific components the system needs until we start building with it. The system must be structured to evolve — to absorb new patterns as they emerge from real product work, and to retire patterns that don't earn their keep.",
+
+    "principles": {
+      "buildToDiscover": {
+        "label": "Build to Discover",
+        "description": "Don't try to predict every component upfront. Start with a minimal token system and a few core primitives. Let product teams build with them. The gaps they encounter are the system's roadmap.",
+        "implication": "The Draft → Candidate → Stable lifecycle exists specifically to support this. Drafts are hypotheses. Candidates are experiments. Stable components are proven solutions."
+      },
+      "repeatabilityDriven": {
+        "label": "Repeatability Drives Inclusion",
+        "description": "A pattern earns its place in the design system by proving it's needed more than once. If a solution is used by one team in one context, it's a product decision. If it's needed by two or more teams, it's a system candidate.",
+        "implication": "The validation phase (requiring 2+ product team integrations) directly enforces this principle. Components must prove repeatability before promotion."
+      },
+      "specificsEmergeFromGenerals": {
+        "label": "Specifics Emerge from Generals",
+        "description": "The system starts with general-purpose building blocks (a Button, an Input) and evolves toward specific compositions (a FilterBar, a UserProfileCard) as real needs are validated. Don't build the specific until the general has been tested.",
+        "implication": "The three-tier taxonomy (Primitives → Composites → Patterns) reflects this: generals first, then specifics."
+      },
+      "modularity": {
+        "label": "Modular by Necessity",
+        "description": "Because the system must absorb new patterns and retire old ones, every component must be modular — composable with others, replaceable without cascading breakage, and independently versioned.",
+        "implication": "The Component Architect's role exists specifically to enforce this. Composition rules, prop API consistency, and separation of concerns are governance mandates, not suggestions."
+      }
+    },
+
+    "antiPatterns": [
+      {
+        "name": "The Crystal Ball",
+        "description": "Trying to predict every component the system will ever need before building anything. This leads to over-engineering, unused components, and a system that serves its own architecture instead of its consumers.",
+        "remedy": "Start small. Build to discover. Let product needs drive the roadmap."
+      },
+      {
+        "name": "The Kitchen Sink",
+        "description": "Adding every component any team has ever built, without validating repeatability. This leads to bloat, inconsistency, and maintenance burden.",
+        "remedy": "Require 2+ team validation before promotion. Deprecate what isn't earning its keep."
+      },
+      {
+        "name": "The Aesthetic Trap",
+        "description": "Prioritizing visual polish over functional completeness. A beautiful button that doesn't handle keyboard navigation is worse than an ugly one that does.",
+        "remedy": "Function first. Accessibility Guardian has absolute veto. Visual refinement is a polish step, not the foundation."
+      },
+      {
+        "name": "The Consistency Fetish",
+        "description": "Enforcing visual sameness at the expense of appropriate variation. Not every product surface needs the same density, the same color temperature, or the same interaction speed.",
+        "remedy": "Consistency means learned behavior transfers. It doesn't mean everything looks identical. The token system supports theming and variation within guardrails."
+      }
+    ]
+  },
+
+  "governanceImplication": {
+    "description": "This philosophy directly shapes governance decisions:",
+    "rules": [
+      "When evaluating a new component proposal, the first question is always: 'What job does this component do?' (Functional)",
+      "The second question is: 'Can a user tell what this is and how to use it at a glance?' (Consistency/Affordance)",
+      "The third question is: 'Does this feel like it belongs in the system?' (Emotional/Brand)",
+      "If a component fails the first question, it's rejected regardless of how good it looks",
+      "If a component fails the second question, it needs redesign regardless of how well it functions in isolation",
+      "If a component fails the third question, it gets a token review — the issue is probably in the tokens, not the component"
+    ]
+  },
+
+  "moltPitEcology": {
+    "$description": "The Molt Pit extends the emergent philosophy into a living terrarium ecosystem model",
+
+    "thesis": "The design system is a living terrarium, not a factory. Ideas are organisms that cross-pollinate, combine, and evolve. The governance agents are species within the ecosystem — each with a niche, each interdependent. The human gardener tends biodiversity and prevents monoculture.",
+
+    "keyPrinciples": {
+      "strongestIdeaFlourishes": "In the Canopy, the idea with the deepest roots flourishes regardless of who proposed it. Agent credibility (h-index) informs nutrient flow but never prevents the strongest idea from thriving.",
+      "protectDelicateIdeas": "Jony Ive's insight: the most transformative ideas are fragile seedlings. They're weird, not yet robust, easily damaged. The Nursery stratosphere exists to protect them under glass until they're hardy enough to flourish in open sunlight.",
+      "convergenceIsTheEnemy": "H-index creates convergence. Convergence stifles germination. The stratosphere system deliberately attenuates nutrient flow in early stages to prevent premature calcification from choking off breakthrough ideas.",
+      "nothingTrulyDies": "Ideas that don't flourish are seed-vaulted, not killed. The Seed Vault is a living bank of dormant potential. Seasons change. Ideas that were ahead of their time sprout anew when conditions shift.",
+      "decoupleToMultiply": "When an idea flourishes across multiple domains, it must be decoupled from its origin and reframed as a general-purpose solution. This is how the system compounds nourishment: one idea, many gardens thriving.",
+      "builderAndOptimizer": "Cultivation and curation are not opposing forces — they're complementary modes that every agent must practice. In early stages they're fused. In later stages they separate. In the final synthesis, the strongest ideas integrate both."
+    },
+
+    "connectionToJTBD": "The Molt Pit operationalizes the JTBD philosophy. The Nursery asks 'What's the Job?' The Workshop asks 'What ideas address the Job?' The Canopy asks 'Which idea does the Job best, with deepest roots?' The three JTBD dimensions (Functional, Affordance, Emotional) are the evaluation criteria that sharpen as ideas progress through the stratospheres."
+  }
+}

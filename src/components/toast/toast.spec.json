@@ -1,0 +1,64 @@
+{
+  "name": "Toast",
+  "id": "toast",
+  "type": "composite",
+  "maturity": "candidate",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Provide non-blocking feedback about system actions (success, error, warning, info) that auto-dismisses without interrupting the user's workflow.",
+    "affordance": "Recognizable notification pattern — appears at screen edge, contains icon + message + optional dismiss action. Users immediately understand this is transient feedback.",
+    "emotional": "Confirms the system responded to their action. Reduces anxiety about whether an operation succeeded."
+  },
+  "anatomy": {
+    "container": ".t-toast-container — Fixed position container at bottom-right",
+    "toast": ".t-toast — Individual notification with slide-in animation",
+    "icon": ".t-toast__icon — Status icon (info/success/warning/error)",
+    "content": ".t-toast__content — Message body area",
+    "title": ".t-toast__title — Optional bold title line",
+    "dismiss": ".t-toast__dismiss — Close button"
+  },
+  "variants": {
+    "severity": ["info", "success", "warning", "error"],
+    "autoDismiss": true,
+    "dismissTimeout": "5000ms"
+  },
+  "tokens": {
+    "uses": [
+      "--t-surface-2",
+      "--t-border-default",
+      "--t-radius-lg",
+      "--t-shadow-3",
+      "--t-text-sm",
+      "--t-leading-normal",
+      "--t-fg-primary",
+      "--t-icon-lg",
+      "--t-weight-semibold",
+      "--t-space-1",
+      "--t-fg-tertiary",
+      "--t-radius-sm",
+      "--t-bg-secondary",
+      "--t-duration-slow",
+      "--t-ease-spring"
+    ],
+    "primitiveRefs": [
+      "--t-raw-blue-600",
+      "--t-raw-green-600",
+      "--t-raw-amber-600",
+      "--t-raw-red-600"
+    ]
+  },
+  "accessibility": {
+    "role": "alert or status",
+    "ariaLive": "polite (info/success) or assertive (warning/error)",
+    "keyboard": "Dismiss button focusable, auto-dismiss can be paused on hover/focus",
+    "screenReader": "Toast content announced automatically via aria-live region",
+    "motionReduced": "slide-in animation disabled when prefers-reduced-motion: reduce"
+  },
+  "knownIssues": [
+    "Toast severity variants use primitive tokens (--t-raw-*) for left border color — needs semantic token mapping",
+    "No pause-on-hover behavior for auto-dismiss implemented in CSS",
+    "Multiple simultaneous toasts need stack management"
+  ],
+  "relatedComponents": ["badge", "dialog"],
+  "createdAt": "2026-02-25T00:00:00.000Z"
+}

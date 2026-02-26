@@ -1,0 +1,60 @@
+/* ============================================================
+   COMPONENT: Tabs
+   Maturity: Candidate | Tier: Composite
+   Job: Organize content into switchable views
+   ============================================================ */
+
+.t-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.t-tab-list {
+  display: flex;
+  border-bottom: 1px solid var(--t-border-default);
+  gap: 0;
+  overflow-x: auto;
+}
+
+.t-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--t-space-2);
+
+  padding: var(--t-space-3) var(--t-space-4);
+  min-height: var(--t-touch-min);
+
+  font-family: var(--t-font-sans);
+  font-size: var(--t-text-sm);
+  font-weight: var(--t-weight-medium);
+  color: var(--t-fg-secondary);
+
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition:
+    color var(--t-duration-fast) var(--t-ease-default),
+    border-color var(--t-duration-fast) var(--t-ease-default);
+}
+
+.t-tab:hover {
+  color: var(--t-fg-primary);
+}
+
+.t-tab[aria-selected="true"],
+.t-tab--active {
+  color: var(--t-interactive-default);
+  border-bottom-color: var(--t-interactive-default);
+  font-weight: var(--t-weight-semibold);
+}
+
+.t-tab-panel {
+  padding: var(--t-space-4) 0;
+}
+
+.t-tab-panel[hidden] {
+  display: none;
+}

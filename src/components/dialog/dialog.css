@@ -1,0 +1,69 @@
+/* ============================================================
+   COMPONENT: Dialog
+   Maturity: Candidate | Tier: Composite
+   Job: Focus attention, capture decisions, trap keyboard
+   ============================================================ */
+
+.t-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 40%);
+  backdrop-filter: blur(4px);
+  z-index: var(--t-z-modal);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--t-space-4);
+
+  animation: t-fade-in var(--t-duration-normal) var(--t-ease-entrance);
+}
+
+.t-dialog {
+  background-color: var(--t-surface-0);
+  border-radius: var(--t-radius-xl);
+  box-shadow: var(--t-shadow-4);
+
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+
+  animation: t-scale-in var(--t-duration-slow) var(--t-ease-spring);
+}
+
+.t-dialog__header {
+  padding: var(--t-space-6) var(--t-space-6) var(--t-space-2);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--t-space-4);
+}
+.t-dialog__title {
+  font-size: var(--t-text-lg);
+  font-weight: var(--t-weight-semibold);
+  line-height: var(--t-leading-tight);
+  color: var(--t-fg-primary);
+}
+.t-dialog__body {
+  padding: var(--t-space-2) var(--t-space-6);
+  color: var(--t-fg-secondary);
+  font-size: var(--t-text-base);
+  line-height: var(--t-leading-normal);
+}
+.t-dialog__footer {
+  padding: var(--t-space-4) var(--t-space-6) var(--t-space-6);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--t-space-2);
+}
+
+@keyframes t-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes t-scale-in {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}

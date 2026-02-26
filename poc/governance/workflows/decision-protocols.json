@@ -1,0 +1,190 @@
+{
+  "$schema": "agentic-ds/governance/decision-protocols/v1",
+  "$description": "Human-in-the-loop decision protocols, escalation paths, and RACI matrices for the Agentic Design System",
+
+  "decisionFramework": {
+    "philosophy": "Every decision has a clear owner, a defined process, and an escalation path. No decision is final until the appropriate human has signed off. Speed matters — time-box everything.",
+
+    "decisionTypes": {
+      "standard": {
+        "description": "Routine decisions within a single agent's domain",
+        "examples": ["Adding a new token value", "Fixing documentation", "Minor component tweak"],
+        "process": "Single agent review → approve/reject → log decision",
+        "timeBox": "3 business days",
+        "escalation": "If no response within time-box → auto-escalate to Design System Lead"
+      },
+      "cross-domain": {
+        "description": "Decisions that span multiple agents' areas of expertise",
+        "examples": ["New component proposal", "Token restructuring", "Accessibility pattern change"],
+        "process": "All relevant agents review in parallel → collect votes → consensus or escalate",
+        "timeBox": "1 week for all reviews",
+        "escalation": "If agents disagree → Design System Lead mediates"
+      },
+      "breaking": {
+        "description": "Decisions that affect existing consumers",
+        "examples": ["Removing a component", "Renaming tokens", "Changing component API"],
+        "process": "RFC → impact assessment → all agents + product liaisons → Design System Lead approval",
+        "timeBox": "2 weeks minimum review period",
+        "escalation": "If Product Liaison raises blocking concern → Steering Committee"
+      },
+      "emergency": {
+        "description": "Critical issues requiring immediate action (accessibility failures, security concerns)",
+        "examples": ["Component fails accessibility audit in production", "Token produces invisible text"],
+        "process": "Any agent can flag → immediate fix deployed → retrospective review within 1 week",
+        "timeBox": "24 hours for fix, 1 week for review",
+        "escalation": "Design System Lead notified immediately"
+      }
+    }
+  },
+
+  "raciMatrix": {
+    "$description": "R=Responsible (does the work), A=Accountable (final decision), C=Consulted, I=Informed",
+    "activities": {
+      "newTokenAddition": {
+        "tokenSteward": "R/A",
+        "accessibilityGuardian": "C",
+        "patternLibrarian": "I",
+        "componentArchitect": "I",
+        "productLiaison": "I",
+        "designSystemLead": "I"
+      },
+      "newComponentProposal": {
+        "tokenSteward": "C",
+        "accessibilityGuardian": "C",
+        "patternLibrarian": "R",
+        "componentArchitect": "C",
+        "productLiaison": "R",
+        "designSystemLead": "A"
+      },
+      "componentSpecReview": {
+        "tokenSteward": "R",
+        "accessibilityGuardian": "R",
+        "patternLibrarian": "R",
+        "componentArchitect": "R",
+        "productLiaison": "C",
+        "designSystemLead": "I"
+      },
+      "stablePromotion": {
+        "tokenSteward": "C",
+        "accessibilityGuardian": "R (veto power)",
+        "patternLibrarian": "R",
+        "componentArchitect": "R",
+        "productLiaison": "C",
+        "designSystemLead": "A"
+      },
+      "breakingChange": {
+        "tokenSteward": "C",
+        "accessibilityGuardian": "C",
+        "patternLibrarian": "C",
+        "componentArchitect": "R",
+        "productLiaison": "R (impact assessment)",
+        "designSystemLead": "A"
+      },
+      "deprecation": {
+        "tokenSteward": "C",
+        "accessibilityGuardian": "I",
+        "patternLibrarian": "R (migration guide)",
+        "componentArchitect": "R (removal plan)",
+        "productLiaison": "R (impact assessment)",
+        "designSystemLead": "A"
+      },
+      "emergencyFix": {
+        "tokenSteward": "C",
+        "accessibilityGuardian": "R (if a11y-related)",
+        "patternLibrarian": "I",
+        "componentArchitect": "R (if structural)",
+        "productLiaison": "I",
+        "designSystemLead": "A"
+      }
+    }
+  },
+
+  "escalationPaths": {
+    "level1": {
+      "name": "Agent-Level Resolution",
+      "description": "Direct discussion between the involved agents",
+      "timeBox": "3 business days",
+      "resolution": "Agents discuss, one yields or they find a compromise",
+      "failureCondition": "No agreement after time-box expires"
+    },
+    "level2": {
+      "name": "Design System Lead Mediation",
+      "description": "Lead reviews both positions and makes a binding decision",
+      "timeBox": "3 business days",
+      "resolution": "Lead decides, documents rationale, dissent is recorded",
+      "failureCondition": "Lead's decision is contested by a Product Liaison citing major business impact"
+    },
+    "level3": {
+      "name": "Steering Committee Review",
+      "description": "Executive body reviews the dispute with full context",
+      "timeBox": "2 weeks (next scheduled meeting or emergency session)",
+      "resolution": "Committee decides by majority vote, decision is final",
+      "failureCondition": "N/A — this is the final level"
+    }
+  },
+
+  "humanInTheLoopGates": {
+    "$description": "Specific points where automated processes MUST pause for human review",
+
+    "gates": {
+      "draftToCandidate": {
+        "description": "Before a component leaves Draft, all specialist agents must manually review and sign off",
+        "requiredApprovals": ["tokenSteward", "accessibilityGuardian", "componentArchitect"],
+        "automatable": false,
+        "rationale": "Early-stage quality gate prevents costly rework later"
+      },
+      "candidateToStable": {
+        "description": "Before a component enters production, the full governance team must sign off",
+        "requiredApprovals": ["tokenSteward", "accessibilityGuardian", "patternLibrarian", "componentArchitect", "designSystemLead"],
+        "automatable": false,
+        "rationale": "Production readiness is a human judgment call"
+      },
+      "breakingChangeApproval": {
+        "description": "Before any breaking change is released, Product Liaisons must confirm migration readiness",
+        "requiredApprovals": ["designSystemLead", "productLiaison (all affected areas)"],
+        "automatable": false,
+        "rationale": "Breaking changes affect real users — human assessment of readiness is essential"
+      },
+      "deprecationStart": {
+        "description": "Before deprecation begins, all affected product teams must acknowledge the timeline",
+        "requiredApprovals": ["designSystemLead", "productLiaison (all affected areas)"],
+        "automatable": false,
+        "rationale": "Deprecation without consumer awareness creates tech debt and friction"
+      },
+      "emergencyBypass": {
+        "description": "Emergency fixes can ship without full review but MUST have retrospective review within 1 week",
+        "requiredApprovals": ["designSystemLead (immediate)", "all relevant agents (retrospective)"],
+        "automatable": "fix only — review is manual",
+        "rationale": "Speed for critical issues, accountability through retrospective"
+      }
+    }
+  },
+
+  "votingProtocol": {
+    "quorum": "All relevant agents must vote (abstentions count toward quorum but not toward approval)",
+    "approvalThreshold": "Unanimous for stable promotions; majority for all other decisions",
+    "vetoRights": {
+      "accessibilityGuardian": "Absolute veto on accessibility grounds — cannot be overridden below Steering Committee level",
+      "designSystemLead": "Veto on any decision with written rationale"
+    },
+    "tieBreaking": "Design System Lead casts deciding vote",
+    "recordKeeping": "All votes, rationale, and dissent logged in the decision log"
+  },
+
+  "communicationProtocol": {
+    "decisionAnnouncements": {
+      "channel": "Dedicated #design-system-governance channel",
+      "format": "Decision ID | Type | Summary | Outcome | Rationale | Dissent (if any)",
+      "timing": "Within 24 hours of decision"
+    },
+    "weeklyDigest": {
+      "audience": "All product teams",
+      "content": "New/changed components, upcoming deprecations, governance decisions",
+      "frequency": "Weekly (Monday)"
+    },
+    "rfcNotifications": {
+      "audience": "All agents + affected product liaisons",
+      "timing": "Immediately upon RFC submission"
+    }
+  }
+}

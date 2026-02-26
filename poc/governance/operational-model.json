@@ -1,0 +1,230 @@
+{
+  "$schema": "agentic-ds/governance/operational-model/v1",
+  "$description": "Operational model for the Agentic Design System — how agents observe, reflect, plan, and act within the terrarium. Informed by ZeroClaw runtime principles, ORPA cognitive cycles, and multi-agent orchestration patterns.",
+
+  "core": {
+    "name": "Terrarium Operations",
+    "thesis": "Agents in the design system operate as a multi-agent system (MAS) — specialized organisms in a shared terrarium, each with a distinct niche. The operational model defines how they perceive, reason, and act. Control is distributed: no single agent orchestrates all others. Instead, the system self-organizes through protocol, with the human gardener setting constraints and step budgets.",
+    "inspirations": [
+      "ZeroClaw: trait-driven modularity, single-purpose modules, inward dependency direction",
+      "ORPA cognitive cycle: Observation → Reflection → Planning → Action",
+      "Multi-Agent Systems: hierarchical supervision with specialized workers",
+      "Parametric design intent: hard guardrails that preserve structural integrity"
+    ]
+  },
+
+  "cognitiveCycle": {
+    "$description": "Every agent action follows the ORPA cycle — adapted for design system governance",
+    "name": "ORPA — Observe, Reflect, Plan, Act",
+
+    "phases": {
+      "observe": {
+        "label": "Observation",
+        "description": "The agent perceives its environment — incoming proposals, token changes, component specs, product team feedback, ecosystem health signals.",
+        "inputs": [
+          "New RFCs and component proposals entering the Nursery",
+          "Token change requests and theme additions",
+          "Product team integration feedback and adoption metrics",
+          "Cross-pollination signals from other agents' work",
+          "Nutrient flow (h-index) shifts across the terrarium",
+          "Quarterly health metrics and ecosystem vitals"
+        ],
+        "principle": "Observe broadly before acting narrowly. An agent that only sees its domain misses cross-pollination opportunities."
+      },
+      "reflect": {
+        "label": "Reflection",
+        "description": "The agent reasons about what it observed — consulting its domain expertise, the system's philosophy, precedent decisions, and the current ecological zone (Nursery/Workshop/Canopy).",
+        "activities": [
+          "Check philosophical alignment: Does this serve a functional job? Is affordance preserved?",
+          "Consult precedent: Have we seen this pattern before? What happened?",
+          "Assess ecological zone: Am I in Builder or Curator mode right now?",
+          "Evaluate nutrient flow: Who has contributed to this line of thinking?",
+          "Consider cross-domain impact: Does this affect other agents' territories?"
+        ],
+        "principle": "Reflection is not delay — it's the immune system of good decisions. Skip it and the terrarium gets weeds."
+      },
+      "plan": {
+        "label": "Planning",
+        "description": "The agent formulates a response — a review, a counter-proposal, a synthesis, or a vote — within the constraints of its role and the current ecological zone.",
+        "constraints": [
+          "Step budget: No agent may take more actions than its role permits per cycle",
+          "Ecological zone rules: Nursery agents build only; Canopy agents may curate fully",
+          "Authority boundaries: Agents cannot act outside their RACI assignments",
+          "Design intent preservation: Plans must not violate token hierarchy or accessibility requirements"
+        ],
+        "principle": "Plan within guardrails. The most creative solutions grow within constraints, not despite them."
+      },
+      "act": {
+        "label": "Action",
+        "description": "The agent executes — submitting a review, proposing a change, casting a vote, flagging a cross-pollination opportunity, or escalating to the gardener.",
+        "actionTypes": [
+          "Review: Approve, request-changes, or defer with rationale",
+          "Propose: Submit an alternative or synthesis",
+          "Cite: Reference another agent's prior decision (nutrient flow)",
+          "Cross-pollinate: Flag an idea as serving multiple domains",
+          "Escalate: Invoke gardener oversight when stuck or in disagreement",
+          "Archive: Recommend seed-vaulting with preservation context"
+        ],
+        "principle": "Every action must be traceable. No decision exists without a rationale. The terrarium remembers."
+      }
+    },
+
+    "feedbackLoop": {
+      "name": "The Data Flywheel",
+      "description": "After acting, the outcome feeds back into the next observation cycle. Did the component succeed in validation? Did product teams adopt it? Did accessibility issues emerge? This continuous loop is how the terrarium self-improves.",
+      "metrics": [
+        "Adoption rate after promotion",
+        "Bug/issue volume post-stable",
+        "Time-to-resolution for flagged issues",
+        "Cross-pollination success rate",
+        "Nutrient flow accuracy (were cited decisions actually foundational?)"
+      ]
+    }
+  },
+
+  "orchestrationPatterns": {
+    "$description": "How agents coordinate — drawn from multi-agent system patterns",
+
+    "hierarchicalSupervision": {
+      "description": "The Design System Lead acts as a supervisor agent, delegating work to specialist workers based on the nature of the proposal. This keeps each agent's context clean and focused.",
+      "pattern": "Supervisor → Workers",
+      "example": "New component RFC arrives → Design System Lead routes token review to Token Steward, a11y review to Accessibility Guardian, architecture review to Component Architect — in parallel.",
+      "benefit": "Parallel evaluation reduces time-to-decision. Each agent operates within its own context window."
+    },
+    "chainedOrchestration": {
+      "description": "For sequential dependencies, agents hand off work in a chain. The output of one agent's review becomes the input for the next.",
+      "pattern": "Agent A → Agent B → Agent C",
+      "example": "Token Steward approves token mapping → Component Architect reviews anatomy (which depends on token structure) → Accessibility Guardian audits the composed result.",
+      "benefit": "Later agents can build on earlier decisions rather than working in isolation."
+    },
+    "parallelOrchestration": {
+      "description": "Independent reviews run concurrently. Results are aggregated for the governance decision.",
+      "pattern": "Agent A ‖ Agent B ‖ Agent C → Aggregation",
+      "example": "During specification review, Token Steward, Accessibility Guardian, and Component Architect all review simultaneously, then their results are compiled by Pattern Librarian.",
+      "benefit": "Minimizes wall-clock time for multi-agent reviews."
+    },
+    "crossPollinationBroadcast": {
+      "description": "When any agent identifies a cross-domain opportunity, it broadcasts to all agents. This is the terrarium's most powerful growth mechanism.",
+      "pattern": "Any Agent → Broadcast → All Agents",
+      "example": "Product Liaison notices that a filtering pattern proposed for DataTable also solves search-within-dropdown. Broadcast triggers priority review.",
+      "benefit": "Prevents siloed thinking. The terrarium's biodiversity depends on ideas flowing between domains."
+    }
+  },
+
+  "operationalModes": {
+    "$description": "Two operating models, matched from ZeroClaw and agentic workflow research",
+
+    "workflowMode": {
+      "name": "Deterministic Workflow",
+      "description": "For standard governance operations — component reviews, token approvals, lifecycle transitions — agents follow a deterministic, code-driven workflow. The path is known in advance. Steps are defined. Outcomes are predictable.",
+      "characteristics": [
+        "Predefined execution paths per the component lifecycle",
+        "RACI matrix governs who does what",
+        "Failures are traceable to specific steps",
+        "Testing mirrors standard software practices",
+        "The train runs on tracks"
+      ],
+      "applicability": "Standard reviews, specification phase, stable promotions, deprecations"
+    },
+    "autonomousMode": {
+      "name": "Goal-Directed Exploration",
+      "description": "For novel situations — entirely new component categories, cross-domain compositions, ecosystem disruptions — agents shift to autonomous mode. The gardener provides a goal and constraints (step budget), but agents determine their own path through the ORPA cycle.",
+      "characteristics": [
+        "Goal-driven, not path-driven",
+        "Agents determine their own workflow at runtime",
+        "Step budgets limit autonomous hops",
+        "Active authorization required for high-impact decisions",
+        "The explorer navigates the wilderness"
+      ],
+      "applicability": "Nursery ideation, cross-pollination exploration, quarterly health reviews, ecosystem disturbances",
+      "guardrails": {
+        "stepBudget": "Maximum number of autonomous actions an agent can take before requiring gardener check-in",
+        "designIntentPreservation": "Even in autonomous mode, agents cannot violate: token hierarchy, accessibility requirements, or the JTBD priority model (Functional > Affordance > Emotional)",
+        "gardenersHalt": "The gardener can pause or redirect any autonomous exploration at any time",
+        "gracefulDegradation": "If an agent's autonomous exploration fails or stalls, the system falls back to deterministic workflow mode"
+      }
+    }
+  },
+
+  "runtimePrinciples": {
+    "$description": "Adapted from ZeroClaw's engineering principles for agent behavior",
+
+    "clarityOverCleverness": {
+      "label": "Clarity Over Cleverness",
+      "description": "Agent decisions should be straightforward and traceable. Prefer explicit reasoning over clever meta-decisions. Every rationale should be readable by any team member.",
+      "origin": "ZeroClaw"
+    },
+    "noSpeculativeAbstractions": {
+      "label": "No Speculative Abstractions",
+      "description": "Don't add governance processes, review gates, or agent roles without a concrete accepted use case. Don't introduce future-proof abstractions without at least one current need.",
+      "origin": "ZeroClaw"
+    },
+    "singlePurposeAgents": {
+      "label": "Single-Purpose Agents",
+      "description": "Each agent has a clear, bounded domain. Token Steward handles tokens. Accessibility Guardian handles a11y. They don't drift into each other's territory. Specialization creates depth; generalization creates confusion.",
+      "origin": "ZeroClaw"
+    },
+    "inwardDependencyDirection": {
+      "label": "Inward Dependency Direction",
+      "description": "Agent decisions depend on core contracts (philosophy, token hierarchy, accessibility standards) — not on other agents' internal processes. Agents are loosely coupled, tightly aligned.",
+      "origin": "ZeroClaw"
+    },
+    "traitDrivenExtensibility": {
+      "label": "Trait-Driven Extensibility",
+      "description": "New agent roles can be added by implementing the standard agent interface: defined responsibilities, decision authority, review checklist, metrics. The system is plugin-oriented — swap agents without breaking governance.",
+      "origin": "ZeroClaw"
+    },
+    "durableStateManagement": {
+      "label": "Durable State Management",
+      "description": "The terrarium maintains continuity across seasons. Short-term memory (current sprint context) and long-term memory (historical decisions, nutrient flow, precedent library) ensure agents never lose institutional knowledge.",
+      "origin": "Agentic MAS research"
+    }
+  },
+
+  "invisibleIntelligence": {
+    "$description": "The design system's agentic layer should be ambient and invisible to consumers",
+
+    "thesis": "Success is measured not by how visible the governance is, but by how invisible it becomes. Product teams should experience the design system as a cohesive, effortless toolkit — not as a bureaucracy. The agents manage complexity in the background so consumers experience simplicity in the foreground.",
+
+    "signaling": {
+      "description": "When agents do need to communicate with consumers, they use a standardized vocabulary of confidence signals.",
+      "signals": {
+        "stable": "This component is proven, tested by 2+ teams, and fully governed. Use with confidence.",
+        "candidate": "This component is under active validation. It works, but its API may change. Use with awareness.",
+        "draft": "This component is a hypothesis. It addresses a real need but hasn't been validated beyond its origin team. Use for prototyping only.",
+        "deprecated": "This component is being composted. A migration path exists. Plan your transition."
+      }
+    },
+
+    "trustBuilding": {
+      "description": "The terrarium builds trust through consistent, reliable behavior — not through transparency of its internal complexity.",
+      "mechanisms": [
+        "Components that just work: accessibility, theming, responsiveness built in",
+        "Clear maturity signals: consumers always know what stage a component is in",
+        "Predictable evolution: the lifecycle is public and follows the same path for every component",
+        "Graceful degradation: if the system can't serve a need, it fails helpfully, not silently"
+      ]
+    }
+  },
+
+  "continuousAdaptation": {
+    "$description": "The data flywheel — how the terrarium evolves based on real-world outcomes",
+
+    "flywheel": {
+      "observe": "Collect adoption metrics, bug reports, accessibility audit results, product team satisfaction",
+      "evaluate": "Quarterly health reviews assess whether stable components are still earning their keep",
+      "adapt": "Underperforming components enter review. Thriving patterns get elevated. Emerging needs surface new Nursery candidates.",
+      "learn": "Historical patterns inform future decisions. The nutrient flow system captures which agent decisions proved foundational."
+    },
+
+    "seasonalDisturbances": {
+      "description": "The gardener periodically disturbs the ecosystem to prevent stagnation. This is not destruction — it's controlled renewal.",
+      "triggers": [
+        "Quarterly: Pattern Librarian reviews Seed Vault for ideas whose season has come",
+        "Biannual: Design System Lead challenges assumptions about stable components",
+        "Annual: Full ecosystem health assessment with stakeholder input",
+        "Ad-hoc: Technology shifts, acquisition events, or major product pivots"
+      ]
+    }
+  }
+}

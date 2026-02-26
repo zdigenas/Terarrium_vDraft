@@ -1,0 +1,21 @@
+{
+  "name": "terarrium",
+  "version": "0.1.0",
+  "description": "A self-governing agentic design system",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint:css": "stylelint 'src/**/*.css'",
+    "lint:js": "eslint 'src/**/*.mjs' 'scripts/**/*.mjs'",
+    "lint": "npm run lint:css && npm run lint:js",
+    "serve": "http-server src/library -p 3000 -c-1 --cors",
+    "test": "node --test src/**/*.test.mjs"
+  },
+  "devDependencies": {
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^37.0.0",
+    "stylelint-selector-bem-pattern": "^4.0.0",
+    "eslint": "^9.0.0",
+    "http-server": "^14.0.0"
+  }
+}

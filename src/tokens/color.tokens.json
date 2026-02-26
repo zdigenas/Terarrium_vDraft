@@ -1,0 +1,110 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Agentic Design System — Color Tokens (DTCG format)",
+  "color": {
+    "primitive": {
+      "$description": "Raw color palette — never reference directly in components",
+      "neutral": {
+        "0":   { "$value": "#FFFFFF", "$type": "color" },
+        "50":  { "$value": "#F8F9FA", "$type": "color" },
+        "100": { "$value": "#F1F3F5", "$type": "color" },
+        "200": { "$value": "#E9ECEF", "$type": "color" },
+        "300": { "$value": "#DEE2E6", "$type": "color" },
+        "400": { "$value": "#CED4DA", "$type": "color" },
+        "500": { "$value": "#ADB5BD", "$type": "color" },
+        "600": { "$value": "#868E96", "$type": "color" },
+        "700": { "$value": "#495057", "$type": "color" },
+        "800": { "$value": "#343A40", "$type": "color" },
+        "900": { "$value": "#212529", "$type": "color" },
+        "1000": { "$value": "#0D0F12", "$type": "color" }
+      },
+      "blue": {
+        "50":  { "$value": "#E7F5FF", "$type": "color" },
+        "100": { "$value": "#D0EBFF", "$type": "color" },
+        "200": { "$value": "#A5D8FF", "$type": "color" },
+        "300": { "$value": "#74C0FC", "$type": "color" },
+        "400": { "$value": "#4DABF7", "$type": "color" },
+        "500": { "$value": "#339AF0", "$type": "color" },
+        "600": { "$value": "#228BE6", "$type": "color" },
+        "700": { "$value": "#1C7ED6", "$type": "color" },
+        "800": { "$value": "#1971C2", "$type": "color" },
+        "900": { "$value": "#1864AB", "$type": "color" }
+      },
+      "red": {
+        "50":  { "$value": "#FFF5F5", "$type": "color" },
+        "100": { "$value": "#FFE3E3", "$type": "color" },
+        "200": { "$value": "#FFC9C9", "$type": "color" },
+        "300": { "$value": "#FFA8A8", "$type": "color" },
+        "400": { "$value": "#FF8787", "$type": "color" },
+        "500": { "$value": "#FF6B6B", "$type": "color" },
+        "600": { "$value": "#FA5252", "$type": "color" },
+        "700": { "$value": "#F03E3E", "$type": "color" },
+        "800": { "$value": "#E03131", "$type": "color" },
+        "900": { "$value": "#C92A2A", "$type": "color" }
+      },
+      "green": {
+        "50":  { "$value": "#EBFBEE", "$type": "color" },
+        "100": { "$value": "#D3F9D8", "$type": "color" },
+        "200": { "$value": "#B2F2BB", "$type": "color" },
+        "300": { "$value": "#8CE99A", "$type": "color" },
+        "400": { "$value": "#69DB7C", "$type": "color" },
+        "500": { "$value": "#51CF66", "$type": "color" },
+        "600": { "$value": "#40C057", "$type": "color" },
+        "700": { "$value": "#37B24D", "$type": "color" },
+        "800": { "$value": "#2F9E44", "$type": "color" },
+        "900": { "$value": "#2B8A3E", "$type": "color" }
+      },
+      "amber": {
+        "50":  { "$value": "#FFF9DB", "$type": "color" },
+        "100": { "$value": "#FFF3BF", "$type": "color" },
+        "200": { "$value": "#FFEC99", "$type": "color" },
+        "300": { "$value": "#FFE066", "$type": "color" },
+        "400": { "$value": "#FFD43B", "$type": "color" },
+        "500": { "$value": "#FCC419", "$type": "color" },
+        "600": { "$value": "#FAB005", "$type": "color" },
+        "700": { "$value": "#F59F00", "$type": "color" },
+        "800": { "$value": "#F08C00", "$type": "color" },
+        "900": { "$value": "#E67700", "$type": "color" }
+      }
+    },
+    "semantic": {
+      "$description": "Intent-based aliases — USE THESE in component specs",
+      "bg": {
+        "primary":   { "$value": "{color.primitive.neutral.0}", "$type": "color" },
+        "secondary": { "$value": "{color.primitive.neutral.50}", "$type": "color" },
+        "tertiary":  { "$value": "{color.primitive.neutral.100}", "$type": "color" },
+        "inverse":   { "$value": "{color.primitive.neutral.900}", "$type": "color" },
+        "brand":     { "$value": "{color.primitive.blue.600}", "$type": "color" },
+        "danger":    { "$value": "{color.primitive.red.50}", "$type": "color" },
+        "success":   { "$value": "{color.primitive.green.50}", "$type": "color" },
+        "warning":   { "$value": "{color.primitive.amber.50}", "$type": "color" }
+      },
+      "fg": {
+        "primary":   { "$value": "{color.primitive.neutral.900}", "$type": "color" },
+        "secondary": { "$value": "{color.primitive.neutral.600}", "$type": "color" },
+        "tertiary":  { "$value": "{color.primitive.neutral.500}", "$type": "color" },
+        "inverse":   { "$value": "{color.primitive.neutral.0}", "$type": "color" },
+        "brand":     { "$value": "{color.primitive.blue.700}", "$type": "color" },
+        "danger":    { "$value": "{color.primitive.red.700}", "$type": "color" },
+        "success":   { "$value": "{color.primitive.green.700}", "$type": "color" },
+        "warning":   { "$value": "{color.primitive.amber.800}", "$type": "color" },
+        "link":      { "$value": "{color.primitive.blue.600}", "$type": "color" },
+        "disabled":  { "$value": "{color.primitive.neutral.400}", "$type": "color" }
+      },
+      "border": {
+        "default":  { "$value": "{color.primitive.neutral.200}", "$type": "color" },
+        "strong":   { "$value": "{color.primitive.neutral.400}", "$type": "color" },
+        "brand":    { "$value": "{color.primitive.blue.600}", "$type": "color" },
+        "danger":   { "$value": "{color.primitive.red.600}", "$type": "color" },
+        "success":  { "$value": "{color.primitive.green.600}", "$type": "color" },
+        "focus":    { "$value": "{color.primitive.blue.400}", "$type": "color" }
+      },
+      "interactive": {
+        "default":  { "$value": "{color.primitive.blue.600}", "$type": "color" },
+        "hover":    { "$value": "{color.primitive.blue.700}", "$type": "color" },
+        "active":   { "$value": "{color.primitive.blue.800}", "$type": "color" },
+        "disabled": { "$value": "{color.primitive.neutral.300}", "$type": "color" }
+      }
+    }
+  }
+}

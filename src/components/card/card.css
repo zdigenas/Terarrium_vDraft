@@ -1,0 +1,56 @@
+/* ============================================================
+   COMPONENT: Card
+   Maturity: Candidate | Tier: Composite
+   Job: Group related content with clear boundaries
+   ============================================================ */
+
+.t-card {
+  background-color: var(--t-surface-0);
+  border: 1px solid var(--t-border-default);
+  border-radius: var(--t-radius-lg);
+  overflow: hidden;
+  transition:
+    box-shadow var(--t-duration-normal) var(--t-ease-default),
+    border-color var(--t-duration-normal) var(--t-ease-default);
+}
+
+/* Tonal elevation (Novel: elevation through surface color + subtle shadow) */
+.t-card--elevated {
+  background-color: var(--t-surface-1);
+  border-color: transparent;
+  box-shadow: var(--t-shadow-1);
+}
+.t-card--elevated-2 {
+  background-color: var(--t-surface-1);
+  border-color: transparent;
+  box-shadow: var(--t-shadow-2);
+}
+
+.t-card--interactive {
+  cursor: pointer;
+}
+.t-card--interactive:hover {
+  border-color: var(--t-border-strong);
+  box-shadow: var(--t-shadow-2);
+}
+.t-card--interactive:active {
+  transform: scale(0.995);
+}
+
+.t-card__header {
+  padding: var(--t-space-4) var(--t-space-4) var(--t-space-2);
+}
+.t-card__body {
+  padding: var(--t-space-2) var(--t-space-4);
+}
+.t-card__footer {
+  padding: var(--t-space-2) var(--t-space-4) var(--t-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--t-space-2);
+}
+.t-card__media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}

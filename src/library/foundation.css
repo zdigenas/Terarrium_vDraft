@@ -1,0 +1,357 @@
+/**
+ * TERARRIUM — The Agentic Design System
+ * Foundation CSS — Token-driven, accessibility-first
+ *
+ * Philosophy: Function first. Affordance second. Emotion through quality.
+ * Inspired by: IBM Carbon (token rigor), Material 3 (tonal elevation),
+ *              Apple HIG (deference + clarity), Atlassian (developer ergonomics)
+ *
+ * Novel contributions:
+ * - Variable font system (Inter Variable — weight axis 100-900, optical sizing)
+ * - Tonal surface system (elevation through color, not shadow alone)
+ * - Adaptive density (compact/default/comfortable via single token)
+ * - Agent-state signaling (maturity-aware component states)
+ * - Terrarium motion: productive + expressive + ambient categories
+ */
+
+/* ============================================================
+   LAYER 0: CSS RESET + BASELINE
+   Normalize behavior across browsers, establish sane defaults
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--t-font-sans);
+  font-size: var(--t-text-base);
+  font-weight: var(--t-weight-regular);
+  line-height: var(--t-leading-normal);
+  color: var(--t-fg-primary);
+  background-color: var(--t-bg-primary);
+}
+
+/* Variable font feature — apply axes globally */
+@supports (font-variation-settings: normal) {
+  body {
+    font-optical-sizing: var(--t-font-opsz);
+    font-variation-settings: "slnt" var(--t-font-slnt);
+  }
+}
+
+/* ============================================================
+   LAYER 1: DESIGN TOKENS AS CSS CUSTOM PROPERTIES
+   Prefix: --t- (for Terarrium)
+   Structure: --t-{category}-{property}-{variant}
+   ============================================================ */
+
+:root {
+  /* --- COLOR: Primitives (never use directly in components) --- */
+  --t-raw-neutral-0:   #FFFFFF;
+  --t-raw-neutral-50:  #F8F9FA;
+  --t-raw-neutral-100: #F1F3F5;
+  --t-raw-neutral-200: #E9ECEF;
+  --t-raw-neutral-300: #DEE2E6;
+  --t-raw-neutral-400: #CED4DA;
+  --t-raw-neutral-500: #ADB5BD;
+  --t-raw-neutral-600: #868E96;
+  --t-raw-neutral-700: #495057;
+  --t-raw-neutral-800: #343A40;
+  --t-raw-neutral-900: #212529;
+  --t-raw-neutral-1000:#0D0F12;
+
+  --t-raw-blue-50:  #E7F5FF;
+  --t-raw-blue-100: #D0EBFF;
+  --t-raw-blue-200: #A5D8FF;
+  --t-raw-blue-300: #74C0FC;
+  --t-raw-blue-400: #4DABF7;
+  --t-raw-blue-500: #339AF0;
+  --t-raw-blue-600: #228BE6;
+  --t-raw-blue-700: #1C7ED6;
+  --t-raw-blue-800: #1971C2;
+  --t-raw-blue-900: #1864AB;
+
+  --t-raw-red-50:  #FFF5F5;
+  --t-raw-red-100: #FFE3E3;
+  --t-raw-red-200: #FFC9C9;
+  --t-raw-red-300: #FFA8A8;
+  --t-raw-red-400: #FF8787;
+  --t-raw-red-500: #FF6B6B;
+  --t-raw-red-600: #FA5252;
+  --t-raw-red-700: #F03E3E;
+  --t-raw-red-800: #E03131;
+  --t-raw-red-900: #C92A2A;
+
+  --t-raw-green-50:  #EBFBEE;
+  --t-raw-green-100: #D3F9D8;
+  --t-raw-green-200: #B2F2BB;
+  --t-raw-green-300: #8CE99A;
+  --t-raw-green-400: #69DB7C;
+  --t-raw-green-500: #51CF66;
+  --t-raw-green-600: #40C057;
+  --t-raw-green-700: #37B24D;
+  --t-raw-green-800: #2F9E44;
+  --t-raw-green-900: #2B8A3E;
+
+  --t-raw-amber-50:  #FFF9DB;
+  --t-raw-amber-100: #FFF3BF;
+  --t-raw-amber-200: #FFEC99;
+  --t-raw-amber-300: #FFE066;
+  --t-raw-amber-400: #FFD43B;
+  --t-raw-amber-500: #FCC419;
+  --t-raw-amber-600: #FAB005;
+  --t-raw-amber-700: #F59F00;
+  --t-raw-amber-800: #F08C00;
+  --t-raw-amber-900: #E67700;
+
+  /* --- COLOR: Semantic (USE THESE) --- */
+  --t-bg-primary:    var(--t-raw-neutral-0);
+  --t-bg-secondary:  var(--t-raw-neutral-50);
+  --t-bg-tertiary:   var(--t-raw-neutral-100);
+  --t-bg-inverse:    var(--t-raw-neutral-900);
+  --t-bg-brand:      var(--t-raw-blue-600);
+  --t-bg-danger:     var(--t-raw-red-50);
+  --t-bg-success:    var(--t-raw-green-50);
+  --t-bg-warning:    var(--t-raw-amber-50);
+  --t-bg-info:       var(--t-raw-blue-50);
+
+  --t-fg-primary:    var(--t-raw-neutral-900);
+  --t-fg-secondary:  var(--t-raw-neutral-600);
+  --t-fg-tertiary:   var(--t-raw-neutral-500);
+  --t-fg-inverse:    var(--t-raw-neutral-0);
+  --t-fg-brand:      var(--t-raw-blue-700);
+  --t-fg-danger:     var(--t-raw-red-700);
+  --t-fg-success:    var(--t-raw-green-700);
+  --t-fg-warning:    var(--t-raw-amber-800);
+  --t-fg-link:       var(--t-raw-blue-600);
+  --t-fg-disabled:   var(--t-raw-neutral-400);
+
+  --t-border-default: var(--t-raw-neutral-200);
+  --t-border-strong:  var(--t-raw-neutral-400);
+  --t-border-brand:   var(--t-raw-blue-600);
+  --t-border-danger:  var(--t-raw-red-600);
+  --t-border-success: var(--t-raw-green-600);
+  --t-border-focus:   var(--t-raw-blue-400);
+
+  --t-interactive-default:  var(--t-raw-blue-600);
+  --t-interactive-hover:    var(--t-raw-blue-700);
+  --t-interactive-active:   var(--t-raw-blue-800);
+  --t-interactive-disabled: var(--t-raw-neutral-300);
+
+  /* --- COLOR: Tonal Surfaces (Material 3 inspired, novel implementation) --- */
+  --t-surface-0: var(--t-raw-neutral-0);
+  --t-surface-1: var(--t-raw-neutral-50);
+  --t-surface-2: var(--t-raw-neutral-100);
+  --t-surface-3: var(--t-raw-neutral-200);
+  --t-surface-4: var(--t-raw-neutral-300);
+
+  /* --- TYPOGRAPHY (Variable Font) --- */
+  --t-font-sans:  'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --t-font-mono:  'JetBrains Mono Variable', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --t-font-serif: 'Merriweather', 'Georgia', 'Times New Roman', serif;
+
+  /* Variable font axes */
+  --t-font-opsz:   auto;          /* Optical size axis (auto = matches font-size) */
+  --t-font-slnt:   0;             /* Slant axis: 0 (upright) to -10 (italic) */
+
+  --t-weight-regular:  400;
+  --t-weight-medium:   500;
+  --t-weight-semibold: 600;
+  --t-weight-bold:     700;
+
+  --t-text-xs:   0.64rem;
+  --t-text-sm:   0.8rem;
+  --t-text-base: 1rem;
+  --t-text-md:   1.25rem;
+  --t-text-lg:   1.563rem;
+  --t-text-xl:   1.953rem;
+  --t-text-2xl:  2.441rem;
+  --t-text-3xl:  3.052rem;
+  --t-text-4xl:  3.815rem;
+
+  --t-leading-tight:   1.2;
+  --t-leading-normal:  1.5;
+  --t-leading-relaxed: 1.75;
+
+  --t-tracking-tight:  -0.025em;
+  --t-tracking-normal: 0em;
+  --t-tracking-wide:   0.025em;
+  --t-tracking-wider:  0.05em;
+
+  /* --- SPACING (4px base unit) --- */
+  --t-space-0:  0px;
+  --t-space-1:  4px;
+  --t-space-2:  8px;
+  --t-space-3:  12px;
+  --t-space-4:  16px;
+  --t-space-5:  20px;
+  --t-space-6:  24px;
+  --t-space-8:  32px;
+  --t-space-10: 40px;
+  --t-space-12: 48px;
+  --t-space-16: 64px;
+  --t-space-20: 80px;
+
+  /* --- SIZING --- */
+  --t-icon-sm: 16px;
+  --t-icon-md: 20px;
+  --t-icon-lg: 24px;
+  --t-icon-xl: 32px;
+
+  --t-avatar-xs: 24px;
+  --t-avatar-sm: 32px;
+  --t-avatar-md: 40px;
+  --t-avatar-lg: 48px;
+  --t-avatar-xl: 64px;
+
+  --t-touch-min: 44px;
+
+  /* --- RADIUS --- */
+  --t-radius-none: 0px;
+  --t-radius-sm:   4px;
+  --t-radius-md:   8px;
+  --t-radius-lg:   12px;
+  --t-radius-xl:   16px;
+  --t-radius-2xl:  24px;
+  --t-radius-full: 9999px;
+
+  /* --- ELEVATION (shadow + tonal surface combined) --- */
+  --t-shadow-0: none;
+  --t-shadow-1: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.10);
+  --t-shadow-2: 0 2px 4px -1px rgba(0,0,0,0.06), 0 4px 6px -1px rgba(0,0,0,0.10);
+  --t-shadow-3: 0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
+  --t-shadow-4: 0 20px 25px -5px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.10);
+
+  /* --- MOTION --- */
+  --t-duration-instant: 0ms;
+  --t-duration-fast:    100ms;
+  --t-duration-normal:  200ms;
+  --t-duration-slow:    300ms;
+  --t-duration-slower:  500ms;
+
+  --t-ease-default:   cubic-bezier(0.2, 0, 0, 1);
+  --t-ease-entrance:  cubic-bezier(0, 0, 0.2, 1);
+  --t-ease-exit:      cubic-bezier(0.4, 0, 1, 1);
+  --t-ease-spring:    cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* --- Z-INDEX --- */
+  --t-z-base:     0;
+  --t-z-dropdown: 1000;
+  --t-z-sticky:   1100;
+  --t-z-overlay:  1200;
+  --t-z-modal:    1300;
+  --t-z-popover:  1400;
+  --t-z-toast:    1500;
+  --t-z-tooltip:  1600;
+
+  /* --- BREAKPOINTS (reference only — use in media queries) --- */
+  --t-bp-sm:  640px;
+  --t-bp-md:  768px;
+  --t-bp-lg:  1024px;
+  --t-bp-xl:  1280px;
+  --t-bp-2xl: 1536px;
+
+  /* --- ADAPTIVE DENSITY (Novel: single token controls component density) --- */
+  --t-density: 0; /* -1 = compact, 0 = default, 1 = comfortable */
+  --t-density-scale: calc(1 + var(--t-density) * 0.15);
+  --t-density-space: calc(var(--t-space-2) + var(--t-density) * 4px);
+
+  /* --- FOCUS RING (consistent, accessible focus indicator) --- */
+  --t-focus-ring: 0 0 0 2px var(--t-bg-primary), 0 0 0 4px var(--t-border-focus);
+  --t-focus-ring-inset: inset 0 0 0 2px var(--t-border-focus);
+}
+
+/* ============================================================
+   DARK THEME
+   Swap semantic tokens — primitives stay the same
+   ============================================================ */
+
+[data-theme="dark"] {
+  --t-bg-primary:    var(--t-raw-neutral-900);
+  --t-bg-secondary:  var(--t-raw-neutral-800);
+  --t-bg-tertiary:   var(--t-raw-neutral-700);
+  --t-bg-inverse:    var(--t-raw-neutral-0);
+  --t-bg-brand:      var(--t-raw-blue-500);
+  --t-bg-danger:     #3D1515;
+  --t-bg-success:    #152D1B;
+  --t-bg-warning:    #3D2E08;
+  --t-bg-info:       #152A3D;
+
+  --t-fg-primary:    var(--t-raw-neutral-100);
+  --t-fg-secondary:  var(--t-raw-neutral-400);
+  --t-fg-tertiary:   var(--t-raw-neutral-500);
+  --t-fg-inverse:    var(--t-raw-neutral-900);
+  --t-fg-brand:      var(--t-raw-blue-300);
+  --t-fg-danger:     var(--t-raw-red-300);
+  --t-fg-success:    var(--t-raw-green-300);
+  --t-fg-warning:    var(--t-raw-amber-300);
+  --t-fg-link:       var(--t-raw-blue-400);
+  --t-fg-disabled:   var(--t-raw-neutral-600);
+
+  --t-border-default: var(--t-raw-neutral-700);
+  --t-border-strong:  var(--t-raw-neutral-500);
+  --t-border-brand:   var(--t-raw-blue-500);
+  --t-border-danger:  var(--t-raw-red-500);
+  --t-border-success: var(--t-raw-green-500);
+  --t-border-focus:   var(--t-raw-blue-400);
+
+  --t-interactive-default:  var(--t-raw-blue-500);
+  --t-interactive-hover:    var(--t-raw-blue-400);
+  --t-interactive-active:   var(--t-raw-blue-300);
+  --t-interactive-disabled: var(--t-raw-neutral-700);
+
+  --t-surface-0: var(--t-raw-neutral-900);
+  --t-surface-1: var(--t-raw-neutral-800);
+  --t-surface-2: var(--t-raw-neutral-700);
+  --t-surface-3: var(--t-raw-neutral-600);
+  --t-surface-4: var(--t-raw-neutral-500);
+
+  --t-shadow-1: 0 1px 2px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.35);
+  --t-shadow-2: 0 2px 4px -1px rgba(0,0,0,0.30), 0 4px 6px -1px rgba(0,0,0,0.35);
+  --t-shadow-3: 0 10px 15px -3px rgba(0,0,0,0.35), 0 4px 6px -4px rgba(0,0,0,0.30);
+  --t-shadow-4: 0 20px 25px -5px rgba(0,0,0,0.40), 0 8px 10px -6px rgba(0,0,0,0.35);
+
+  --t-focus-ring: 0 0 0 2px var(--t-bg-primary), 0 0 0 4px var(--t-border-focus);
+}
+
+/* ============================================================
+   LAYER 2: COMPONENT FOUNDATIONS
+   Shared patterns that all components inherit
+   ============================================================ */
+
+/* --- Focus visible (keyboard-only focus ring) --- */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--t-focus-ring);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* --- Reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Density variants --- */
+[data-density="compact"] { --t-density: -1; }
+[data-density="default"] { --t-density: 0;  }
+[data-density="comfortable"] { --t-density: 1; }

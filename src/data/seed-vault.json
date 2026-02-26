@@ -1,0 +1,63 @@
+[
+  {
+    "name": "CalendarGrid",
+    "archivedDate": "2024-09-15",
+    "reason": "Insufficient adoption signal — only 1 team requested, didn't meet 2-team threshold",
+    "context": "Originated from Team Finance for date range selection in reporting dashboards",
+    "revivable": true,
+    "reviveReason": "Now 3 teams have expressed need for date-based filtering. Cross-pollination candidate with DatePicker pattern.",
+    "agents": {
+      "patternLibrarian": "Cross-pollination candidate with date filtering needs",
+      "a11yGuardian": "Accessibility pattern was sound — grid navigation with arrow keys",
+      "componentArchitect": "Solid composition model — could compose with Input and Dropdown"
+    }
+  },
+  {
+    "name": "ColorPicker",
+    "archivedDate": "2024-10-01",
+    "reason": "Prerequisite component (Popover) not yet stable — blocked dependency chain",
+    "context": "Requested by design tools team for theme customization features",
+    "revivable": true,
+    "reviveReason": "If Popover/Dropdown reaches Stable, ColorPicker can be revisited",
+    "agents": {
+      "componentArchitect": "Architecture depends on Popover for the picker panel",
+      "tokenSteward": "Would need new color manipulation tokens (HSL conversion utilities)"
+    }
+  },
+  {
+    "name": "Carousel",
+    "archivedDate": "2024-08-20",
+    "reason": "Accessibility Guardian absolute veto — fundamental accessibility barrier",
+    "context": "Requested by marketing team for product showcase pages",
+    "revivable": false,
+    "reviveReason": null,
+    "agents": {
+      "a11yGuardian": "VETO: Auto-advancing content violates WCAG 2.2.2 (Pause, Stop, Hide). Hidden content inaccessible to screen readers. No established WAI-ARIA pattern.",
+      "productLiaison": "Marketing team found alternative using manual tab-based showcase"
+    }
+  },
+  {
+    "name": "Breadcrumb",
+    "archivedDate": "2024-11-10",
+    "reason": "Functional overlap — existing Tab + Link composition covers the same job",
+    "context": "Proposed as standalone navigation component",
+    "revivable": false,
+    "reviveReason": null,
+    "agents": {
+      "patternLibrarian": "Covered by existing primitives — nav element with ordered list of links",
+      "componentArchitect": "Not complex enough to warrant a governed component"
+    }
+  },
+  {
+    "name": "Skeleton",
+    "archivedDate": "2024-12-01",
+    "reason": "Blocked on animation token support — system doesn't yet have ambient motion tokens",
+    "context": "Loading placeholder patterns needed across multiple teams",
+    "revivable": true,
+    "reviveReason": "When the motion token system supports ambient/persistent animations, Skeleton can be built properly",
+    "agents": {
+      "tokenSteward": "Needs new motion category: ambient (persistent, subtle, non-interactive)",
+      "productLiaison": "4 teams using ad-hoc skeleton implementations — clear adoption signal"
+    }
+  }
+]

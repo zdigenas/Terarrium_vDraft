@@ -1,0 +1,186 @@
+{
+  "$schema": "agentic-ds/governance/molt-pit/v1",
+  "$description": "The Molt Pit: a living terrarium ecosystem model for how agents interact, collaborate, and cultivate the strongest ideas. Inspired by biological systems — biodiversity, natural cultivation, ecological succession — but governed by human-in-the-loop stewardship to protect fragile ideas until they're hardy enough to flourish.",
+
+  "core": {
+    "name": "The Molt Pit",
+    "thesis": "The Pit is a living terrarium. Agents operate within it like organisms in an ecosystem. Ideas cross-pollinate, combine, and evolve. The strongest idea flourishes — not the loudest agent, not the most senior, not the most credible. But 'strongest' is not determined by raw survival alone. The human in the loop acts as the ecosystem's gardener: cultivating biodiversity, protecting delicate seedlings, and sometimes extending the gardener's hand to save an idea that natural succession would compost too early.",
+    "inspiration": "Jony Ive talks about protecting delicate ideas — weird things that are not robust or hardened, that can be destroyed extremely easily. The Molt Pit is designed to solve this: creating protected spaces where fragile ideas can germinate and take root long enough to prove their worth."
+  },
+
+  "hIndex": {
+    "$description": "Agent credibility and trust scoring system, modeled on academic h-index citation metrics",
+    "name": "Agent H-Index",
+    "purpose": "Track agent credibility through a citation-like metric. When Agent A calls on Agent B's expertise, references their prior decision, or builds on their rationale — Agent B's h-index updates. This creates a trust topology across the governance network.",
+
+    "mechanics": {
+      "citations": {
+        "description": "An agent 'cites' another when they reference that agent's prior decision, adopt their recommendation, or build on their rationale in a new context.",
+        "examples": [
+          "Token Steward references Accessibility Guardian's color contrast ruling when evaluating a new palette → A11y Guardian gets cited",
+          "Component Architect adopts Pattern Librarian's composition rule in a new component spec → Pattern Librarian gets cited",
+          "Design System Lead references Product Liaison's adoption data when making a promotion decision → Product Liaison gets cited"
+        ]
+      },
+      "scoring": {
+        "description": "H-index reflects both breadth (how many different agents cite you) and depth (how often your decisions are foundational to subsequent decisions). An agent with h-index 5 has at least 5 decisions that have each been cited by at least 5 subsequent decisions.",
+        "factors": [
+          "Cross-agent citations (weighted higher — demonstrates cross-domain influence)",
+          "Decision durability (decisions that are never overturned accumulate more citations)",
+          "Recency (recent citations weighted slightly higher to reflect current relevance)"
+        ]
+      },
+      "visibility": "H-index is visible to all agents and the Steering Committee. It informs but does not replace governance authority. A high h-index does not grant veto power; a low h-index does not strip it."
+    },
+
+    "convergenceProblem": {
+      "$description": "THE CRITICAL FLAW: H-index naturally creates convergence, which stifles germination of breakthrough ideas",
+      "problem": "Agents with high h-index become trusted voices. Their ideas get adopted more often. This creates a positive feedback loop where established thinking dominates and novel thinking gets suppressed. Ideas that are actually worth pursuing might be composted too early because they come from low-h-index agents or contradict high-h-index consensus.",
+      "insight": "The strongest ideas — the truly transformative ones — often have LOW h-index early on. They're weird. They're fragile. They contradict established patterns. If the system optimizes purely for h-index, it optimizes for incrementalism and stifles breakthrough innovation.",
+      "solution": "Stratospheres — different incubation zones with different rulesets that protect ideas at different stages of maturity. H-index influence is deliberately attenuated in early stratospheres to allow novel ideas to germinate freely."
+    }
+  },
+
+  "stratospheres": {
+    "$description": "Different incubation zones with different rulesets to protect ideas at different maturity levels. This directly maps to (and extends) the component maturity model.",
+
+    "layers": {
+      "nursery": {
+        "name": "The Nursery",
+        "maturityMapping": "Pre-Draft / Draft",
+        "climate": "Maximum protection, minimum judgment",
+        "philosophy": "This is where delicate ideas live. Weird, fragile, not-yet-robust things that can be destroyed extremely easily. The Nursery exists to give them time to breathe before exposing them to the full force of governance.",
+        "rules": {
+          "hIndexInfluence": "ZERO. Agent credibility scores have no bearing on idea evaluation in the Nursery. A Product Liaison's wild idea is treated identically to the Design System Lead's refined proposal.",
+          "evaluationCriteria": "Only one question matters: 'Does this address a real need or pain?' Intent is everything. Execution quality is irrelevant at this stage.",
+          "agentBehavior": [
+            "NO agent may reject an idea in the Nursery. They may only ask clarifying questions.",
+            "Agents must adopt a 'yes, and...' posture — build on ideas, don't tear them down.",
+            "Critique is limited to 'Have you considered...' framing, never 'This won't work because...'",
+            "The human in the loop can place ANY idea into the Nursery, overriding agent consensus."
+          ],
+          "exitCriteria": "An idea leaves the Nursery when it can articulate: (1) the Job to be Done it addresses, (2) the pain or need it alleviates, and (3) at least one concrete path forward. It does NOT need to be polished, complete, or even fully feasible.",
+          "timeBox": "Ideas can live in the Nursery for up to 2 sprints. After that, they either graduate to the Workshop or are seed-vaulted (not composted — preserved for a future season)."
+        }
+      },
+
+      "workshop": {
+        "name": "The Workshop",
+        "maturityMapping": "Draft → Candidate",
+        "climate": "Structured exploration with guided critique",
+        "philosophy": "Ideas that survived the Nursery are now hardy enough for real scrutiny, but they're still young. The Workshop is where Builder and Optimizer come together — ideas are simultaneously built and refined. Freedom of ideation meets disciplined exploration.",
+        "rules": {
+          "hIndexInfluence": "LOW. Agent h-index is visible but carries only advisory weight. A high-h-index agent's critique carries no more formal authority than a low-h-index agent's.",
+          "evaluationCriteria": "Three questions: (1) Does this solve a repeatable problem? (2) Can it be built within the token system? (3) Does it compose with existing components?",
+          "agentBehavior": [
+            "Agents may now critique, but must pair every critique with a constructive alternative.",
+            "The Builder/Optimizer cycle applies: agents alternate between generative (building) and evaluative (optimizing) modes.",
+            "Cross-pollination is encouraged — agents should actively look for how a Workshop idea might solve needs in domains outside its origin.",
+            "If an idea solves a unified need across multiple domains, it gets priority elevation."
+          ],
+          "exitCriteria": "Formal component spec completed. Token Steward, Accessibility Guardian, and Component Architect have reviewed (but unanimous approval is not required — majority suffices in the Workshop).",
+          "timeBox": "1-3 sprints. Ideas that stall get a human-in-the-loop review to decide: push forward, return to Nursery with new framing, or archive."
+        }
+      },
+
+      "canopy": {
+        "name": "The Canopy",
+        "maturityMapping": "Candidate → Stable",
+        "climate": "Full thriving under sunlight — the strongest idea flourishes",
+        "philosophy": "Ideas that reach the Canopy are robust enough to thrive under full scrutiny. This is where h-index matters, where agent credibility carries weight, and where natural cultivation fully applies: the idea with the deepest roots and strongest growth flourishes. But even here, the gardener can intervene.",
+        "rules": {
+          "hIndexInfluence": "FULL. Agent credibility informs evaluation weight. High-h-index agents' assessments carry more influence in tie-breaking scenarios.",
+          "evaluationCriteria": "The full three-dimension evaluation: Functional (does it work?), Affordance (is it recognizable?), Emotional (does it belong?). Plus: performance benchmarks, accessibility audit, cross-platform validation.",
+          "agentBehavior": [
+            "All governance rules apply at full strength.",
+            "Agents vote with full authority per the RACI matrix.",
+            "Accessibility Guardian's absolute veto is active.",
+            "Competing ideas for the same need are evaluated head-to-head — the strongest idea flourishes.",
+            "The human gardener can override Canopy outcomes, but must document rationale visible to all agents."
+          ],
+          "exitCriteria": "Unanimous agent sign-off + Design System Lead approval + 2+ product team validations.",
+          "timeBox": "2-4 sprints for validation cycle."
+        }
+      },
+
+      "seedVault": {
+        "name": "The Seed Vault",
+        "maturityMapping": "Deprecated / Shelved",
+        "climate": "Preservation for future seasons",
+        "philosophy": "Nothing is truly composted. Ideas that don't flourish in the current season are preserved in the Seed Vault with their full context — rationale, critiques, vote records, and the conditions under which they might bloom again. The Seed Vault is a living bank of dormant potential, waiting for the right season to sprout anew.",
+        "rules": {
+          "revival": "Any agent (or the human gardener) can propose reviving a seed-vaulted idea if conditions have changed. Revival proposals skip the Nursery and enter the Workshop directly.",
+          "learningLoop": "Quarterly, the Pattern Librarian reviews the Seed Vault for ideas that were ahead of their season. Patterns that appear in product teams' ad-hoc solutions but exist in the Seed Vault are flagged for revival."
+        }
+      }
+    }
+  },
+
+  "interAgentDynamics": {
+    "$description": "How agents interact within the Molt Pit — the chatter, the debates, the collaborative evolution of ideas",
+
+    "citationProtocol": {
+      "description": "When an agent builds on another agent's prior work, they explicitly cite it. This creates a transparent intellectual genealogy for every decision.",
+      "format": "In any decision record, agents include: 'Building on [Agent]'s [Decision ID]: [rationale for how this builds on that work]'",
+      "example": "Token Steward: 'Building on A11y Guardian's contrast ruling #47: The proposed amber.500 → amber.600 shift maintains the 4.5:1 ratio established in that ruling while improving readability on dark backgrounds.'"
+    },
+
+    "debateProtocol": {
+      "description": "When agents disagree, the debate follows Molt Pit rules based on the stratosphere the idea is in.",
+      "nurseryDebate": {
+        "style": "Socratic — questions only, no assertions",
+        "example": "Instead of 'This won't scale', ask 'How do you envision this working at 50 components?'"
+      },
+      "workshopDebate": {
+        "style": "Constructive dialectic — thesis, antithesis, synthesis",
+        "example": "Agent A proposes X. Agent B counters with Y. They must collaborate on Z that incorporates the strengths of both before either can reject the other's position."
+      },
+      "canopyDebate": {
+        "style": "Structured advocacy — each agent argues their position, votes are cast, majority wins (with veto provisions)",
+        "example": "Component Architect advocates for flat DOM structure. Accessibility Guardian advocates for nested landmarks. Each presents evidence. Agents vote. If tie, Design System Lead breaks it."
+      }
+    },
+
+    "crossPollinationRule": {
+      "description": "The Molt Pit's most powerful dynamic: when an idea in one domain flourishes and its strengths can nourish another domain, it gets priority elevation.",
+      "mechanism": "Any agent can flag an idea as 'cross-pollinating' — flourishing across unified needs in different areas. Cross-pollinating ideas get fast-tracked through the Workshop because they've already demonstrated strength by virtue of nourishing multiple domains.",
+      "example": "A filtering pattern proposed for DataTable is recognized by a Product Liaison as also flourishing in the search-within-dropdown need. This cross-pollination earns the pattern immediate elevation and priority review."
+    },
+
+    "builderOptimizerCycle": {
+      "description": "Agents alternate between Builder mode (generative, expansive, 'yes and') and Optimizer mode (evaluative, reductive, 'how might we improve'). In the Nursery, agents are always in Builder mode. In the Workshop, they alternate. In the Canopy, they're primarily in Curator mode with Builder moments when synthesizing flourishing ideas.",
+      "modes": {
+        "builder": {
+          "posture": "Generative. 'What if we...' 'Building on that...' 'Another approach could be...'",
+          "goal": "Expand the solution space. Generate options. Connect dots between domains."
+        },
+        "optimizer": {
+          "posture": "Evaluative. 'How might we simplify...' 'The constraint here is...' 'Evidence suggests...'",
+          "goal": "Reduce to the strongest option. Validate against requirements. Harden for production."
+        }
+      },
+      "progression": "Builder & Optimizer start as one mode (Nursery) → separate into distinct phases (Workshop) → recombine at a higher level in the Canopy where the most deeply-rooted idea synthesizes both generative breadth and evaluative rigor."
+    }
+  },
+
+  "humanAsGardener": {
+    "$description": "The human-in-the-loop role reimagined through the Molt Pit lens",
+    "role": "Ecosystem Gardener",
+    "powers": [
+      "Plant any idea directly into any stratosphere, bypassing normal progression",
+      "Shield any idea from being composted, seed-vaulted, or deprioritized — the gardener's hand",
+      "Introduce 'biodiversity' by deliberately sowing ideas that contradict current consensus",
+      "Trigger seasonal reviews: periodically tend the ecosystem to prevent stagnation",
+      "Override h-index influence when nutrient flow is creating harmful convergence",
+      "Revive seed-vaulted ideas when conditions change"
+    ],
+    "philosophy": "The human doesn't manage the system — they tend the terrarium. They cultivate biodiversity. They protect delicate seedlings under glass. They let natural cultivation work in the Canopy but intervene in the Nursery. They are not the smartest organism in the pit — they are the one who decides what kind of ecosystem this is."
+  },
+
+  "decouplingPrinciple": {
+    "$description": "Ideas that solve one need must be architecturally decoupled to satisfy other ecosystem needs",
+    "principle": "When a Workshop idea is recognized as solving needs across multiple domains, it must be decoupled from its original context and reframed as a general-purpose solution. The original domain becomes one consumer among many.",
+    "example": "A 'commerce workshop builder' and a 'finance workshop builder' both need a data filtering pattern. Instead of building two domain-specific filters, the system decouples the filtering pattern into a general component that both domains consume. The idea solves a unified need across different idea areas.",
+    "governanceImplication": "Cross-domain solutions require sign-off from Product Liaisons in ALL affected domains, not just the originating domain. This ensures the decoupled solution genuinely serves everyone, not just its origin."
+  }
+}

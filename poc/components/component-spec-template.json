@@ -1,0 +1,138 @@
+{
+  "$schema": "agentic-ds/component-spec/v1",
+  "$description": "Template for authoring new component specifications in the Agentic Design System",
+
+  "metadata": {
+    "name": "ComponentName",
+    "version": "0.1.0",
+    "maturity": "draft | candidate | stable | deprecated",
+    "category": "primitive | composite | pattern",
+    "owner": "Agent role responsible for this component",
+    "created": "YYYY-MM-DD",
+    "lastReviewed": "YYYY-MM-DD",
+    "reviewedBy": ["Agent Role 1", "Agent Role 2"]
+  },
+
+  "purpose": {
+    "description": "Clear one-line description of what this component does and why it exists",
+    "useCases": [
+      "When to use this component",
+      "Specific scenario where this is the right choice"
+    ],
+    "antiPatterns": [
+      "When NOT to use this component",
+      "Common misuse to avoid"
+    ]
+  },
+
+  "anatomy": {
+    "$description": "Every visible sub-part of the component, ordered by DOM/render order",
+    "parts": {
+      "container": { "required": true, "description": "Root wrapper element" },
+      "part-name": { "required": true, "description": "What this part does" }
+    }
+  },
+
+  "variants": {
+    "$description": "Named visual or behavioral variations",
+    "variant-name": {
+      "description": "When to use this variant",
+      "tokenOverrides": {
+        "part-name": "token.path overrides for this variant"
+      }
+    }
+  },
+
+  "sizes": {
+    "$description": "Size scale options",
+    "sm": { "height": "spacing.8", "padding": "spacing.2 spacing.3", "typography": "typography.composite.body-sm" },
+    "md": { "height": "spacing.10", "padding": "spacing.2 spacing.4", "typography": "typography.composite.body-md" },
+    "lg": { "height": "spacing.12", "padding": "spacing.3 spacing.5", "typography": "typography.composite.body-lg" }
+  },
+
+  "tokens": {
+    "$description": "Token mappings for each anatomy part and state",
+    "container": {
+      "default": {
+        "background": "color.semantic.bg.primary",
+        "border": "1px solid color.semantic.border.default",
+        "borderRadius": "radius.md",
+        "padding": "spacing.3 spacing.4"
+      },
+      "hover": {},
+      "active": {},
+      "focus": {
+        "outline": "2px solid color.semantic.border.focus",
+        "outlineOffset": "2px"
+      },
+      "disabled": {
+        "background": "color.semantic.interactive.disabled",
+        "opacity": "0.5",
+        "cursor": "not-allowed"
+      }
+    }
+  },
+
+  "props": {
+    "$description": "API surface — what consumers can configure",
+    "required": {
+      "prop-name": { "type": "string", "description": "What this prop controls" }
+    },
+    "optional": {
+      "variant": { "type": "enum", "values": ["default"], "default": "default" },
+      "size": { "type": "enum", "values": ["sm", "md", "lg"], "default": "md" },
+      "disabled": { "type": "boolean", "default": false }
+    }
+  },
+
+  "accessibility": {
+    "role": "ARIA role",
+    "attributes": {
+      "required": ["aria-label OR visible label via aria-labelledby"],
+      "conditional": {
+        "aria-expanded": "When component has expandable state",
+        "aria-invalid": "When in error state"
+      }
+    },
+    "keyboard": {
+      "Tab": "Focus the component",
+      "Enter/Space": "Activate",
+      "Escape": "Dismiss (if applicable)"
+    },
+    "announcements": {
+      "stateChange": "Announce via aria-live when state changes affect user"
+    },
+    "contrast": {
+      "text": "4.5:1 minimum (WCAG AA)",
+      "nonText": "3:1 minimum (WCAG AA)"
+    }
+  },
+
+  "behavior": {
+    "interactions": {
+      "click": "What happens on click",
+      "hover": "What happens on hover"
+    },
+    "animations": {
+      "enter": "motion.easing.entrance + motion.duration.normal",
+      "exit": "motion.easing.exit + motion.duration.fast"
+    },
+    "responsive": {
+      "mobile": "Behavior at < breakpoint.md",
+      "desktop": "Behavior at >= breakpoint.lg"
+    }
+  },
+
+  "governance": {
+    "$description": "Tracks review status across all governance agents",
+    "reviews": {
+      "tokenSteward": { "status": "pending | approved | changes-requested", "date": null, "notes": "" },
+      "accessibilityGuardian": { "status": "pending", "date": null, "notes": "" },
+      "patternLibrarian": { "status": "pending", "date": null, "notes": "" },
+      "componentArchitect": { "status": "pending", "date": null, "notes": "" }
+    },
+    "changeLog": [
+      { "version": "0.1.0", "date": "YYYY-MM-DD", "author": "Role", "description": "Initial draft" }
+    ]
+  }
+}

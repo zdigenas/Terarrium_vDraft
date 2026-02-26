@@ -1,0 +1,44 @@
+/* ============================================================
+   COMPONENT: Avatar
+   Maturity: Stable | Tier: Primitive
+   Job: Represent a person or entity visually
+   ============================================================ */
+
+.t-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border-radius: var(--t-radius-full);
+  overflow: hidden;
+
+  background-color: var(--t-bg-brand);
+  color: var(--t-fg-inverse);
+  font-family: var(--t-font-sans);
+  font-weight: var(--t-weight-semibold);
+}
+
+.t-avatar--xs { width: var(--t-avatar-xs); height: var(--t-avatar-xs); font-size: var(--t-text-xs); }
+.t-avatar--sm { width: var(--t-avatar-sm); height: var(--t-avatar-sm); font-size: var(--t-text-xs); }
+.t-avatar--md { width: var(--t-avatar-md); height: var(--t-avatar-md); font-size: var(--t-text-sm); }
+.t-avatar--lg { width: var(--t-avatar-lg); height: var(--t-avatar-lg); font-size: var(--t-text-base); }
+.t-avatar--xl { width: var(--t-avatar-xl); height: var(--t-avatar-xl); font-size: var(--t-text-md); }
+
+.t-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.t-avatar-group {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.t-avatar-group .t-avatar {
+  border: 2px solid var(--t-bg-primary);
+  margin-left: -8px;
+}
+.t-avatar-group .t-avatar:last-child {
+  margin-left: 0;
+}

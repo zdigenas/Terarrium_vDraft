@@ -1,0 +1,282 @@
+{
+  "$schema": "agentic-ds/governance/workflow/v1",
+  "$description": "Complete component lifecycle workflow — from proposal through deprecation",
+
+  "philosophicalFoundation": {
+    "evaluationOrder": [
+      "1. FUNCTIONAL: What job does this component do? If it doesn't solve a real, repeatable problem, stop here.",
+      "2. AFFORDANCE: Can a user tell what this is and how to use it at a glance? If not, it needs redesign.",
+      "3. EMOTIONAL: Does it feel like it belongs in the system? If not, the issue is probably in the tokens, not the component."
+    ],
+    "emergentPrinciple": "The system discovers its shape through use. Drafts are hypotheses, Candidates are experiments, Stable components are proven solutions. Don't predict — build, validate, promote.",
+    "repeatabilityGate": "A pattern earns system inclusion by proving it's needed by 2+ teams. One team, one context = product decision. Two+ teams = system candidate."
+  },
+
+  "moltPitStratospheres": {
+    "$description": "The lifecycle phases map to Molt Pit stratospheres with escalating rigor and nutrient flow influence",
+    "mapping": {
+      "nursery": {
+        "lifecyclePhase": "1_proposal (Pre-Draft and Draft)",
+        "agentMode": "Builder only — 'yes, and...' posture",
+        "nutrientFlow": "ZERO — h-index has no bearing on seedling evaluation",
+        "debateStyle": "Socratic — questions only, no rejections",
+        "keyRule": "NO agent may reject an idea. They may only ask clarifying questions and build on the concept. The gardener can place any idea here, overriding all agent opinion."
+      },
+      "workshop": {
+        "lifecyclePhase": "2_specification + 3_validation (Draft → Candidate)",
+        "agentMode": "Builder/Optimizer alternating",
+        "nutrientFlow": "LOW — advisory only, letting ideas grow at their own pace",
+        "debateStyle": "Constructive dialectic — thesis, antithesis, synthesis required",
+        "keyRule": "Every critique must be paired with a constructive alternative. Cross-pollination is actively encouraged. Ideas flourish through mutual growth. Majority approval suffices (not unanimity)."
+      },
+      "canopy": {
+        "lifecyclePhase": "4_promotion (Candidate → Stable)",
+        "agentMode": "Optimizer primary — full governance rigor, evaluating in full sunlight",
+        "nutrientFlow": "FULL — informs tie-breaking and growth trajectory",
+        "debateStyle": "Structured advocacy — evidence-based arguments, formal votes",
+        "keyRule": "The strongest idea flourishes. Full RACI authority. Accessibility Guardian's absolute veto is active. Unanimous approval required for Stable promotion."
+      },
+      "seedVault": {
+        "lifecyclePhase": "6_deprecation + dormant ideas",
+        "agentMode": "Curator — preservation and pattern mining for future seasons",
+        "nutrientFlow": "N/A",
+        "debateStyle": "Reflective — what seeds are we preserving for tomorrow?",
+        "keyRule": "Nothing is truly composted. Any agent can propose revival if conditions change. Pattern Librarian reviews the Seed Vault quarterly for ideas ready to sprout again."
+      }
+    }
+  },
+
+  "workflow": {
+    "1_proposal": {
+      "name": "Component Proposal",
+      "trigger": "Product Liaison or any team member submits an RFC",
+      "humanInTheLoop": true,
+      "philosophyCheck": "Does this component address a repeatable functional need? Can we identify 2+ potential consumers? This is a hypothesis — the lifecycle will validate it.",
+      "steps": [
+        {
+          "step": "1.1",
+          "action": "Author submits Component RFC",
+          "deliverables": ["RFC document with use cases, visual examples, and justification"],
+          "responsible": "Any team member",
+          "timeBox": "N/A (self-serve)"
+        },
+        {
+          "step": "1.2",
+          "action": "Pattern Librarian screens for duplication",
+          "deliverables": ["Duplication analysis report"],
+          "responsible": "Pattern Librarian",
+          "timeBox": "3 business days",
+          "decision": {
+            "approve": "No existing component covers this use case → proceed to 1.3",
+            "reject": "Existing component can be extended → redirect to enhancement workflow",
+            "defer": "Need more information → request clarification from author"
+          }
+        },
+        {
+          "step": "1.3",
+          "action": "Component Architect reviews technical feasibility",
+          "deliverables": ["Feasibility assessment with complexity estimate"],
+          "responsible": "Component Architect",
+          "timeBox": "3 business days"
+        },
+        {
+          "step": "1.4",
+          "action": "Design System Lead prioritizes and assigns to backlog",
+          "deliverables": ["Backlog item with priority, assigned agents, and target sprint"],
+          "responsible": "Design System Lead",
+          "timeBox": "Weekly governance sync"
+        }
+      ],
+      "outputState": "draft",
+      "escalation": "If Pattern Librarian and author disagree → Design System Lead resolves"
+    },
+
+    "2_specification": {
+      "name": "Component Specification",
+      "trigger": "Component enters Draft state",
+      "humanInTheLoop": true,
+      "steps": [
+        {
+          "step": "2.1",
+          "action": "Author creates component spec using template",
+          "deliverables": ["Completed component-spec.json"],
+          "responsible": "Assigned designer/developer",
+          "timeBox": "1 sprint"
+        },
+        {
+          "step": "2.2",
+          "action": "Token Steward reviews token mapping",
+          "deliverables": ["Token review with approve/changes-requested"],
+          "responsible": "Token Steward",
+          "timeBox": "3 business days",
+          "checklist": "tokenSteward.reviewChecklist"
+        },
+        {
+          "step": "2.3",
+          "action": "Accessibility Guardian reviews a11y spec",
+          "deliverables": ["Accessibility review with approve/changes-requested"],
+          "responsible": "Accessibility Guardian",
+          "timeBox": "3 business days",
+          "checklist": "accessibilityGuardian.reviewChecklist"
+        },
+        {
+          "step": "2.4",
+          "action": "Component Architect reviews anatomy and API",
+          "deliverables": ["Architecture review with approve/changes-requested"],
+          "responsible": "Component Architect",
+          "timeBox": "3 business days",
+          "checklist": "componentArchitect.reviewChecklist"
+        },
+        {
+          "step": "2.5",
+          "action": "Author addresses all review feedback",
+          "deliverables": ["Updated spec with response to each review item"],
+          "responsible": "Assigned designer/developer",
+          "timeBox": "1 sprint"
+        }
+      ],
+      "gate": "All three specialist agents (Token Steward, Accessibility Guardian, Component Architect) must approve",
+      "outputState": "candidate",
+      "escalation": "If author and reviewer cannot agree → Component Architect mediates → Design System Lead resolves"
+    },
+
+    "3_validation": {
+      "name": "Product Validation",
+      "trigger": "Component enters Candidate state",
+      "humanInTheLoop": true,
+      "steps": [
+        {
+          "step": "3.1",
+          "action": "Product Liaisons identify 2+ product teams for validation",
+          "deliverables": ["Validation plan with participating teams and timelines"],
+          "responsible": "Product Liaison",
+          "timeBox": "1 week"
+        },
+        {
+          "step": "3.2",
+          "action": "Product teams integrate candidate component in beta features",
+          "deliverables": ["Integration feedback report from each team"],
+          "responsible": "Product teams (guided by Product Liaison)",
+          "timeBox": "2 sprints"
+        },
+        {
+          "step": "3.3",
+          "action": "Pattern Librarian compiles validation results",
+          "deliverables": ["Validation summary with go/no-go recommendation"],
+          "responsible": "Pattern Librarian",
+          "timeBox": "3 business days"
+        },
+        {
+          "step": "3.4",
+          "action": "Accessibility Guardian conducts full accessibility audit",
+          "deliverables": ["Complete WCAG 2.2 AA audit report"],
+          "responsible": "Accessibility Guardian",
+          "timeBox": "1 sprint",
+          "note": "This is the thorough audit — includes screen reader testing, manual keyboard testing, and automated scans"
+        }
+      ],
+      "gate": "2+ successful product validations AND accessibility audit passed",
+      "outputState": "ready for stable promotion",
+      "escalation": "If validation reveals fundamental issues → return to Specification phase"
+    },
+
+    "4_promotion": {
+      "name": "Stable Promotion",
+      "trigger": "Candidate passes all validation gates",
+      "humanInTheLoop": true,
+      "steps": [
+        {
+          "step": "4.1",
+          "action": "Pattern Librarian prepares promotion package",
+          "deliverables": ["Complete documentation", "Migration guide (if replacing existing)", "Usage examples"],
+          "responsible": "Pattern Librarian",
+          "timeBox": "1 sprint"
+        },
+        {
+          "step": "4.2",
+          "action": "All agents confirm final sign-off",
+          "deliverables": ["Signed governance review record"],
+          "responsible": "All specialist agents",
+          "timeBox": "1 week"
+        },
+        {
+          "step": "4.3",
+          "action": "Design System Lead gives final approval",
+          "deliverables": ["Promotion approval with version number"],
+          "responsible": "Design System Lead",
+          "timeBox": "3 business days"
+        }
+      ],
+      "gate": "Design System Lead approval",
+      "outputState": "stable"
+    },
+
+    "5_maintenance": {
+      "name": "Ongoing Maintenance",
+      "trigger": "Component is Stable",
+      "humanInTheLoop": true,
+      "steps": [
+        {
+          "step": "5.1",
+          "action": "Quarterly health check",
+          "frequency": "every 3 months",
+          "responsible": "Pattern Librarian + Component Architect",
+          "checks": [
+            "Usage analytics (adoption, abandonment)",
+            "Bug/issue volume",
+            "Performance metrics",
+            "Accessibility regression testing"
+          ]
+        },
+        {
+          "step": "5.2",
+          "action": "Enhancement requests follow lightweight review",
+          "responsible": "Relevant specialist agent(s)",
+          "note": "Non-breaking changes need only the relevant agent's approval. Breaking changes require full RFC."
+        }
+      ],
+      "outputState": "stable (ongoing)"
+    },
+
+    "6_deprecation": {
+      "name": "Deprecation",
+      "trigger": "Component no longer serves its purpose or is being replaced",
+      "humanInTheLoop": true,
+      "steps": [
+        {
+          "step": "6.1",
+          "action": "Deprecation RFC with justification and replacement plan",
+          "deliverables": ["Deprecation RFC", "Migration guide", "Timeline"],
+          "responsible": "Design System Lead or Component Architect",
+          "timeBox": "N/A"
+        },
+        {
+          "step": "6.2",
+          "action": "Product Liaisons assess migration impact",
+          "deliverables": ["Impact assessment per product area"],
+          "responsible": "Product Liaisons",
+          "timeBox": "2 weeks"
+        },
+        {
+          "step": "6.3",
+          "action": "Deprecation approval",
+          "responsible": "Design System Lead",
+          "note": "Must include a minimum 2-sprint migration window"
+        },
+        {
+          "step": "6.4",
+          "action": "Migration support period",
+          "responsible": "Pattern Librarian + original component authors",
+          "timeBox": "Defined in deprecation RFC (minimum 2 sprints)"
+        },
+        {
+          "step": "6.5",
+          "action": "Component removal",
+          "responsible": "Component Architect",
+          "note": "Only after all consumers have migrated"
+        }
+      ],
+      "outputState": "deprecated → removed"
+    }
+  }
+}

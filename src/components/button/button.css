@@ -1,0 +1,150 @@
+/* ============================================================
+   COMPONENT: Button
+   Maturity: Stable | Tier: Primitive
+   Job: Submit actions, trigger operations, navigate
+   ============================================================ */
+
+.t-btn {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--t-space-2);
+
+  /* Sizing — density-aware */
+  min-height: var(--t-touch-min);
+  padding: calc(var(--t-space-2) * var(--t-density-scale)) calc(var(--t-space-4) * var(--t-density-scale));
+
+  /* Typography */
+  font-family: var(--t-font-sans);
+  font-size: var(--t-text-sm);
+  font-weight: var(--t-weight-semibold);
+  line-height: var(--t-leading-tight);
+  letter-spacing: var(--t-tracking-wide);
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Appearance */
+  border: 1px solid transparent;
+  border-radius: var(--t-radius-md);
+  cursor: pointer;
+  user-select: none;
+
+  /* Transition */
+  transition:
+    background-color var(--t-duration-fast) var(--t-ease-default),
+    border-color var(--t-duration-fast) var(--t-ease-default),
+    color var(--t-duration-fast) var(--t-ease-default),
+    box-shadow var(--t-duration-fast) var(--t-ease-default),
+    transform var(--t-duration-fast) var(--t-ease-default);
+}
+
+.t-btn:active {
+  transform: scale(0.98);
+}
+
+/* --- Button: Primary (filled) --- */
+.t-btn--primary {
+  background-color: var(--t-interactive-default);
+  color: var(--t-fg-inverse);
+  border-color: var(--t-interactive-default);
+}
+.t-btn--primary:hover {
+  background-color: var(--t-interactive-hover);
+  border-color: var(--t-interactive-hover);
+}
+.t-btn--primary:active {
+  background-color: var(--t-interactive-active);
+  border-color: var(--t-interactive-active);
+}
+
+/* --- Button: Secondary (outlined) --- */
+.t-btn--secondary {
+  background-color: transparent;
+  color: var(--t-interactive-default);
+  border-color: var(--t-border-brand);
+}
+.t-btn--secondary:hover {
+  background-color: var(--t-bg-info);
+}
+.t-btn--secondary:active {
+  background-color: var(--t-raw-blue-100);
+}
+
+/* --- Button: Ghost (minimal) --- */
+.t-btn--ghost {
+  background-color: transparent;
+  color: var(--t-interactive-default);
+  border-color: transparent;
+}
+.t-btn--ghost:hover {
+  background-color: var(--t-bg-secondary);
+}
+.t-btn--ghost:active {
+  background-color: var(--t-bg-tertiary);
+}
+
+/* --- Button: Danger --- */
+.t-btn--danger {
+  background-color: var(--t-raw-red-600);
+  color: var(--t-fg-inverse);
+  border-color: var(--t-raw-red-600);
+}
+.t-btn--danger:hover {
+  background-color: var(--t-raw-red-700);
+  border-color: var(--t-raw-red-700);
+}
+.t-btn--danger:active {
+  background-color: var(--t-raw-red-800);
+  border-color: var(--t-raw-red-800);
+}
+
+/* --- Button: Sizes --- */
+.t-btn--sm {
+  min-height: calc(var(--t-touch-min) - 12px);
+  padding: var(--t-space-1) var(--t-space-3);
+  font-size: var(--t-text-xs);
+}
+.t-btn--lg {
+  min-height: calc(var(--t-touch-min) + 8px);
+  padding: var(--t-space-3) var(--t-space-6);
+  font-size: var(--t-text-base);
+}
+
+/* --- Button: Icon-only --- */
+.t-btn--icon {
+  padding: var(--t-space-2);
+  min-width: var(--t-touch-min);
+}
+
+/* --- Button: Disabled --- */
+.t-btn:disabled,
+.t-btn[aria-disabled="true"] {
+  background-color: var(--t-interactive-disabled);
+  color: var(--t-fg-disabled);
+  border-color: var(--t-interactive-disabled);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Button: Loading --- */
+.t-btn--loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+.t-btn--loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: var(--t-radius-full);
+  animation: t-spin 0.6s linear infinite;
+}
+.t-btn--primary.t-btn--loading::after { border-color: var(--t-fg-inverse); border-right-color: transparent; }
+
+@keyframes t-spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,66 @@
+/* ============================================================
+   COMPONENT: Badge
+   Maturity: Stable | Tier: Primitive
+   Job: Convey status, category, or count at a glance
+   ============================================================ */
+
+.t-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--t-space-1);
+
+  padding: var(--t-space-1) var(--t-space-2);
+
+  font-family: var(--t-font-sans);
+  font-size: var(--t-text-xs);
+  font-weight: var(--t-weight-medium);
+  line-height: var(--t-leading-tight);
+  letter-spacing: var(--t-tracking-wide);
+  white-space: nowrap;
+
+  border-radius: var(--t-radius-full);
+}
+
+.t-badge--neutral {
+  background-color: var(--t-bg-tertiary);
+  color: var(--t-fg-primary);
+}
+.t-badge--brand {
+  background-color: var(--t-bg-info);
+  color: var(--t-fg-brand);
+}
+.t-badge--success {
+  background-color: var(--t-bg-success);
+  color: var(--t-fg-success);
+}
+.t-badge--warning {
+  background-color: var(--t-bg-warning);
+  color: var(--t-fg-warning);
+}
+.t-badge--danger {
+  background-color: var(--t-bg-danger);
+  color: var(--t-fg-danger);
+}
+
+/* Maturity badges — agent-state signaling (Novel) */
+.t-badge--draft {
+  background-color: var(--t-raw-amber-100);
+  color: var(--t-raw-amber-800);
+  border: 1px dashed var(--t-raw-amber-400);
+}
+.t-badge--candidate {
+  background-color: var(--t-raw-blue-100);
+  color: var(--t-raw-blue-800);
+  border: 1px solid var(--t-raw-blue-300);
+}
+.t-badge--stable {
+  background-color: var(--t-raw-green-100);
+  color: var(--t-raw-green-800);
+  border: 1px solid var(--t-raw-green-400);
+}
+.t-badge--deprecated {
+  background-color: var(--t-raw-neutral-200);
+  color: var(--t-raw-neutral-600);
+  border: 1px solid var(--t-raw-neutral-400);
+  text-decoration: line-through;
+}

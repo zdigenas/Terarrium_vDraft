@@ -1,0 +1,261 @@
+{
+  "terrarium-model": {
+    "term": "Terrarium Model",
+    "category": "Ecosystem",
+    "def": "The governing metaphor of this design system. Like a real terrarium, it's a self-contained ecosystem where ideas germinate, grow, and either flourish or return to the soil. The system discovers its own shape through use rather than top-down prediction.",
+    "source": "philosophy.json",
+    "rule": "The system must emerge through use, not through speculative abstraction."
+  },
+  "eco-zones": {
+    "term": "Ecological Zones",
+    "category": "Ecosystem",
+    "def": "Four stratospheres through which every component idea travels: Nursery, Workshop, Canopy, and Seed Vault. Each zone has escalating governance rigor and different rules for how agents behave.",
+    "source": "terarrium-governance",
+    "rule": "Every component must pass through zones sequentially. No skipping — unless the Gardener overrides."
+  },
+  "nursery": {
+    "term": "Nursery",
+    "category": "Ecosystem",
+    "def": "The first zone. A protected space where new ideas germinate. No rejection allowed — only 'yes, and...' exploration. H-index influence is zero. All agents operate in Builder mode only. Max 2 sprints before graduating to Workshop or being seed-vaulted.",
+    "source": "terarrium-governance",
+    "rule": "No agent may reject an idea in the Nursery. Only Socratic questions, never assertions."
+  },
+  "workshop": {
+    "term": "Workshop",
+    "category": "Ecosystem",
+    "def": "The second zone. Structured exploration through alternating Builder/Optimizer cycles. Agents propose and critique in turns. Majority approval (3/5) suffices. Cross-pollination actively encouraged. 1-3 sprints.",
+    "source": "terarrium-governance",
+    "rule": "Every critique MUST pair with a constructive alternative. Majority vote, not unanimity."
+  },
+  "canopy": {
+    "term": "Canopy",
+    "category": "Ecosystem",
+    "def": "The third zone. Full sunlight — full governance rigor. Proven ideas face complete audits from all agents. Unanimous approval required for Stable promotion. Accessibility Guardian's absolute veto is active. H-index at full weight for tie-breaking.",
+    "source": "terarrium-governance",
+    "rule": "Unanimous approval required. AG absolute veto cannot be overridden by any agent."
+  },
+  "seed-vault": {
+    "term": "Seed Vault",
+    "category": "Ecosystem",
+    "def": "The archive. Ideas that didn't flourish in their season are preserved here with full context — rationale, critiques, votes, conditions. Nothing truly dies. The Pattern Librarian reviews quarterly, and any agent or the Gardener can propose revival when conditions change.",
+    "source": "terarrium-governance",
+    "rule": "Seeds must be preserved with full decision context. Quarterly review mandatory."
+  },
+  "builder-optimizer": {
+    "term": "Builder/Optimizer Cycle",
+    "category": "Ecosystem",
+    "def": "The alternating creative rhythm in the Workshop zone. In Builder mode, agents propose and expand. In Optimizer mode, agents critique and refine. This prevents premature convergence while ensuring quality.",
+    "source": "terarrium-governance",
+    "rule": "Workshop agents must alternate modes. Pure critique (Optimizer-only) is forbidden."
+  },
+  "third-shape": {
+    "term": "Third Shape",
+    "category": "Agents",
+    "def": "The agent hierarchy model unique to terarrium. Authority does not flow from the top down (tree), nor is it distributed equally (flat). Authority radiates from the center — documented truth. The Root System (Decision Memory, Change Registry, Living Reference) sits at the center; five domain agents radiate outward. The gardener reaches anywhere.",
+    "source": "CLAUDE.md",
+    "rule": "Authority comes from documented truth, not from position or seniority."
+  },
+  "root-system": {
+    "term": "Root System",
+    "category": "Agents",
+    "def": "The three documentation agents at the center of the Third Shape: Decision Memory (what was decided and why), Change Registry (what changed and what it affects), Living Reference (what things mean and how they work). All domain agent authority derives from citing documented truth.",
+    "source": "CLAUDE.md",
+    "rule": "Every agent action must cite from the Root System. Undocumented claims carry no authority."
+  },
+  "token-steward": {
+    "term": "Token Steward",
+    "category": "Agents",
+    "def": "Domain specialist for design tokens. Validates naming conventions, semantic token usage, dark mode definitions, and deprecation paths. Can veto components that reference primitives directly.",
+    "source": "agent-roles.json",
+    "rule": "No component may reference primitive tokens directly. Semantic tokens only."
+  },
+  "a11y-guardian": {
+    "term": "Accessibility Guardian",
+    "category": "Agents",
+    "def": "Domain specialist with absolute veto power on accessibility failures. Validates WCAG 2.2 AA compliance, keyboard navigation, screen reader support, touch targets (44px min), and color contrast (4.5:1 text, 3:1 non-text). Veto cannot be overridden by any agent — only the gardener.",
+    "source": "agent-roles.json",
+    "rule": "ABSOLUTE VETO on a11y failures. Cannot be overridden by any agent."
+  },
+  "pattern-librarian": {
+    "term": "Pattern Librarian",
+    "category": "Agents",
+    "def": "Domain specialist for pattern management. Manages the Seed Vault, screens for duplication, facilitates cross-pollination between domains, and conducts quarterly pattern mining reviews.",
+    "source": "agent-roles.json",
+    "rule": "Must screen every new proposal for duplication within 3 business days."
+  },
+  "component-architect": {
+    "term": "Component Architect",
+    "category": "Agents",
+    "def": "Domain specialist for component structure. Reviews composition, dependency direction, bundle size, SSR compatibility. Can veto composition-violating structures.",
+    "source": "agent-roles.json",
+    "rule": "Inward dependency direction required. No circular dependencies allowed."
+  },
+  "product-liaison": {
+    "term": "Product Liaison",
+    "category": "Agents",
+    "def": "Bridge agent between the design system and product teams. Validates real-world need, tracks adoption, reports feedback. Advisory veto on deprecations citing migration burden. Cannot modify tokens or override a11y.",
+    "source": "agent-roles.json",
+    "rule": "Repeatability gate: 2+ product team validations required before Stable."
+  },
+  "decision-memory": {
+    "term": "Decision Memory",
+    "category": "Agents",
+    "def": "Root System documentation agent. Records every governance decision with full context: what was decided, what alternatives existed, who dissented, what the gardener said. Append-only JSONL log. When any agent makes a decision, they cite from here.",
+    "source": "CLAUDE.md",
+    "rule": "Decisions are immutable once recorded. New decisions can supersede old ones but never erase them."
+  },
+  "change-registry": {
+    "term": "Change Registry",
+    "category": "Agents",
+    "def": "Root System documentation agent. Tracks every modification to the system with its dependency chain. Token changed → these components affected → these pages impacted. When something breaks, trace the chain backward.",
+    "source": "CLAUDE.md",
+    "rule": "Every change must record upstream causes and downstream effects."
+  },
+  "living-reference": {
+    "term": "Living Reference",
+    "category": "Agents",
+    "def": "Root System documentation agent. The self-teaching layer. Wiki entries, patterns, terminology, component documentation. When a new concept emerges, it gets captured here. When terminology evolves, references update.",
+    "source": "CLAUDE.md",
+    "rule": "New concepts must be named and defined before they can be cited in decisions."
+  },
+  "nutrient-flow": {
+    "term": "Nutrient Flow (H-Index)",
+    "category": "Operational",
+    "def": "The citation-based credibility system. When Agent A builds on Agent B's decision, B's h-index grows. Visible to all agents but does NOT grant veto power. Weight varies by zone: zero in Nursery, advisory in Workshop, full for tie-breaking in Canopy.",
+    "source": "terarrium-governance",
+    "rule": "High h-index never grants additional authority. Low h-index never strips existing authority."
+  },
+  "gardeners-hand": {
+    "term": "Gardener's Hand",
+    "category": "Operational",
+    "def": "The human-in-the-loop override system. The gardener can: Shield ideas from archival, seed biodiversity by injecting contrarian perspectives, revive ideas from the Seed Vault, force-promote through zones, and halt all agent activity at any time.",
+    "source": "CLAUDE.md",
+    "rule": "Gardener can override any agent decision. Must be documented in the Decision Memory."
+  },
+  "gardeners-halt": {
+    "term": "Gardener's Halt",
+    "category": "Operational",
+    "def": "Emergency stop mechanism. The human can pause or redirect any autonomous agent exploration at any time. When triggered, agents fall back to deterministic workflow mode.",
+    "source": "CLAUDE.md",
+    "rule": "Gardener's Halt is instantaneous and irrevocable. All agents must comply immediately."
+  },
+  "push-live": {
+    "term": "Push Live",
+    "category": "Operational",
+    "def": "The act of applying approved governance proposals to the live design system. All staged changes are batched. Token changes modify CSS custom properties. Lifecycle promotions update component maturity. Requires explicit human action.",
+    "source": "CLAUDE.md",
+    "rule": "Push Live requires explicit gardener action. No automatic deployment."
+  },
+  "honesty-paradigm": {
+    "term": "Honesty Paradigm",
+    "category": "Operational",
+    "def": "All agent claims must be verifiable from ground truth. Token compliance claims reference actual CSS. Accessibility claims reference actual axe scans. No synthetic verdicts presented as real analysis. All governance data in append-only JSONL logs.",
+    "source": "CLAUDE.md",
+    "rule": "No claim without evidence. No evidence without source. No source without ground truth."
+  },
+  "spark-queue": {
+    "term": "Spark Queue",
+    "category": "Operational",
+    "def": "Pre-Nursery signal capture. An interest or observation before it becomes a component proposal. Sparks are NOT tasks, NOT proposals. They live upstream of the Nursery as signals that something might be worth exploring.",
+    "source": "CLAUDE.md",
+    "rule": "Sparks must not be confused with proposals. They are signals, not commitments."
+  },
+  "jtbd": {
+    "term": "Jobs to Be Done (JTBD)",
+    "category": "Philosophy",
+    "def": "The foundational design philosophy. Every component exists to solve a real, repeatable problem. Priority: Functional (does it work?) > Affordance (is it recognizable?) > Emotional (does it feel right?).",
+    "source": "philosophy.json",
+    "rule": "JTBD priority is immutable: Functional > Affordance > Emotional. Cannot be reordered."
+  },
+  "functional-dimension": {
+    "term": "Functional Dimension",
+    "category": "Philosophy",
+    "def": "'Does this component do what I need it to do?' A button submits. An input captures text. A dialog traps focus. Function is the non-negotiable foundation. If a component fails functional evaluation, visual polish cannot save it.",
+    "source": "philosophy.json",
+    "rule": "No component passes review without proving functional completeness."
+  },
+  "affordance": {
+    "term": "Consistency as Affordance",
+    "category": "Philosophy",
+    "def": "When you look at a button, you know it's a button. This visual language consistency IS the unique value proposition of a design system. Accessibility Guardian has absolute veto on affordance violations.",
+    "source": "philosophy.json",
+    "rule": "Visual consistency is non-negotiable. AG veto on affordance failures."
+  },
+  "emotional-quality": {
+    "term": "Emotional Quality",
+    "category": "Philosophy",
+    "def": "Emotional resonance is earned through functional excellence. Don't design for feelings — design for competence, and the feelings follow. Trust is the product of consistent, high-quality interactions.",
+    "source": "philosophy.json",
+    "rule": "Emotion is tertiary. Never prioritize aesthetics over function or affordance."
+  },
+  "gardeners-log": {
+    "term": "Gardener's Log",
+    "category": "Philosophy",
+    "def": "The living record of the gardener's directives, philosophical breakthroughs, and course corrections that shaped terarrium. Preserved in the gardener's exact words. This is the ultimate design authority — when principles conflict, the Gardener's Log resolves the ambiguity.",
+    "source": "CLAUDE.md",
+    "rule": "The gardener's voice is law. When in doubt, return to the log."
+  },
+  "draft": {
+    "term": "Draft",
+    "category": "Lifecycle",
+    "def": "The first maturity tier. A hypothesis — the component idea has entered the system but hasn't been validated. In Nursery or early Workshop. Protected from rejection.",
+    "source": "terarrium-governance",
+    "rule": "Drafts may only be seed-vaulted, never rejected outright."
+  },
+  "candidate": {
+    "term": "Candidate",
+    "category": "Lifecycle",
+    "def": "The second maturity tier. A component that has passed specification review (Token Steward + A11y Guardian + Component Architect approval). Now undergoing validation with 2+ product teams.",
+    "source": "terarrium-governance",
+    "rule": "Requires TS + AG + CA approval. Must have 2+ team validations before Stable."
+  },
+  "stable": {
+    "term": "Stable",
+    "category": "Lifecycle",
+    "def": "The third maturity tier. Production-ready. Has passed all validation gates: unanimous agent approval, full WCAG 2.2 AA audit, 2+ team integrations, and gardener final sign-off.",
+    "source": "terarrium-governance",
+    "rule": "UNANIMOUS approval required. Subject to quarterly health checks."
+  },
+  "deprecated": {
+    "term": "Deprecated",
+    "category": "Lifecycle",
+    "def": "A stable component that no longer serves its purpose or is being replaced. Requires deprecation RFC, impact assessment, minimum 2-sprint migration window, and explicit gardener approval. Component enters Seed Vault with full context.",
+    "source": "terarrium-governance",
+    "rule": "Minimum 2-sprint migration window. Must include migration guide."
+  },
+  "design-tokens": {
+    "term": "Design Tokens",
+    "category": "Tokens",
+    "def": "The atomic values of the design system: colors, spacing, typography, elevation, radius. Stored in W3C DTCG JSON format with three tiers: Primitive (raw values) > Semantic (contextual meaning) > Component (specific usage). 180+ tokens in the system.",
+    "source": "token-engine.js",
+    "rule": "Three-tier hierarchy is mandatory. Components must reference semantic tokens only."
+  },
+  "semantic-tokens": {
+    "term": "Semantic Tokens",
+    "category": "Tokens",
+    "def": "The middle tier of the token hierarchy. These carry contextual meaning: --t-interactive-default, --t-fg-primary, --t-bg-danger. They reference primitives internally but expose meaning externally. All component styles must use semantic tokens.",
+    "source": "color.tokens.json",
+    "rule": "Components may NEVER reference primitive tokens directly. Semantic only."
+  },
+  "primitive-tokens": {
+    "term": "Primitive Tokens",
+    "category": "Tokens",
+    "def": "The base tier. Raw values like --t-raw-blue-600, --t-raw-neutral-100. These form the palette but should never be used directly in components. They're consumed by semantic tokens.",
+    "source": "color.tokens.json",
+    "rule": "Primitives are internal only. Direct usage in components triggers Token Steward veto."
+  },
+  "dtcg": {
+    "term": "DTCG Format",
+    "category": "Tokens",
+    "def": "W3C Design Token Community Group JSON format. The standard schema for design tokens. Uses $value, $type, and $description fields. Ensures interoperability across tools and platforms.",
+    "source": "token-engine.js",
+    "rule": "All token files must conform to DTCG schema."
+  },
+  "tonal-surfaces": {
+    "term": "Tonal Surface System",
+    "category": "Tokens",
+    "def": "Material 3-inspired elevation system. Surfaces are differentiated through both color tint and shadow depth, creating a layered interface hierarchy. Five levels (0-4) from base to highest elevation.",
+    "source": "foundation.css",
+    "rule": "Elevation must combine tonal shift + shadow. Color-only or shadow-only is insufficient."
+  }
+}

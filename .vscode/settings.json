@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "css.validate": false,
+  "stylelint.validate": ["css"],
+  "files.associations": {
+    "*.tokens.json": "json"
+  },
+  "search.exclude": {
+    "node_modules": true,
+    "poc": true,
+    "dist": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "claudeCode.useTerminal": true
+}

@@ -1,0 +1,185 @@
+{
+  "$schema": "agentic-ds/component-taxonomy/v1",
+  "$description": "Complete component taxonomy with maturity tiers, categorization, and governance metadata",
+
+  "maturityModel": {
+    "tiers": {
+      "draft": {
+        "label": "Draft",
+        "icon": "pencil",
+        "description": "Proposed component — not yet reviewed by any agent",
+        "requirements": ["RFC document", "Use-case justification", "Initial token mapping"],
+        "allowedIn": ["prototypes"],
+        "governanceGate": "Component Architect review"
+      },
+      "candidate": {
+        "label": "Candidate",
+        "icon": "flask",
+        "description": "Under active development, being validated against patterns",
+        "requirements": ["Anatomy spec", "Token compliance", "Accessibility audit (draft)", "2+ product team validations"],
+        "allowedIn": ["prototypes", "beta features"],
+        "governanceGate": "Accessibility Guardian + Token Steward sign-off"
+      },
+      "stable": {
+        "label": "Stable",
+        "icon": "check-circle",
+        "description": "Production-ready, fully governed, breaking changes require RFC",
+        "requirements": ["Full accessibility audit (WCAG 2.2 AA)", "Cross-platform validation", "Performance benchmark", "Documentation complete", "All agent sign-offs"],
+        "allowedIn": ["prototypes", "beta features", "production"],
+        "governanceGate": "Design System Lead final approval"
+      },
+      "deprecated": {
+        "label": "Deprecated",
+        "icon": "archive",
+        "description": "Scheduled for removal — migration path documented",
+        "requirements": ["Migration guide", "Replacement component identified", "Sunset timeline"],
+        "allowedIn": ["existing production (no new usage)"],
+        "governanceGate": "Design System Lead + Product Liaison agreement"
+      }
+    }
+  },
+
+  "categories": {
+    "primitives": {
+      "description": "Atomic building blocks — lowest-level interactive or visual elements",
+      "components": {
+        "Button": {
+          "maturity": "stable",
+          "variants": ["primary", "secondary", "ghost", "danger", "link"],
+          "sizes": ["sm", "md", "lg"],
+          "anatomy": ["container", "label", "icon-leading", "icon-trailing", "loading-indicator"],
+          "tokens": {
+            "container": "color.semantic.interactive + radius.md + spacing.2/spacing.4",
+            "label": "typography.composite.label",
+            "states": "interactive.default → hover → active → disabled"
+          },
+          "a11y": {
+            "role": "button",
+            "minTouchTarget": "sizing.touch-target.min",
+            "contrastRatio": "4.5:1 (text), 3:1 (non-text)",
+            "focusIndicator": "2px solid color.semantic.border.focus, 2px offset"
+          }
+        },
+        "Input": {
+          "maturity": "stable",
+          "variants": ["text", "password", "email", "number", "search", "textarea"],
+          "sizes": ["sm", "md", "lg"],
+          "anatomy": ["container", "label", "input-field", "placeholder", "helper-text", "error-text", "prefix", "suffix", "clear-button"],
+          "tokens": {
+            "container": "color.semantic.bg.primary + border.default + radius.md",
+            "label": "typography.composite.label",
+            "input": "typography.composite.body-md",
+            "error": "color.semantic.fg.danger"
+          },
+          "a11y": {
+            "role": "textbox",
+            "required": ["aria-label OR visible label", "aria-describedby for helper/error text", "aria-invalid for error state"]
+          }
+        },
+        "Icon": {
+          "maturity": "stable",
+          "sizes": ["sm", "md", "lg", "xl"],
+          "anatomy": ["svg-container"],
+          "tokens": { "size": "sizing.icon.*", "color": "inherits from parent fg" },
+          "a11y": { "decorative": "aria-hidden=true", "meaningful": "role=img + aria-label" }
+        },
+        "Badge": {
+          "maturity": "candidate",
+          "variants": ["neutral", "brand", "success", "warning", "danger"],
+          "anatomy": ["container", "label", "dot-indicator"],
+          "tokens": { "container": "color.semantic.bg.* + radius.full", "label": "typography.composite.caption" }
+        },
+        "Avatar": {
+          "maturity": "stable",
+          "variants": ["image", "initials", "icon-fallback"],
+          "sizes": ["xs", "sm", "md", "lg", "xl"],
+          "anatomy": ["container", "image", "initials-text", "presence-indicator"],
+          "tokens": { "container": "sizing.avatar.* + radius.full" }
+        }
+      }
+    },
+    "composites": {
+      "description": "Mid-complexity components composed of multiple primitives",
+      "components": {
+        "Card": {
+          "maturity": "stable",
+          "variants": ["default", "interactive", "outlined", "elevated"],
+          "anatomy": ["container", "header", "media", "body", "footer", "actions"],
+          "tokens": {
+            "container": "color.semantic.bg.primary + radius.lg + elevation.1",
+            "interactive": "elevation.1 → elevation.2 on hover"
+          }
+        },
+        "Dialog": {
+          "maturity": "stable",
+          "variants": ["default", "alert", "fullscreen"],
+          "anatomy": ["backdrop", "container", "header", "close-button", "body", "footer", "actions"],
+          "tokens": {
+            "backdrop": "rgba(0,0,0,0.5)",
+            "container": "color.semantic.bg.primary + elevation.4 + radius.xl"
+          },
+          "a11y": {
+            "role": "dialog",
+            "required": ["aria-modal=true", "aria-labelledby", "focus-trap", "return-focus-on-close", "Escape to dismiss"]
+          }
+        },
+        "Tabs": {
+          "maturity": "stable",
+          "variants": ["underline", "pill", "enclosed"],
+          "anatomy": ["tab-list", "tab-item", "tab-indicator", "tab-panel"],
+          "a11y": {
+            "roles": "tablist → tab → tabpanel",
+            "keyboard": "Arrow keys to navigate, Enter/Space to select"
+          }
+        },
+        "Dropdown": {
+          "maturity": "candidate",
+          "variants": ["select", "multi-select", "combobox"],
+          "anatomy": ["trigger", "menu-container", "option-item", "option-group", "search-input", "empty-state"],
+          "a11y": {
+            "role": "listbox OR combobox",
+            "keyboard": "Arrow keys, Enter, Escape, type-ahead"
+          }
+        },
+        "Toast": {
+          "maturity": "candidate",
+          "variants": ["info", "success", "warning", "error"],
+          "anatomy": ["container", "icon", "message", "action", "dismiss-button", "progress-bar"],
+          "a11y": {
+            "role": "status (info/success) OR alert (warning/error)",
+            "required": ["aria-live=polite OR assertive", "auto-dismiss timer pausable on hover"]
+          }
+        }
+      }
+    },
+    "patterns": {
+      "description": "High-level patterns that prescribe how components work together",
+      "components": {
+        "Form": {
+          "maturity": "stable",
+          "composed-of": ["Input", "Button", "Dropdown", "Badge"],
+          "anatomy": ["form-container", "field-group", "field", "actions-bar", "validation-summary"],
+          "behavior": {
+            "validation": "inline on blur, summary on submit",
+            "submission": "disable actions during async, show loading state"
+          }
+        },
+        "DataTable": {
+          "maturity": "candidate",
+          "composed-of": ["Input", "Button", "Badge", "Dropdown", "Icon"],
+          "anatomy": ["toolbar", "column-header", "row", "cell", "pagination", "empty-state", "loading-state"],
+          "behavior": {
+            "sorting": "click column header, tri-state (asc/desc/none)",
+            "selection": "checkbox column, shift-click range"
+          }
+        },
+        "Navigation": {
+          "maturity": "draft",
+          "composed-of": ["Button", "Icon", "Avatar", "Badge", "Dropdown"],
+          "variants": ["sidebar", "top-bar", "bottom-bar", "breadcrumb"],
+          "anatomy": ["nav-container", "nav-item", "nav-group", "nav-divider", "collapse-toggle"]
+        }
+      }
+    }
+  }
+}

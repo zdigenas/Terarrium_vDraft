@@ -1,0 +1,114 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Agentic Design System — Spacing, Sizing & Layout Tokens (DTCG format)",
+  "spacing": {
+    "$description": "4px base unit geometric scale",
+    "0":    { "$value": "0px",   "$type": "dimension" },
+    "1":    { "$value": "4px",   "$type": "dimension" },
+    "2":    { "$value": "8px",   "$type": "dimension" },
+    "3":    { "$value": "12px",  "$type": "dimension" },
+    "4":    { "$value": "16px",  "$type": "dimension" },
+    "5":    { "$value": "20px",  "$type": "dimension" },
+    "6":    { "$value": "24px",  "$type": "dimension" },
+    "8":    { "$value": "32px",  "$type": "dimension" },
+    "10":   { "$value": "40px",  "$type": "dimension" },
+    "12":   { "$value": "48px",  "$type": "dimension" },
+    "16":   { "$value": "64px",  "$type": "dimension" },
+    "20":   { "$value": "80px",  "$type": "dimension" },
+    "24":   { "$value": "96px",  "$type": "dimension" },
+    "32":   { "$value": "128px", "$type": "dimension" },
+    "40":   { "$value": "160px", "$type": "dimension" }
+  },
+  "sizing": {
+    "icon": {
+      "sm": { "$value": "16px", "$type": "dimension" },
+      "md": { "$value": "20px", "$type": "dimension" },
+      "lg": { "$value": "24px", "$type": "dimension" },
+      "xl": { "$value": "32px", "$type": "dimension" }
+    },
+    "avatar": {
+      "xs": { "$value": "24px", "$type": "dimension" },
+      "sm": { "$value": "32px", "$type": "dimension" },
+      "md": { "$value": "40px", "$type": "dimension" },
+      "lg": { "$value": "48px", "$type": "dimension" },
+      "xl": { "$value": "64px", "$type": "dimension" }
+    },
+    "touch-target": {
+      "min": { "$value": "44px", "$type": "dimension", "$description": "WCAG 2.5.8 minimum" }
+    }
+  },
+  "radius": {
+    "none": { "$value": "0px",   "$type": "dimension" },
+    "sm":   { "$value": "4px",   "$type": "dimension" },
+    "md":   { "$value": "8px",   "$type": "dimension" },
+    "lg":   { "$value": "12px",  "$type": "dimension" },
+    "xl":   { "$value": "16px",  "$type": "dimension" },
+    "2xl":  { "$value": "24px",  "$type": "dimension" },
+    "full": { "$value": "9999px","$type": "dimension" }
+  },
+  "elevation": {
+    "$description": "Layered shadow system for depth hierarchy",
+    "0": { "$value": "none", "$type": "shadow" },
+    "1": {
+      "$value": [
+        { "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px", "color": "rgba(0,0,0,0.05)" },
+        { "offsetX": "0px", "offsetY": "1px", "blur": "3px", "spread": "0px", "color": "rgba(0,0,0,0.10)" }
+      ],
+      "$type": "shadow"
+    },
+    "2": {
+      "$value": [
+        { "offsetX": "0px", "offsetY": "2px", "blur": "4px", "spread": "-1px", "color": "rgba(0,0,0,0.06)" },
+        { "offsetX": "0px", "offsetY": "4px", "blur": "6px", "spread": "-1px", "color": "rgba(0,0,0,0.10)" }
+      ],
+      "$type": "shadow"
+    },
+    "3": {
+      "$value": [
+        { "offsetX": "0px", "offsetY": "10px", "blur": "15px", "spread": "-3px", "color": "rgba(0,0,0,0.10)" },
+        { "offsetX": "0px", "offsetY": "4px", "blur": "6px", "spread": "-4px", "color": "rgba(0,0,0,0.10)" }
+      ],
+      "$type": "shadow"
+    },
+    "4": {
+      "$value": [
+        { "offsetX": "0px", "offsetY": "20px", "blur": "25px", "spread": "-5px", "color": "rgba(0,0,0,0.10)" },
+        { "offsetX": "0px", "offsetY": "8px", "blur": "10px", "spread": "-6px", "color": "rgba(0,0,0,0.10)" }
+      ],
+      "$type": "shadow"
+    }
+  },
+  "motion": {
+    "duration": {
+      "instant":  { "$value": "0ms",   "$type": "duration" },
+      "fast":     { "$value": "100ms", "$type": "duration" },
+      "normal":   { "$value": "200ms", "$type": "duration" },
+      "slow":     { "$value": "300ms", "$type": "duration" },
+      "slower":   { "$value": "500ms", "$type": "duration" }
+    },
+    "easing": {
+      "default":    { "$value": "cubic-bezier(0.2, 0, 0, 1)", "$type": "cubicBezier" },
+      "entrance":   { "$value": "cubic-bezier(0, 0, 0.2, 1)", "$type": "cubicBezier" },
+      "exit":       { "$value": "cubic-bezier(0.4, 0, 1, 1)",  "$type": "cubicBezier" },
+      "spring":     { "$value": "cubic-bezier(0.175, 0.885, 0.32, 1.275)", "$type": "cubicBezier" }
+    }
+  },
+  "breakpoint": {
+    "$description": "Viewport breakpoints for responsive design",
+    "sm":  { "$value": "640px",  "$type": "dimension" },
+    "md":  { "$value": "768px",  "$type": "dimension" },
+    "lg":  { "$value": "1024px", "$type": "dimension" },
+    "xl":  { "$value": "1280px", "$type": "dimension" },
+    "2xl": { "$value": "1536px", "$type": "dimension" }
+  },
+  "z-index": {
+    "base":     { "$value": 0,    "$type": "number" },
+    "dropdown": { "$value": 1000, "$type": "number" },
+    "sticky":   { "$value": 1100, "$type": "number" },
+    "overlay":  { "$value": 1200, "$type": "number" },
+    "modal":    { "$value": 1300, "$type": "number" },
+    "popover":  { "$value": 1400, "$type": "number" },
+    "toast":    { "$value": 1500, "$type": "number" },
+    "tooltip":  { "$value": 1600, "$type": "number" }
+  }
+}

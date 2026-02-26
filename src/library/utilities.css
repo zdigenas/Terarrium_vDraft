@@ -1,0 +1,40 @@
+/* ============================================================
+   UTILITIES: Layout helpers
+   ============================================================ */
+
+.t-stack    { display: flex; flex-direction: column; }
+.t-inline   { display: flex; flex-direction: row; align-items: center; }
+.t-gap-1    { gap: var(--t-space-1); }
+.t-gap-2    { gap: var(--t-space-2); }
+.t-gap-3    { gap: var(--t-space-3); }
+.t-gap-4    { gap: var(--t-space-4); }
+.t-gap-6    { gap: var(--t-space-6); }
+.t-gap-8    { gap: var(--t-space-8); }
+
+.t-p-2  { padding: var(--t-space-2); }
+.t-p-3  { padding: var(--t-space-3); }
+.t-p-4  { padding: var(--t-space-4); }
+.t-p-6  { padding: var(--t-space-6); }
+.t-p-8  { padding: var(--t-space-8); }
+
+.t-text-center { text-align: center; }
+.t-text-right  { text-align: right; }
+.t-w-full      { width: 100%; }
+
+/* ============================================================
+   UTILITIES: Typography helpers
+   ============================================================ */
+
+.t-display-lg  { font-size: var(--t-text-4xl); font-weight: var(--t-weight-bold); line-height: var(--t-leading-tight); letter-spacing: var(--t-tracking-tight); }
+.t-display-md  { font-size: var(--t-text-3xl); font-weight: var(--t-weight-bold); line-height: var(--t-leading-tight); letter-spacing: var(--t-tracking-tight); }
+.t-heading-lg  { font-size: var(--t-text-2xl); font-weight: var(--t-weight-semibold); line-height: var(--t-leading-tight); letter-spacing: var(--t-tracking-tight); }
+.t-heading-md  { font-size: var(--t-text-xl);  font-weight: var(--t-weight-semibold); line-height: var(--t-leading-tight); }
+.t-heading-sm  { font-size: var(--t-text-lg);  font-weight: var(--t-weight-semibold); line-height: var(--t-leading-tight); }
+.t-body-lg     { font-size: var(--t-text-md);  font-weight: var(--t-weight-regular); line-height: var(--t-leading-normal); }
+.t-body-md     { font-size: var(--t-text-base); font-weight: var(--t-weight-regular); line-height: var(--t-leading-normal); }
+.t-body-sm     { font-size: var(--t-text-sm);  font-weight: var(--t-weight-regular); line-height: var(--t-leading-normal); }
+.t-caption     { font-size: var(--t-text-xs);  font-weight: var(--t-weight-regular); line-height: var(--t-leading-normal); letter-spacing: var(--t-tracking-wide); }
+.t-code        { font-family: var(--t-font-mono); font-size: var(--t-text-sm); line-height: var(--t-leading-relaxed); }
+
+/* End of Terrarium foundation CSS.
+   Additional component styles are born through the pipeline. */

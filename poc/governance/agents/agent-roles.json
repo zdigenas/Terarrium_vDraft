@@ -1,0 +1,276 @@
+{
+  "$schema": "agentic-ds/governance/agent-roles/v1",
+  "$description": "Role-based agent definitions for the Agentic Design System governance model",
+
+  "principles": {
+    "separation": "No single agent can approve their own proposals — all changes require cross-agent review",
+    "transparency": "Every decision is logged with rationale, dissent is recorded, not suppressed",
+    "escalation": "Unresolved disagreements escalate to the Design System Lead, then to the Steering Committee",
+    "humanInTheLoop": "Agents are human roles with defined authority boundaries — final authority rests with humans at every level",
+    "functionFirst": "When evaluating any proposal, the first question is always 'What job does this component do?' (Functional). The second is 'Can a user tell what this is at a glance?' (Affordance). The third is 'Does it feel like it belongs?' (Emotional). This priority order is non-negotiable.",
+    "emergentDiscovery": "We cannot know what the system needs until we build with it. Agents must embrace that Drafts are hypotheses, Candidates are experiments, and Stable components are proven solutions. No agent should block proposals for being 'too speculative' at the Draft stage — that's what the lifecycle is for.",
+    "repeatabilityOverNovelty": "A pattern earns system inclusion by proving it's needed by 2+ teams, not by being clever. Agents should evaluate proposals against real product needs, not theoretical completeness."
+  },
+
+  "agents": {
+    "designSystemLead": {
+      "title": "Design System Lead",
+      "type": "strategic",
+      "headcount": "1",
+      "authority": "final",
+      "description": "Overall steward of the design system. Sets vision, resolves disputes, approves stable promotions, and represents the system to product leadership.",
+      "responsibilities": [
+        "Set and maintain the design system roadmap",
+        "Final approval gate for Candidate → Stable promotions",
+        "Resolve cross-agent disputes when escalated",
+        "Approve or reject deprecation proposals",
+        "Quarterly health reports to stakeholders",
+        "Onboard and mentor new governance agents"
+      ],
+      "decisionAuthority": {
+        "canApprove": ["stable promotions", "deprecations", "breaking changes", "new agent appointments"],
+        "canVeto": ["any component change with written rationale"],
+        "cannotDo": ["bypass accessibility requirements", "approve own proposals without co-sign"]
+      },
+      "metrics": {
+        "systemAdoption": "% of product teams using the design system",
+        "componentCoverage": "% of UI surface covered by system components",
+        "meanTimeToStable": "Average days from Draft → Stable"
+      },
+      "rituals": [
+        { "name": "Weekly Governance Sync", "frequency": "weekly", "duration": "30min" },
+        { "name": "Quarterly System Review", "frequency": "quarterly", "duration": "2hr" }
+      ]
+    },
+
+    "tokenSteward": {
+      "title": "Token Steward",
+      "type": "specialist",
+      "headcount": "1-2",
+      "authority": "domain",
+      "description": "Guardian of the design token architecture. Ensures token naming, aliasing, and usage follow system conventions. Prevents token sprawl and maintains semantic consistency.",
+      "responsibilities": [
+        "Review all token additions, modifications, and removals",
+        "Enforce DTCG format compliance",
+        "Maintain the primitive → semantic → component token hierarchy",
+        "Audit token usage in component specs for correctness",
+        "Manage dark mode and theme token overlays",
+        "Produce token deprecation migration guides"
+      ],
+      "decisionAuthority": {
+        "canApprove": ["new tokens", "token renames", "theme additions"],
+        "canVeto": ["component specs that reference primitives directly", "token names that violate conventions"],
+        "cannotDo": ["approve new components", "modify accessibility requirements"]
+      },
+      "reviewChecklist": [
+        "Token follows naming convention: {category}.{concept}.{property}.{variant}",
+        "Semantic token exists between primitive and component usage",
+        "No hardcoded values — all values reference tokens",
+        "Dark mode / high-contrast values defined",
+        "Deprecated tokens have migration path"
+      ],
+      "metrics": {
+        "tokenCoverage": "% of component values mapped to tokens",
+        "tokenSprawl": "Ratio of tokens to components (lower = better)",
+        "migrationDebt": "Count of deprecated tokens still in use"
+      }
+    },
+
+    "accessibilityGuardian": {
+      "title": "Accessibility Guardian",
+      "type": "specialist",
+      "headcount": "1-2",
+      "authority": "domain (veto power on a11y issues)",
+      "description": "Ensures every component meets WCAG 2.2 AA (and AAA where feasible). Has veto power — no component can reach Stable without their sign-off.",
+      "responsibilities": [
+        "Audit all component specs for WCAG 2.2 AA compliance",
+        "Define keyboard interaction patterns",
+        "Validate ARIA role and attribute usage",
+        "Test with screen readers (NVDA, VoiceOver, JAWS)",
+        "Review color contrast ratios across all themes",
+        "Maintain the accessibility testing protocol",
+        "Advocate for inclusive design in all governance discussions"
+      ],
+      "decisionAuthority": {
+        "canApprove": ["accessibility compliance of any component"],
+        "canVeto": ["ANY component promotion if accessibility requirements unmet — this veto is absolute"],
+        "cannotDo": ["approve visual design direction", "override token naming conventions"]
+      },
+      "reviewChecklist": [
+        "ARIA roles and attributes are correct and complete",
+        "Keyboard navigation is logical and complete",
+        "Focus management is properly handled",
+        "Color contrast meets 4.5:1 (text) and 3:1 (non-text) minimums",
+        "Touch targets meet 44x44px minimum",
+        "Screen reader announcements are meaningful",
+        "Motion respects prefers-reduced-motion",
+        "Component works at 200% zoom"
+      ],
+      "metrics": {
+        "a11yPassRate": "% of components passing full audit",
+        "issueResolutionTime": "Mean days to resolve flagged issues",
+        "coverageByLevel": "% of components at AA vs AAA"
+      }
+    },
+
+    "patternLibrarian": {
+      "title": "Pattern Librarian",
+      "type": "specialist",
+      "headcount": "1-2",
+      "authority": "domain",
+      "description": "Maintains the pattern library and ensures components compose correctly. Prevents duplication, identifies reuse opportunities, and keeps documentation current.",
+      "responsibilities": [
+        "Review new component proposals for overlap with existing patterns",
+        "Maintain composition rules (which components can nest in which)",
+        "Keep documentation complete, accurate, and versioned",
+        "Manage the component status dashboard",
+        "Identify and flag component duplication across product teams",
+        "Author usage guidelines and best-practice examples"
+      ],
+      "decisionAuthority": {
+        "canApprove": ["documentation changes", "composition rules", "usage guidelines"],
+        "canVeto": ["new components that duplicate existing patterns (with justification)"],
+        "cannotDo": ["approve token changes", "override accessibility decisions"]
+      },
+      "reviewChecklist": [
+        "No existing component already serves this use case",
+        "Composition with parent/child components is well-defined",
+        "Usage guidelines cover common scenarios and anti-patterns",
+        "Examples are provided for each variant",
+        "Documentation follows the system template"
+      ],
+      "metrics": {
+        "documentationCoverage": "% of stable components with complete docs",
+        "duplicationRate": "Instances of redundant components across teams",
+        "searchSuccessRate": "% of developers finding what they need in first search"
+      }
+    },
+
+    "componentArchitect": {
+      "title": "Component Architect",
+      "type": "specialist",
+      "headcount": "1-2",
+      "authority": "domain",
+      "description": "Ensures components are well-structured, performant, and follow sound engineering principles. Reviews the technical anatomy, prop API, and behavioral specifications.",
+      "responsibilities": [
+        "Review component anatomy for proper separation of concerns",
+        "Validate prop API design (naming, types, defaults)",
+        "Assess performance implications (render cost, bundle size)",
+        "Define state management patterns for complex components",
+        "Establish responsive behavior specifications",
+        "Review animation and transition specifications"
+      ],
+      "decisionAuthority": {
+        "canApprove": ["component anatomy", "prop API design", "behavioral specs"],
+        "canVeto": ["component structures that violate composition principles"],
+        "cannotDo": ["approve visual design", "override accessibility decisions"]
+      },
+      "reviewChecklist": [
+        "Anatomy is minimal — no unnecessary wrapper elements",
+        "Props are well-named and follow system conventions",
+        "Default values are sensible for the most common use case",
+        "Component is composable — can be combined with others",
+        "Performance is considered (no unnecessary re-renders, lazy loading where appropriate)",
+        "Responsive behavior is specified for all breakpoints"
+      ],
+      "metrics": {
+        "apiConsistency": "% of props following naming conventions",
+        "bundleSizeBudget": "Components within size targets",
+        "breakingChangeRate": "Breaking changes per quarter (lower = better)"
+      }
+    },
+
+    "productLiaison": {
+      "title": "Product Liaison",
+      "type": "bridge",
+      "headcount": "2-4 (one per major product area)",
+      "authority": "advisory",
+      "description": "Represents product teams within the governance model. Brings real-world usage context, advocates for product needs, and ensures the system serves its consumers.",
+      "responsibilities": [
+        "Bring component requests from product teams to governance",
+        "Validate that proposed components solve real product needs",
+        "Participate in prioritization of the design system backlog",
+        "Gather feedback on system usability from developers and designers",
+        "Report adoption blockers and friction points",
+        "Champion the design system within their product area"
+      ],
+      "decisionAuthority": {
+        "canApprove": ["prioritization of backlog items"],
+        "canVeto": ["deprecations that would cause undue migration burden (advisory — can be overridden by Lead)"],
+        "cannotDo": ["approve component specs", "modify tokens or accessibility requirements"]
+      },
+      "metrics": {
+        "adoptionRate": "% of eligible screens using system components",
+        "satisfactionScore": "Developer/designer satisfaction (quarterly survey)",
+        "requestFulfillmentRate": "% of product requests addressed within 2 sprints"
+      }
+    }
+  },
+
+  "moltPitBehavior": {
+    "$description": "How each agent operates within the Molt Pit ecosystem — their mode shifts across stratospheres",
+
+    "nutrientFlowTracking": {
+      "description": "Every agent has an h-index score that reflects their credibility through citation metrics — like nutrient flow in an ecosystem. When Agent A builds on Agent B's prior decision, Agent B's h-index grows, directing more growth energy their way.",
+      "visibility": "Transparent to all agents and the Steering Committee",
+      "influence": {
+        "nursery": "ZERO — nutrient flow has no bearing on seedling evaluation",
+        "workshop": "LOW — visible but advisory only",
+        "canopy": "FULL — informs tie-breaking and evaluation weight"
+      },
+      "warning": "H-index is a trust signal showing fertile ground, not an authority grant. High h-index never grants additional veto power. Low h-index never strips existing authority."
+    },
+
+    "modesByStratosphere": {
+      "designSystemLead": {
+        "nursery": "Gardener — sows ideas, protects delicate seedlings, tends biodiversity",
+        "workshop": "Facilitator — ensures Builder/Optimizer cycles are productive, prevents premature hardening",
+        "canopy": "Steward — exercises full authority, tends growth, makes final calls"
+      },
+      "tokenSteward": {
+        "nursery": "Builder — helps ideas find their token language, never rejects for token violations",
+        "workshop": "Builder/Optimizer alternating — proposes token mappings, then evaluates them",
+        "canopy": "Optimizer — enforces strict token compliance, vetoes direct primitive usage"
+      },
+      "accessibilityGuardian": {
+        "nursery": "Builder — asks 'How might this be accessible?' not 'This isn't accessible'",
+        "workshop": "Builder/Optimizer — proposes a11y patterns, then audits against them",
+        "canopy": "Optimizer with veto — full audit authority, absolute veto on a11y failures"
+      },
+      "patternLibrarian": {
+        "nursery": "Connector — 'This reminds me of...' 'Have you seen what Team X grew?' Cross-pollinates ideas.",
+        "workshop": "Curator — identifies duplication, proposes compositions, maintains the terrarium map",
+        "canopy": "Steward — ensures only flourishing ideas reach full sunlight, ensures documentation blooms"
+      },
+      "componentArchitect": {
+        "nursery": "Builder — sketches possible structures, explores growth paths openly",
+        "workshop": "Builder/Optimizer — proposes architectures, stress-tests their roots, iterates",
+        "canopy": "Optimizer — enforces structural standards, vetoes composition violations"
+      },
+      "productLiaison": {
+        "nursery": "Advocate — brings real-world needs, validates that ideas address actual pain",
+        "workshop": "Validator — connects ideas to product gardens for early growth, reports back",
+        "canopy": "Advocate — represents ecosystem impact, provides thriving data, advisory veto on composting decisions"
+      }
+    },
+
+    "citationExamples": [
+      "Token Steward → A11y Guardian: 'Building on contrast ruling #47, the amber.500→600 shift maintains 4.5:1 while improving dark-mode readability.'",
+      "Component Architect → Pattern Librarian: 'Adopting composition rule #12 for nested Dialogs within Tabs — the containment model holds.'",
+      "Design System Lead → Product Liaison: 'Based on adoption data from #PL-23, promoting Badge to Stable is justified by 4-team usage.'",
+      "A11y Guardian → Component Architect: 'Extending focus-trap pattern from Dialog (#CA-15) to the new Dropdown. The keyboard model transfers cleanly.'"
+    ]
+  },
+
+  "steeringCommittee": {
+    "description": "Executive oversight body for the design system. Meets quarterly or on escalation.",
+    "composition": ["VP Design", "VP Engineering", "Design System Lead", "1 Product Liaison (rotating)"],
+    "authority": "Can override any agent decision. Acts as final escalation point.",
+    "scope": [
+      "Major version decisions (breaking changes affecting >50% of consumers)",
+      "Resource allocation for the design system team",
+      "Resolution of disputes the Design System Lead cannot resolve",
+      "Strategic direction alignment with company goals"
+    ]
+  }
+}

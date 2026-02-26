@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrarium — Agentic Design System Architecture Explorer</title>
+<style>
+  :root {
+    --bg: #0D0F12;
+    --bg-card: #161A1F;
+    --bg-hover: #1E2329;
+    --border: #2A2F36;
+    --text: #E9ECEF;
+    --text-dim: #868E96;
+    --blue: #339AF0;
+    --blue-dim: #1864AB;
+    --green: #40C057;
+    --amber: #FCC419;
+    --red: #FA5252;
+    --purple: #9775FA;
+    --radius: 12px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .header {
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .header p { color: var(--text-dim); font-size: 15px; max-width: 600px; line-height: 1.5; }
+  .header-link { display: inline-block; margin-top: 12px; padding: 8px 16px; background: var(--blue); color: #fff; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
+  .header-link:hover { background: var(--blue-dim); }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .tab {
+    padding: 14px 24px;
+    cursor: pointer;
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); background: var(--bg-hover); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  .content { padding: 32px 40px; max-width: 1200px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Token Viewer */
+  .token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .token-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .token-card:hover { border-color: var(--blue); }
+  .token-card h3 { font-size: 13px; color: var(--text-dim); font-weight: 500; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .color-swatch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+  }
+  .swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .swatch-info { font-size: 13px; }
+  .swatch-info .name { color: var(--text); font-weight: 500; }
+  .swatch-info .value { color: var(--text-dim); font-family: var(--mono); font-size: 12px; }
+
+  /* Agent Cards */
+  .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .agent-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .agent-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+  .agent-card .agent-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .agent-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+  }
+  .agent-card h3 { font-size: 16px; font-weight: 600; }
+  .agent-card .agent-type {
+    font-size: 12px;
+    color: var(--text-dim);
+    background: var(--bg-hover);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  .agent-card p { font-size: 14px; color: var(--text-dim); line-height: 1.5; margin-bottom: 16px; }
+  .agent-powers { display: flex; flex-wrap: wrap; gap: 6px; }
+  .power-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+  .power-approve { color: var(--green); border-color: rgba(64, 192, 87, 0.3); background: rgba(64, 192, 87, 0.08); }
+  .power-veto { color: var(--red); border-color: rgba(250, 82, 82, 0.3); background: rgba(250, 82, 82, 0.08); }
+
+  /* Workflow */
+  .workflow-timeline { position: relative; padding-left: 32px; }
+  .workflow-timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .workflow-step {
+    position: relative;
+    margin-bottom: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .workflow-step::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 24px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--blue);
+    background: var(--bg);
+  }
+  .workflow-step h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .workflow-step p { font-size: 14px; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px; }
+  .step-number {
+    background: var(--blue);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .gate-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .gate-human { background: rgba(252, 196, 25, 0.1); color: var(--amber); border: 1px solid rgba(252, 196, 25, 0.3); }
+  .gate-agents { background: rgba(151, 117, 250, 0.1); color: var(--purple); border: 1px solid rgba(151, 117, 250, 0.3); }
+
+  /* RACI Matrix */
+  .raci-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 16px;
+  }
+  .raci-table th, .raci-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .raci-table th {
+    background: var(--bg-hover);
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .raci-table td:first-child { text-align: left; font-weight: 500; }
+  .raci-r { color: var(--blue); font-weight: 700; }
+  .raci-a { color: var(--green); font-weight: 700; }
+  .raci-c { color: var(--amber); }
+  .raci-i { color: var(--text-dim); }
+
+  /* Component Taxonomy */
+  .taxonomy-tier {
+    margin-bottom: 32px;
+  }
+  .tier-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .tier-badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tier-primitives { background: rgba(51, 154, 240, 0.15); color: var(--blue); }
+  .tier-composites { background: rgba(151, 117, 250, 0.15); color: var(--purple); }
+  .tier-patterns { background: rgba(64, 192, 87, 0.15); color: var(--green); }
+  .component-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .component-chip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s;
+  }
+  .component-chip:hover { border-color: var(--blue); }
+  .component-chip .name { font-weight: 500; font-size: 14px; }
+  .maturity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .maturity-stable { background: var(--green); }
+  .maturity-candidate { background: var(--amber); }
+  .maturity-draft { background: var(--text-dim); }
+
+  .section-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .section-desc { color: var(--text-dim); font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+
+  .legend { display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Agentic Design System</h1>
+  <p>A stack-agnostic UI component design system governed by role-based human agents with structured decision protocols and human-in-the-loop gates at every critical juncture.</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-panel="philosophy">Philosophy</div>
+  <div class="tab" data-panel="moltpit">Molt Pit</div>
+  <div class="tab" data-panel="tokens">Tokens</div>
+  <div class="tab" data-panel="components">Components</div>
+  <div class="tab" data-panel="agents">Governance Agents</div>
+  <div class="tab" data-panel="workflow">Component Lifecycle</div>
+  <div class="tab" data-panel="raci">RACI Matrix</div>
+</div>
+
+<div class="content">
+
+  <!-- PHILOSOPHY PANEL -->
+  <div class="panel active" id="philosophy">
+    <h2 class="section-title">Emergent Functional Design</h2>
+    <p class="section-desc">Design systems come out of a need for repeatable solutions. We can't know what specific components the system needs until we start building with it. This isn't a limitation — it's the foundational insight that shapes every decision.</p>
+
+    <div style="margin-bottom:32px">
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--blue)">Jobs to Be Done: The Three Dimensions</h3>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:20px">Traditional JTBD identifies functional and emotional dimensions. For design systems, we identify a critical third dimension — <strong style="color:var(--text)">consistency as affordance</strong> — that bridges the two and is the unique reason design systems exist.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;border-left:4px solid var(--blue)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="background:rgba(51,154,240,0.15);color:var(--blue);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600">PRIMARY</span>
+            <h4 style="font-size:15px">Functional</h4>
+          </div>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">"Does this component do what I need it to do?" A Button submits. An Input captures text. A Dialog traps focus. If the function fails, nothing else matters.</p>
+          <p style="font-size:13px;color:var(--text);font-style:italic;border-top:1px solid var(--border);padding-top:12px">No design system has ever failed because it didn't pull on heartstrings — but plenty have failed because components didn't work.</p>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;border-left:4px solid var(--purple)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="background:rgba(151,117,250,0.15);color:var(--purple);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600">BRIDGE</span>
+            <h4 style="font-size:15px">Consistency as Affordance</h4>
+          </div>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">When I look at a button, I <em>know</em> it's a button. Without reading a label, I know I can tap it and it's going to give me something. This pattern recognition — moving from A to B using learned behavior — is why design systems exist.</p>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+            <span style="font-size:12px;color:var(--text)"><strong>Interaction Affordance</strong> — elements communicate their purpose visually</span>
+            <span style="font-size:12px;color:var(--text)"><strong>Pattern Continuity</strong> — learned behavior transfers across contexts</span>
+            <span style="font-size:12px;color:var(--text)"><strong>Brand Coherence</strong> — components feel like one family</span>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;border-left:4px solid var(--amber)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="background:rgba(252,196,25,0.15);color:var(--amber);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600">SUPPORTING</span>
+            <h4 style="font-size:15px">Emotional</h4>
+          </div>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">Real but subordinate. Surfaces as developer trust ("I know this handles edge cases"), designer respect ("This system doesn't fight my intent"), and team morale ("We ship faster").</p>
+          <p style="font-size:13px;color:var(--text);font-style:italic;border-top:1px solid var(--border);padding-top:12px">Emotional resonance is earned through functional excellence. It's a consequence, not a goal.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px">
+      <h3 style="font-size:16px;margin-bottom:4px;color:var(--green)">Priority Order: When Dimensions Conflict</h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:16px">A component that works but looks rough is still useful. A beautiful component that ignores keyboard navigation is a liability.</p>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--blue);color:white;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">1</span>
+          <span style="font-size:14px;font-weight:500">Function</span>
+        </div>
+        <span style="color:var(--text-dim);font-size:18px">&rsaquo;</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--purple);color:white;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">2</span>
+          <span style="font-size:14px;font-weight:500">Consistency</span>
+        </div>
+        <span style="color:var(--text-dim);font-size:18px">&rsaquo;</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--amber);color:#212529;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">3</span>
+          <span style="font-size:14px;font-weight:500">Emotion</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:32px">
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--blue)">Emergent Discovery: Build to Learn</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+        <div class="token-card">
+          <h3>Build to Discover</h3>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6">Don't predict every component. Start with a minimal token system and a few core primitives. The gaps teams encounter are the roadmap. Drafts are hypotheses. Candidates are experiments. Stable components are proven.</p>
+        </div>
+        <div class="token-card">
+          <h3>Repeatability Drives Inclusion</h3>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6">A pattern earns its place by proving it's needed more than once. One team, one context = product decision. Two+ teams = system candidate. The 2+ validation requirement enforces this directly.</p>
+        </div>
+        <div class="token-card">
+          <h3>Specifics from Generals</h3>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6">Start with general blocks (Button, Input), evolve toward specific compositions (FilterBar, UserProfileCard). The three-tier taxonomy — Primitives → Composites → Patterns — reflects this natural progression.</p>
+        </div>
+        <div class="token-card">
+          <h3>Modular by Necessity</h3>
+          <p style="font-size:14px;color:var(--text-dim);line-height:1.6">Because the system must absorb new patterns and retire old ones, every component must be composable, replaceable without cascading breakage, and independently governed.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--red)">Anti-Patterns</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <h4 style="font-size:14px;color:var(--red);margin-bottom:8px">The Crystal Ball</h4>
+          <p style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:8px">Trying to predict every component before building anything. Leads to over-engineering and unused components.</p>
+          <p style="font-size:12px;color:var(--green)">Remedy: Start small. Build to discover.</p>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <h4 style="font-size:14px;color:var(--red);margin-bottom:8px">The Kitchen Sink</h4>
+          <p style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:8px">Adding every component without validating repeatability, causing bloat and inconsistency.</p>
+          <p style="font-size:12px;color:var(--green)">Remedy: Require 2+ team validation. Deprecate freely.</p>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <h4 style="font-size:14px;color:var(--red);margin-bottom:8px">The Aesthetic Trap</h4>
+          <p style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:8px">Prioritizing visual polish over functional completeness. Beautiful buttons that can't be keyboard-navigated.</p>
+          <p style="font-size:12px;color:var(--green)">Remedy: Function first. A11y Guardian has absolute veto.</p>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <h4 style="font-size:14px;color:var(--red);margin-bottom:8px">The Consistency Fetish</h4>
+          <p style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:8px">Enforcing visual sameness at the expense of appropriate variation across different product surfaces.</p>
+          <p style="font-size:12px;color:var(--green)">Remedy: Consistency = transferable behavior, not identical appearance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOLT PIT PANEL -->
+  <div class="panel" id="moltpit">
+    <h2 class="section-title">The Molt Pit: Evolutionary Governance</h2>
+    <p class="section-desc">The Pit is a biome. Agents operate like organisms in an ecosystem. Ideas compete, combine, and evolve. The best idea wins — but only after being given a fair chance to develop. The human acts as the ecosystem's gardener.</p>
+
+    <!-- H-Index Section -->
+    <div style="margin-bottom:32px">
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--blue)">Agent H-Index: Trust Through Citation</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+          <h4 style="font-size:14px;margin-bottom:12px">How It Works</h4>
+          <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">When Agent A builds on Agent B's prior decision, Agent B's h-index updates. This creates a transparent trust topology across the governance network.</p>
+          <div style="font-size:12px;color:var(--text-dim);font-family:var(--mono);background:var(--bg-hover);padding:12px;border-radius:8px;line-height:1.8">
+            <span style="color:var(--purple)">Token Steward</span> → <span style="color:var(--green)">A11y Guardian</span>:<br>
+            "Building on contrast ruling #47, the amber shift maintains 4.5:1 while improving dark-mode readability."
+          </div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;border-left:4px solid var(--red)">
+          <h4 style="font-size:14px;color:var(--red);margin-bottom:12px">The Convergence Problem</h4>
+          <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">H-index creates a positive feedback loop. Established thinking dominates. Novel thinking dies. <strong style="color:var(--text)">The best ideas often have LOW h-index early on</strong> — they're weird, fragile, and contradict consensus.</p>
+          <p style="font-size:13px;color:var(--amber);font-style:italic">If the system optimizes purely for h-index, it optimizes for incrementalism and kills breakthrough innovation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stratospheres -->
+    <div style="margin-bottom:32px">
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--purple)">Stratospheres: The Solution to Convergence</h3>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:20px">Different incubation zones with different rulesets. H-index influence is deliberately attenuated in early stages to protect fragile ideas.</p>
+
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <!-- Nursery -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px 12px 4px 4px;padding:24px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),#69DB7C)"></div>
+          <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+            <div style="flex:0 0 180px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="font-size:20px">🌱</span>
+                <h4 style="font-size:16px;color:var(--green)">The Nursery</h4>
+              </div>
+              <span style="font-size:11px;color:var(--text-dim)">Pre-Draft / Draft</span>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:8px">Where delicate ideas live. Weird, fragile, not-yet-robust things that can be destroyed extremely easily. Maximum protection, minimum judgment.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(64,192,87,0.1);color:var(--green);border:1px solid rgba(64,192,87,0.3)">H-Index: ZERO</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(64,192,87,0.1);color:var(--green);border:1px solid rgba(64,192,87,0.3)">Mode: Builder only</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(64,192,87,0.1);color:var(--green);border:1px solid rgba(64,192,87,0.3)">No rejections allowed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workshop -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:24px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple))"></div>
+          <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+            <div style="flex:0 0 180px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="font-size:20px">🔧</span>
+                <h4 style="font-size:16px;color:var(--blue)">The Workshop</h4>
+              </div>
+              <span style="font-size:11px;color:var(--text-dim)">Draft → Candidate</span>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:8px">Builder & Optimizer alternate. Structured exploration with guided critique. Every critique paired with an alternative. Cross-pollination actively encouraged.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(51,154,240,0.1);color:var(--blue);border:1px solid rgba(51,154,240,0.3)">H-Index: LOW (advisory)</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(51,154,240,0.1);color:var(--blue);border:1px solid rgba(51,154,240,0.3)">Mode: Builder/Optimizer</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(51,154,240,0.1);color:var(--blue);border:1px solid rgba(51,154,240,0.3)">Dialectic debate</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arena -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:24px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--red))"></div>
+          <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+            <div style="flex:0 0 180px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="font-size:20px">⚔️</span>
+                <h4 style="font-size:16px;color:var(--amber)">The Arena</h4>
+              </div>
+              <span style="font-size:11px;color:var(--text-dim)">Candidate → Stable</span>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:8px">Full competitive evaluation. Best idea wins. Darwinian selection with full governance rigor. This is where h-index matters and absolute vetoes activate.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(252,196,25,0.1);color:var(--amber);border:1px solid rgba(252,196,25,0.3)">H-Index: FULL</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(252,196,25,0.1);color:var(--amber);border:1px solid rgba(252,196,25,0.3)">Mode: Optimizer primary</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(252,196,25,0.1);color:var(--amber);border:1px solid rgba(252,196,25,0.3)">Vetoes active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Archive -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px 4px 12px 12px;padding:24px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--text-dim),#495057)"></div>
+          <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+            <div style="flex:0 0 180px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="font-size:20px">🏛️</span>
+                <h4 style="font-size:16px;color:var(--text-dim)">The Archive</h4>
+              </div>
+              <span style="font-size:11px;color:var(--text-dim)">Deprecated / Shelved</span>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:8px">A seed bank, not a graveyard. Nothing truly dies. Ideas are preserved with full context. Any agent can propose revival. Quarterly mining for ideas ahead of their time.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(134,142,150,0.1);color:var(--text-dim);border:1px solid rgba(134,142,150,0.3)">Mode: Curator</span>
+                <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(134,142,150,0.1);color:var(--text-dim);border:1px solid rgba(134,142,150,0.3)">Revival possible</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Builder/Optimizer + Gardener -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+        <h3 style="font-size:15px;margin-bottom:12px;color:var(--blue)">Builder/Optimizer Cycle</h3>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:16px">Agents alternate between generative (Builder) and evaluative (Optimizer) modes. The relationship evolves across stratospheres:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(64,192,87,0.15);color:var(--green);font-weight:600;white-space:nowrap">Nursery</span>
+            <span style="font-size:12px;color:var(--text-dim)">Builder & Optimizer fused — create and shape simultaneously</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(51,154,240,0.15);color:var(--blue);font-weight:600;white-space:nowrap">Workshop</span>
+            <span style="font-size:12px;color:var(--text-dim)">Separated — alternate between generative and evaluative passes</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(252,196,25,0.15);color:var(--amber);font-weight:600;white-space:nowrap">Arena</span>
+            <span style="font-size:12px;color:var(--text-dim)">Recombined at higher level — best ideas integrate both modes</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;border-left:4px solid var(--green)">
+        <h3 style="font-size:15px;margin-bottom:12px;color:var(--green)">Human as Ecosystem Gardener</h3>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">The human doesn't manage the system — they govern the biome. They are not the smartest organism in the pit — they decide what kind of ecosystem this is.</p>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--text)">
+          <span>🌱 Plant ideas into any stratosphere, bypassing progression</span>
+          <span>🛡️ Shield fragile ideas from premature death</span>
+          <span>🌿 Introduce biodiversity — seed ideas that contradict consensus</span>
+          <span>🔄 Trigger seasonal disturbances to prevent stagnation</span>
+          <span>⚖️ Override h-index when it creates harmful convergence</span>
+          <span>🔮 Revive archived ideas when conditions change</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:16px">
+      <h4 style="font-size:14px;margin-bottom:8px;color:var(--purple)">Cross-Pollination & Decoupling</h4>
+      <p style="font-size:13px;color:var(--text-dim);line-height:1.6">When an idea solves needs across multiple domains, it gets priority elevation. A filtering pattern for DataTable that also solves search-within-dropdown earns immediate fast-tracking. Cross-domain solutions must then be <strong style="color:var(--text)">decoupled</strong> from their origin and reframed as general-purpose — the original domain becomes one consumer among many.</p>
+    </div>
+  </div>
+
+  <!-- TOKENS PANEL -->
+  <div class="panel" id="tokens">
+    <h2 class="section-title">Design Tokens</h2>
+    <p class="section-desc">Three-tier token architecture: Primitive (raw values) → Semantic (intent-based aliases) → Component (usage-specific). All tokens use the W3C Design Token Community Group format.</p>
+
+    <div class="token-grid">
+      <div class="token-card">
+        <h3>Semantic Backgrounds</h3>
+        <div class="color-swatch"><div class="swatch" style="background:#FFFFFF"></div><div class="swatch-info"><div class="name">bg.primary</div><div class="value">#FFFFFF</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#F8F9FA"></div><div class="swatch-info"><div class="name">bg.secondary</div><div class="value">#F8F9FA</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#F1F3F5"></div><div class="swatch-info"><div class="name">bg.tertiary</div><div class="value">#F1F3F5</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#212529"></div><div class="swatch-info"><div class="name">bg.inverse</div><div class="value">#212529</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#228BE6"></div><div class="swatch-info"><div class="name">bg.brand</div><div class="value">#228BE6</div></div></div>
+      </div>
+
+      <div class="token-card">
+        <h3>Semantic Foregrounds</h3>
+        <div class="color-swatch"><div class="swatch" style="background:#212529"></div><div class="swatch-info"><div class="name">fg.primary</div><div class="value">#212529</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#868E96"></div><div class="swatch-info"><div class="name">fg.secondary</div><div class="value">#868E96</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#1C7ED6"></div><div class="swatch-info"><div class="name">fg.brand</div><div class="value">#1C7ED6</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#F03E3E"></div><div class="swatch-info"><div class="name">fg.danger</div><div class="value">#F03E3E</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#37B24D"></div><div class="swatch-info"><div class="name">fg.success</div><div class="value">#37B24D</div></div></div>
+      </div>
+
+      <div class="token-card">
+        <h3>Interactive States</h3>
+        <div class="color-swatch"><div class="swatch" style="background:#228BE6"></div><div class="swatch-info"><div class="name">interactive.default</div><div class="value">#228BE6</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#1C7ED6"></div><div class="swatch-info"><div class="name">interactive.hover</div><div class="value">#1C7ED6</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#1971C2"></div><div class="swatch-info"><div class="name">interactive.active</div><div class="value">#1971C2</div></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#DEE2E6"></div><div class="swatch-info"><div class="name">interactive.disabled</div><div class="value">#DEE2E6</div></div></div>
+      </div>
+
+      <div class="token-card">
+        <h3>Typography Scale</h3>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:38px;font-weight:700;line-height:1.2">Display Lg</div>
+          <div style="font-size:24px;font-weight:600;line-height:1.2">Heading Lg</div>
+          <div style="font-size:20px;font-weight:600;line-height:1.2">Heading Md</div>
+          <div style="font-size:16px;line-height:1.5">Body Md — the workhorse</div>
+          <div style="font-size:13px;line-height:1.5;color:var(--text-dim)">Body Sm — secondary content</div>
+          <div style="font-size:10px;letter-spacing:0.05em;color:var(--text-dim)">CAPTION — metadata</div>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <h3>Spacing Scale (4px base)</h3>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:4px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.1 — 4px</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:8px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.2 — 8px</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.4 — 16px</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:24px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.6 — 24px</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.8 — 32px</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:48px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.12 — 48px</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:64px;height:12px;background:var(--blue);border-radius:2px"></div><span style="font-size:13px">spacing.16 — 64px</span></div>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <h3>Elevation & Radius</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;padding-top:8px">
+          <div style="background:#1E2329;padding:12px 16px;border-radius:4px;font-size:13px;box-shadow:0 1px 2px rgba(0,0,0,0.2)">elevation.1 · radius.sm</div>
+          <div style="background:#1E2329;padding:12px 16px;border-radius:8px;font-size:13px;box-shadow:0 2px 4px -1px rgba(0,0,0,0.2),0 4px 6px -1px rgba(0,0,0,0.2)">elevation.2 · radius.md</div>
+          <div style="background:#1E2329;padding:12px 16px;border-radius:12px;font-size:13px;box-shadow:0 10px 15px -3px rgba(0,0,0,0.2),0 4px 6px -4px rgba(0,0,0,0.2)">elevation.3 · radius.lg</div>
+          <div style="background:#1E2329;padding:12px 16px;border-radius:16px;font-size:13px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.2),0 8px 10px -6px rgba(0,0,0,0.2)">elevation.4 · radius.xl</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS PANEL -->
+  <div class="panel" id="components">
+    <h2 class="section-title">Component Taxonomy</h2>
+    <p class="section-desc">Components are organized into three tiers of complexity. Each has a maturity level tracked through the governance lifecycle.</p>
+
+    <div class="legend">
+      <div class="legend-item"><div class="maturity-dot maturity-stable"></div> Stable</div>
+      <div class="legend-item"><div class="maturity-dot maturity-candidate"></div> Candidate</div>
+      <div class="legend-item"><div class="maturity-dot maturity-draft"></div> Draft</div>
+    </div>
+
+    <div class="taxonomy-tier">
+      <div class="tier-header"><span class="tier-badge tier-primitives">Primitives</span><span style="font-size:14px;color:var(--text-dim)">Atomic building blocks</span></div>
+      <div class="component-list">
+        <div class="component-chip"><span class="name">Button</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">Input</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">Icon</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">Badge</span><div class="maturity-dot maturity-candidate"></div></div>
+        <div class="component-chip"><span class="name">Avatar</span><div class="maturity-dot maturity-stable"></div></div>
+      </div>
+    </div>
+
+    <div class="taxonomy-tier">
+      <div class="tier-header"><span class="tier-badge tier-composites">Composites</span><span style="font-size:14px;color:var(--text-dim)">Mid-complexity compositions</span></div>
+      <div class="component-list">
+        <div class="component-chip"><span class="name">Card</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">Dialog</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">Tabs</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">Dropdown</span><div class="maturity-dot maturity-candidate"></div></div>
+        <div class="component-chip"><span class="name">Toast</span><div class="maturity-dot maturity-candidate"></div></div>
+      </div>
+    </div>
+
+    <div class="taxonomy-tier">
+      <div class="tier-header"><span class="tier-badge tier-patterns">Patterns</span><span style="font-size:14px;color:var(--text-dim)">High-level compositions</span></div>
+      <div class="component-list">
+        <div class="component-chip"><span class="name">Form</span><div class="maturity-dot maturity-stable"></div></div>
+        <div class="component-chip"><span class="name">DataTable</span><div class="maturity-dot maturity-candidate"></div></div>
+        <div class="component-chip"><span class="name">Navigation</span><div class="maturity-dot maturity-draft"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENTS PANEL -->
+  <div class="panel" id="agents">
+    <h2 class="section-title">Governance Agents</h2>
+    <p class="section-desc">Six role-based human agents govern the design system. Each has defined authority, responsibilities, and metrics. No agent can approve their own proposals.</p>
+
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon" style="background:linear-gradient(135deg,#228BE6,#1864AB)">L</div>
+          <div><h3>Design System Lead</h3></div>
+          <span class="agent-type">Strategic</span>
+        </div>
+        <p>Overall steward. Sets vision, resolves disputes, approves stable promotions, represents the system to leadership.</p>
+        <div class="agent-powers">
+          <span class="power-tag power-approve">Approve promotions</span>
+          <span class="power-tag power-approve">Approve deprecations</span>
+          <span class="power-tag power-veto">Veto any change</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon" style="background:linear-gradient(135deg,#9775FA,#7048E8)">T</div>
+          <div><h3>Token Steward</h3></div>
+          <span class="agent-type">Specialist</span>
+        </div>
+        <p>Guardian of the token architecture. Enforces naming, aliasing, and prevents sprawl. Reviews all token changes.</p>
+        <div class="agent-powers">
+          <span class="power-tag power-approve">Approve tokens</span>
+          <span class="power-tag power-veto">Veto direct primitive use</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon" style="background:linear-gradient(135deg,#40C057,#2B8A3E)">A</div>
+          <div><h3>Accessibility Guardian</h3></div>
+          <span class="agent-type">Specialist</span>
+        </div>
+        <p>Ensures WCAG 2.2 AA compliance. Has absolute veto power — no component reaches Stable without their sign-off.</p>
+        <div class="agent-powers">
+          <span class="power-tag power-approve">Approve a11y</span>
+          <span class="power-tag power-veto">Absolute veto (a11y)</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon" style="background:linear-gradient(135deg,#FCC419,#E67700)">P</div>
+          <div><h3>Pattern Librarian</h3></div>
+          <span class="agent-type">Specialist</span>
+        </div>
+        <p>Prevents duplication, maintains docs, identifies reuse. Keeps the pattern library consistent and well-documented.</p>
+        <div class="agent-powers">
+          <span class="power-tag power-approve">Approve docs</span>
+          <span class="power-tag power-veto">Veto duplicates</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon" style="background:linear-gradient(135deg,#FA5252,#C92A2A)">C</div>
+          <div><h3>Component Architect</h3></div>
+          <span class="agent-type">Specialist</span>
+        </div>
+        <p>Reviews technical anatomy, prop API, performance, and behavioral specs. Ensures engineering quality.</p>
+        <div class="agent-powers">
+          <span class="power-tag power-approve">Approve architecture</span>
+          <span class="power-tag power-veto">Veto structural issues</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon" style="background:linear-gradient(135deg,#339AF0,#228BE6)">R</div>
+          <div><h3>Product Liaison</h3></div>
+          <span class="agent-type">Bridge</span>
+        </div>
+        <p>Represents product teams. Brings real-world context, validates proposals against actual needs, champions adoption.</p>
+        <div class="agent-powers">
+          <span class="power-tag power-approve">Prioritize backlog</span>
+          <span class="power-tag power-veto">Advisory veto (deprecations)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW PANEL -->
+  <div class="panel" id="workflow">
+    <h2 class="section-title">Component Lifecycle</h2>
+    <p class="section-desc">Every component passes through a governed lifecycle with human-in-the-loop gates at each stage. No automation can bypass these gates.</p>
+
+    <div class="workflow-timeline">
+      <div class="workflow-step">
+        <h3><span class="step-number">1</span> Proposal</h3>
+        <p>A team member or Product Liaison submits an RFC. The Pattern Librarian screens for duplication, the Component Architect assesses feasibility, and the Design System Lead prioritizes.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="gate-badge gate-human">Human Gate: Pattern Librarian screens</span>
+          <span class="gate-badge gate-agents">Output: Draft status</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <h3><span class="step-number">2</span> Specification</h3>
+        <p>The component spec is authored using the standard template, then reviewed in parallel by the Token Steward, Accessibility Guardian, and Component Architect. All three must approve.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="gate-badge gate-human">Human Gate: Triple agent sign-off</span>
+          <span class="gate-badge gate-agents">Output: Candidate status</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <h3><span class="step-number">3</span> Validation</h3>
+        <p>At least 2 product teams integrate the Candidate in beta features. The Accessibility Guardian conducts a full WCAG 2.2 AA audit including screen reader and keyboard testing.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="gate-badge gate-human">Human Gate: Product team validation + Full a11y audit</span>
+          <span class="gate-badge gate-agents">Output: Ready for promotion</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <h3><span class="step-number">4</span> Stable Promotion</h3>
+        <p>Complete documentation is prepared, all agents confirm final sign-off, and the Design System Lead gives final approval. The component enters production.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="gate-badge gate-human">Human Gate: Full governance sign-off + Lead approval</span>
+          <span class="gate-badge gate-agents">Output: Stable status</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <h3><span class="step-number">5</span> Maintenance</h3>
+        <p>Quarterly health checks cover adoption, bugs, performance, and accessibility regression. Non-breaking enhancements follow a lightweight single-agent review.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="gate-badge gate-human">Human Gate: Quarterly reviews</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <h3><span class="step-number">6</span> Deprecation</h3>
+        <p>Requires a deprecation RFC, product impact assessment, migration guide, and a minimum 2-sprint migration window. Only removed after all consumers have migrated.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="gate-badge gate-human">Human Gate: Lead + Product Liaison agreement</span>
+          <span class="gate-badge gate-agents">Output: Deprecated → Removed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RACI PANEL -->
+  <div class="panel" id="raci">
+    <h2 class="section-title">RACI Matrix</h2>
+    <p class="section-desc">Clear accountability mapping for every governance activity. R = Responsible, A = Accountable, C = Consulted, I = Informed.</p>
+
+    <table class="raci-table">
+      <thead>
+        <tr>
+          <th style="text-align:left">Activity</th>
+          <th>DS Lead</th>
+          <th>Token Steward</th>
+          <th>A11y Guardian</th>
+          <th>Pattern Librarian</th>
+          <th>Component Architect</th>
+          <th>Product Liaison</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>New Token Addition</td>
+          <td class="raci-i">I</td>
+          <td class="raci-a">R/A</td>
+          <td class="raci-c">C</td>
+          <td class="raci-i">I</td>
+          <td class="raci-i">I</td>
+          <td class="raci-i">I</td>
+        </tr>
+        <tr>
+          <td>New Component Proposal</td>
+          <td class="raci-a">A</td>
+          <td class="raci-c">C</td>
+          <td class="raci-c">C</td>
+          <td class="raci-r">R</td>
+          <td class="raci-c">C</td>
+          <td class="raci-r">R</td>
+        </tr>
+        <tr>
+          <td>Component Spec Review</td>
+          <td class="raci-i">I</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+          <td class="raci-c">C</td>
+        </tr>
+        <tr>
+          <td>Stable Promotion</td>
+          <td class="raci-a">A</td>
+          <td class="raci-c">C</td>
+          <td class="raci-r">R*</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+          <td class="raci-c">C</td>
+        </tr>
+        <tr>
+          <td>Breaking Change</td>
+          <td class="raci-a">A</td>
+          <td class="raci-c">C</td>
+          <td class="raci-c">C</td>
+          <td class="raci-c">C</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+        </tr>
+        <tr>
+          <td>Deprecation</td>
+          <td class="raci-a">A</td>
+          <td class="raci-c">C</td>
+          <td class="raci-i">I</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+          <td class="raci-r">R</td>
+        </tr>
+        <tr>
+          <td>Emergency Fix</td>
+          <td class="raci-a">A</td>
+          <td class="raci-c">C</td>
+          <td class="raci-r">R*</td>
+          <td class="raci-i">I</td>
+          <td class="raci-r">R*</td>
+          <td class="raci-i">I</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--text-dim);margin-top:12px">* R with veto power — if a11y-related, A11y Guardian; if structural, Component Architect</p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
