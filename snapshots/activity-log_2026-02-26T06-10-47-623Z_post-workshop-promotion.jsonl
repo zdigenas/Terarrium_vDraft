@@ -46,5 +46,3 @@
 {"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-009","componentName":"Tabs","actor":"gardener","detail":"Moved from nursery to workshop"}
 {"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-010","componentName":"Tooltip","actor":"gardener","detail":"Moved from nursery to workshop"}
 {"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-011","componentName":"Dropdown","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.627Z","action":"governance-review","componentId":"COMP-002","componentName":"Toggle","actor":"orchestrator","detail":"workshop review complete: failed — Majority required: 0/5 (need 3)"}
-{"timestamp":"2026-02-26T12:49:47.314Z","action":"governance-review","componentId":"COMP-002","componentName":"Toggle","actor":"orchestrator","detail":"workshop review complete: failed — Majority required: 2/5 (need 3)"}

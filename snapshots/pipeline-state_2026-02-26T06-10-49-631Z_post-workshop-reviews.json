@@ -12,47 +12,47 @@
       "movedAt": "2026-02-26T05:00:00.000Z",
       "agentReviews": {
         "ts": {
-          "verdict": "approved",
-          "score": 87,
-          "action": "APPROVED at 87/100. Condition for 90+ would be: (1) Add one-line dark mode documentation comment, (2) Confirm spec reflects current CSS state (remove 'must be replaced' language if already done). Current state exceeds minimum requirements and is fit for Nursery→Garden progression.",
+          "verdict": "api-unavailable",
+          "score": 0,
+          "action": "Review deferred — API unavailable",
           "conditionalApproval": null,
-          "timestamp": "2026-02-26T12:48:32.151Z"
+          "timestamp": "2026-02-26T06:10:47.627Z"
         },
         "ag": {
-          "verdict": "needs-work",
-          "score": 62,
-          "action": "Verdict: needs-work. Condition for approval: (A) Component spec must include a mandatory HTML pattern showing label + toggle with for/id linkage for both leading and trailing variants; (B) CSS must update .t-toggle__track height to minimum 32px and .t-toggle__thumb proportionally; (C) Disabled state must include explicit background-color change (not opacity-only) with contrast verification; (D) Spec must declare that aria-label is required if no visible label is present, or CSS must enforce a ::before or ::after label fallback; (E) Provide token definition for var(--t-focus-ring) confirming >= 3px visible indicator.",
-          "conditionalApproval": "Approval requires: (1) HTML spec pattern with label linkage (for/id) for both label-leading and label-trailing variants, or explicit aria-label requirement with enforcement note; (2) .t-toggle__track height increased to minimum 32px (44px preferred) with proportional thumb scaling; (3) .t-toggle__input:disabled + .t-toggle__track color change (not opacity-only) with WCAG 1.4.11 contrast verification (>= 3:1); (4) Focus ring token definition confirming >= 3px visible indicator; (5) Accessibility section updated to mandate aria-label presence when no visible label is used.",
-          "timestamp": "2026-02-26T12:48:51.819Z"
+          "verdict": "api-unavailable",
+          "score": 0,
+          "action": "Review deferred — API unavailable",
+          "conditionalApproval": null,
+          "timestamp": "2026-02-26T06:10:47.627Z"
         },
         "pl": {
-          "verdict": "approved",
-          "score": 82,
-          "action": "APPROVED with conditional documentation completeness. Verdict: APPROVED pending submission of: usage examples (3), Do/Don't guidelines, changelog, and expanded accessibility notes. These are documentation completions, not code refactors. If these are provided within one review cycle, component exits to Nursery. If deferred, score holds at 82 pending those additions.",
-          "conditionalApproval": "Provide (1) 3+ usage examples, (2) Do/Don't guidelines (at least 3 each), (3) changelog entry, (4) expanded accessibility section with contrast and colorblind considerations. Code approval; documentation completion required for Nursery exit.",
-          "timestamp": "2026-02-26T12:49:07.270Z"
+          "verdict": "api-unavailable",
+          "score": 0,
+          "action": "Review deferred — API unavailable",
+          "conditionalApproval": null,
+          "timestamp": "2026-02-26T06:10:47.627Z"
         },
         "ca": {
-          "verdict": "needs-work",
-          "score": 68,
-          "action": "NEEDS-WORK. Approval requires: (A) CSS selector fix verified with DOM structure diagram, (B) zone/maturity corrected to workshop/candidate, (C) aria-label requirement added to accessibility section, (D) disabled state color verified for WCAG AA contrast, (E) spec document cleaned (resolved issues removed, living issues clarified). Until these are addressed, the component cannot progress — the CSS animation is currently broken due to invalid selector, and accessibility does not guarantee label presence.",
-          "conditionalApproval": "Approval granted when: (1) CSS selector corrected and verified with working DOM structure (provide before/after code example), (2) Spec zone changed to 'workshop' and maturity to 'candidate', (3) Accessibility section updated with explicit 'aria-label fallback required for label-less variant', (4) Disabled state color changed from opacity to semantic token with documented WCAG AA contrast ratio, (5) Spec 'known issues' section cleaned: either remove if resolved or clarify what remains, (6) Provide proof of bundle size compliance (<5KB gzipped) via build output. All six changes must be present for approval.",
-          "timestamp": "2026-02-26T12:49:28.572Z"
+          "verdict": "api-unavailable",
+          "score": 0,
+          "action": "Review deferred — API unavailable",
+          "conditionalApproval": null,
+          "timestamp": "2026-02-26T06:10:47.627Z"
         },
         "px": {
-          "verdict": "needs-work",
-          "score": 58,
-          "action": "Verdict: NEEDS-WORK. This component fails adoption validation gates for Workshop maturity. Approval condition: Submit evidence of 2+ teams actively prototyping this component in product code + 1 concrete use case per team (specific screen, JTBD solved, time saved metric) + Developer NPS ≥8 from prototype feedback + Clear migration guide for existing ad-hoc solutions. Resubmit with these artifacts and resolve zone/maturity metadata conflict.",
-          "conditionalApproval": "Approval earned if: (1) Zone field corrected to 'workshop' and maturity field corrected to 'candidate' (or acknowledge regression to 'nursery'). (2) Evidence document provided citing 2+ named teams actively prototyping this component with dates and prototype links. (3) Real-world use cases: 3+ specific product screens where toggle solves the JTBD (cite feature name, team, screenshot if possible). (4) Developer NPS data from prototype teams, minimum 8/10, with feedback quotes. (5) Migration guide explaining how teams with existing custom toggles or checkbox-based solutions will transition to this component. (6) Response to prior vote failure [DEC-workshop-toggle-mm32ebpn] 0/5: explain what changed or provide new team validation cohort. Resubmit with these artifacts; pending their completion, score remains 58 / Needs-work.",
-          "timestamp": "2026-02-26T12:49:47.311Z"
+          "verdict": "api-unavailable",
+          "score": 0,
+          "action": "Review deferred — API unavailable",
+          "conditionalApproval": null,
+          "timestamp": "2026-02-26T06:10:47.627Z"
         }
       },
       "proposals": [],
       "shielded": false,
-      "lastReviewedAt": "2026-02-26T12:49:47.312Z",
+      "lastReviewedAt": "2026-02-26T06:10:47.627Z",
       "lastZoneVerdict": {
         "passed": false,
-        "reason": "Majority required: 2/5 (need 3)"
+        "reason": "Majority required: 0/5 (need 3)"
       }
     },
     {

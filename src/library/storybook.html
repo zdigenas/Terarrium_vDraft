@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terarrium — Agentic Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="terrarium.css">
+  <link rel="stylesheet" href="shell.css">
+  <link rel="stylesheet" href="storybook.css">
+</head>
+<body>
+
+<div class="shell" id="shell">
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
+  <header class="shell__header">
+    <div class="shell__brand">
+      <div class="shell__logo" aria-hidden="true">🌿</div>
+      <span class="shell__title">Terarrium</span>
+      <span class="t-badge t-badge--neutral" style="font-size:9px">v0.1</span>
+    </div>
+    <div class="shell__controls">
+      <span id="pipeline-status" style="font-size:var(--t-text-xs);color:var(--t-fg-tertiary)"></span>
+      <button class="t-btn t-btn--secondary t-btn--sm" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle theme">☽ Dark</button>
+      <button class="t-btn t-btn--secondary t-btn--sm" onclick="togglePanel()" id="panel-btn" aria-expanded="false" aria-controls="gov-panel">Chat ›</button>
+    </div>
+  </header>
+
+  <!-- ═══ SIDEBAR ══════════════════════════════════════════════════════ -->
+  <nav class="shell__sidebar" aria-label="Component navigation">
+    <div class="nav-section">
+      <div class="nav-section__title">Overview</div>
+      <button class="nav-item nav-item--active" data-target="welcome" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Welcome</button>
+      <button class="nav-item" data-target="philosophy" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Philosophy</button>
+      <button class="nav-item" data-target="pipeline" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Pipeline</button>
+      <button class="nav-item" data-target="wiki" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Wiki</button>
+      <button class="nav-item" data-target="seed-vault" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Seed Vault</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section__title">Foundations</div>
+      <button class="nav-item" data-target="colors" onclick="nav(this)">Colors</button>
+      <button class="nav-item" data-target="typography" onclick="nav(this)">Typography</button>
+      <button class="nav-item" data-target="spacing" onclick="nav(this)">Spacing</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section__title">Primitives</div>
+      <button class="nav-item" data-target="button" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Button</button>
+      <button class="nav-item" data-target="input" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Input</button>
+      <button class="nav-item" data-target="badge" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Badge</button>
+      <button class="nav-item" data-target="avatar" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Avatar</button>
+      <button class="nav-item" data-target="toggle" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--candidate"></span>Toggle <span class="t-badge t-badge--candidate" style="margin-left:auto;font-size:8px">Workshop</span></button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section__title">Composites</div>
+      <button class="nav-item" data-target="card" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Card</button>
+      <button class="nav-item" data-target="dialog" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Dialog</button>
+      <button class="nav-item" data-target="toast" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Toast <span class="t-badge t-badge--stable" style="margin-left:auto;font-size:8px">Stable</span></button>
+      <button class="nav-item" data-target="tabs" onclick="nav(this)"><span class="nav-item__dot nav-item__dot--stable"></span>Tabs</button>
+    </div>
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ═════════════════════════════════════════════════ -->
+  <main class="shell__main" id="main-content">
+
+    <!-- WELCOME -->
+    <section class="story story--active" id="story-welcome">
+      <h1 class="story__title">Terarrium</h1>
+      <p class="story__desc">A self-governing agentic design system. The governance IS the architecture. Five specialized agents collaboratively review every component through ecological zones. The gardener always has the final say.</p>
+      <div class="story__meta">
+        <span class="t-badge t-badge--stable">v0.1</span>
+        <span class="t-badge t-badge--neutral">agentic-first</span>
+        <span class="t-badge t-badge--neutral">function over everything</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-card__number" id="stat-stable">—</div><div class="stat-card__label">Stable</div></div>
+        <div class="stat-card"><div class="stat-card__number" id="stat-workshop">—</div><div class="stat-card__label">Workshop</div></div>
+        <div class="stat-card"><div class="stat-card__number" id="stat-nursery">—</div><div class="stat-card__label">Nursery</div></div>
+        <div class="stat-card"><div class="stat-card__number">5</div><div class="stat-card__label">Agents</div></div>
+      </div>
+      <div class="zone-grid">
+        <div class="zone-card" style="border-left-color:var(--t-raw-green-400)"><div style="font-weight:var(--t-weight-semibold);margin-bottom:4px">🌱 Nursery</div><div style="font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Protected incubation. No rejection. Builder mode. H-index = 0.</div></div>
+        <div class="zone-card" style="border-left-color:var(--t-raw-blue-400)"><div style="font-weight:var(--t-weight-semibold);margin-bottom:4px">🪴 Workshop</div><div style="font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Builder/Optimizer cycles. Majority (3/5). Cross-pollination.</div></div>
+        <div class="zone-card" style="border-left-color:var(--t-raw-amber-400)"><div style="font-weight:var(--t-weight-semibold);margin-bottom:4px">🌳 Canopy</div><div style="font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Full rigor. Unanimous (5/5). AG absolute veto active.</div></div>
+        <div class="zone-card" style="border-left-color:var(--t-raw-neutral-400)"><div style="font-weight:var(--t-weight-semibold);margin-bottom:4px">🗄 Seed Vault</div><div style="font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Archive with full context. Nothing truly dies. Revivable.</div></div>
+      </div>
+      <hr class="sb-hr">
+      <h2 class="sb-h2">Recent Activity</h2>
+      <div id="welcome-activity" style="font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Loading…</div>
+    </section>
+
+    <!-- PHILOSOPHY -->
+    <section class="story" id="story-philosophy">
+      <h1 class="story__title">Philosophy</h1>
+      <p class="story__desc">The founding principles. These are immutable — no agent or governance process can reorder them.</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral">JTBD framework</span><span class="t-badge t-badge--neutral">emergent discovery</span></div>
+      <h2 class="sb-h2">Three-Dimension Evaluation (Immutable Order)</h2>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">1</span>Functional</div><div class="philosophy-card__body">Does this component do exactly what it claims? Nothing more, nothing less. If it fails here, nothing else matters. No amount of visual polish saves a broken component.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">2</span>Affordance</div><div class="philosophy-card__body">Can users recognize what this is and how to use it without instruction? Visual language must be consistent. Learned behavior must transfer.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">3</span>Emotional</div><div class="philosophy-card__body">Does it feel like it belongs? Earned through functional excellence. Never prioritize aesthetics over function.</div></div>
+      <hr class="sb-hr">
+      <h2 class="sb-h2">7 Design Principles</h2>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">1</span>Agentic-First</div><div class="philosophy-card__body">Governance is not a feature, it is the architecture.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">2</span>Function Over Everything</div><div class="philosophy-card__body">JTBD: Functional &gt; Affordance &gt; Emotional. This ordering cannot be changed.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">3</span>Alive, Not Static</div><div class="philosophy-card__body">The system discovers its shape through use, not through speculative abstraction.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">4</span>Real, Not Theatrical</div><div class="philosophy-card__body">No facades. Agent reviews come from real Anthropic API calls. If the API is unavailable, we say so.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">5</span>The Gardener's Authority</div><div class="philosophy-card__body">Human-in-the-loop with final say. The gardener can override any agent decision.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">6</span>Earned, Not Granted</div><div class="philosophy-card__body">Maturity through the pipeline, no shortcuts. Components must prove repeatability.</div></div>
+      <div class="philosophy-card"><div class="philosophy-card__title"><span class="philosophy-card__num">7</span>Self-Documenting</div><div class="philosophy-card__body">The system explains itself from within. Every decision is recorded. Every rationale is preserved.</div></div>
+    </section>
+
+    <!-- PIPELINE -->
+    <section class="story" id="story-pipeline">
+      <h1 class="story__title">Pipeline</h1>
+      <p class="story__desc">Live component lifecycle state. Components travel: Spark → Nursery → Workshop → Canopy → Stable (or Seed Vault).</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral" id="pipeline-last-updated">Loading…</span></div>
+      <div style="margin-bottom:var(--t-space-4)"><button class="t-btn t-btn--secondary t-btn--sm" onclick="loadPipeline()">↻ Refresh</button></div>
+      <div class="pipeline-tabs">
+        <button class="pipeline-tab pipeline-tab--active" onclick="switchPipelineTab(this,'stable')" data-zone="stable">Stable <span class="pipeline-tab__count" id="tab-count-stable">0</span></button>
+        <button class="pipeline-tab" onclick="switchPipelineTab(this,'workshop')" data-zone="workshop">Workshop <span class="pipeline-tab__count" id="tab-count-workshop">0</span></button>
+        <button class="pipeline-tab" onclick="switchPipelineTab(this,'canopy')" data-zone="canopy">Canopy <span class="pipeline-tab__count" id="tab-count-canopy">0</span></button>
+        <button class="pipeline-tab" onclick="switchPipelineTab(this,'nursery')" data-zone="nursery">Nursery <span class="pipeline-tab__count" id="tab-count-nursery">0</span></button>
+      </div>
+      <div id="pipeline-panel-stable" class="pipeline-panel pipeline-panel--active"></div>
+      <div id="pipeline-panel-workshop" class="pipeline-panel"></div>
+      <div id="pipeline-panel-canopy" class="pipeline-panel"></div>
+      <div id="pipeline-panel-nursery" class="pipeline-panel"></div>
+    </section>
+
+    <!-- WIKI -->
+    <section class="story" id="story-wiki">
+      <h1 class="story__title">Living Reference</h1>
+      <p class="story__desc">The self-teaching layer. Every concept, pattern, and governance rule documented from within the system.</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral" id="wiki-count">Loading…</span></div>
+      <input type="search" class="wiki-search" placeholder="Search wiki…" oninput="filterWiki(this.value)" id="wiki-search-input" aria-label="Search wiki">
+      <div id="wiki-content">Loading…</div>
+    </section>
+
+    <!-- SEED VAULT -->
+    <section class="story" id="story-seed-vault">
+      <h1 class="story__title">Seed Vault</h1>
+      <p class="story__desc">Ideas that didn't flourish in their season. Preserved with full context. Nothing truly dies — conditions change.</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral" id="vault-count">Loading…</span></div>
+      <div id="vault-content">Loading…</div>
+    </section>
+
+    <!-- COLORS -->
+    <section class="story" id="story-colors">
+      <h1 class="story__title">Colors</h1>
+      <p class="story__desc">Three-tier token hierarchy. Primitive → Semantic → Component. Components never reference primitives directly.</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral">180+ tokens</span><span class="t-badge t-badge--neutral">dark mode parity</span></div>
+      <h2 class="sb-h2">Semantic Backgrounds</h2>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-primary);border:1px solid var(--t-border-default)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-primary</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-secondary)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-secondary</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-tertiary)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-tertiary</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-brand)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-brand</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-success)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-success</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-warning)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-warning</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-danger)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-danger</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-bg-info)"></div><div class="color-swatch__info"><div class="color-swatch__name">bg-info</div></div></div>
+      </div>
+      <h2 class="sb-h2">Tonal Surfaces</h2>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-surface-0);border:1px solid var(--t-border-default)"></div><div class="color-swatch__info"><div class="color-swatch__name">surface-0</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-surface-1)"></div><div class="color-swatch__info"><div class="color-swatch__name">surface-1</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-surface-2)"></div><div class="color-swatch__info"><div class="color-swatch__name">surface-2</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-surface-3)"></div><div class="color-swatch__info"><div class="color-swatch__name">surface-3</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-surface-4)"></div><div class="color-swatch__info"><div class="color-swatch__name">surface-4</div></div></div>
+      </div>
+      <h2 class="sb-h2">Foregrounds</h2>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-primary)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-primary</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-secondary)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-secondary</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-tertiary)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-tertiary</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-brand)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-brand</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-success)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-success</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-warning)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-warning</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-danger)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-danger</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:var(--t-fg-inverse)"></div><div class="color-swatch__info"><div class="color-swatch__name">fg-inverse</div></div></div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="story" id="story-typography">
+      <h1 class="story__title">Typography</h1>
+      <p class="story__desc">Variable font system. Inter Variable with weight axis 100–900. Modular type scale with 1.25 ratio.</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral">Inter Variable</span><span class="t-badge t-badge--neutral">JetBrains Mono</span></div>
+      <h2 class="sb-h2">Type Scale</h2>
+      <div class="type-sample"><div class="type-sample__label">--t-text-3xl · 3.052rem</div><div style="font-size:var(--t-text-3xl);font-weight:var(--t-weight-bold);line-height:1.1">Display</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-2xl · 2.441rem</div><div style="font-size:var(--t-text-2xl);font-weight:var(--t-weight-bold)">Heading 1</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-xl · 1.953rem</div><div style="font-size:var(--t-text-xl);font-weight:var(--t-weight-bold)">Heading 2</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-lg · 1.563rem</div><div style="font-size:var(--t-text-lg);font-weight:var(--t-weight-semibold)">Heading 3</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-md · 1.25rem</div><div style="font-size:var(--t-text-md);font-weight:var(--t-weight-medium)">Heading 4</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-base · 1rem</div><div style="font-size:var(--t-text-base)">Body text. The quick brown fox jumps over the lazy dog.</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-sm · 0.8rem</div><div style="font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Small text. Used for descriptions, helper text, and secondary content.</div></div>
+      <div class="type-sample"><div class="type-sample__label">--t-text-xs · 0.64rem</div><div style="font-size:var(--t-text-xs);color:var(--t-fg-tertiary)">Extra small. Labels, captions, metadata.</div></div>
+      <hr class="sb-hr">
+      <h2 class="sb-h2">Weights</h2>
+      <div style="display:flex;flex-direction:column;gap:var(--t-space-2)">
+        <div style="font-weight:var(--t-weight-regular)">Regular (400) — The quick brown fox</div>
+        <div style="font-weight:var(--t-weight-medium)">Medium (500) — The quick brown fox</div>
+        <div style="font-weight:var(--t-weight-semibold)">Semibold (600) — The quick brown fox</div>
+        <div style="font-weight:var(--t-weight-bold)">Bold (700) — The quick brown fox</div>
+      </div>
+      <hr class="sb-hr">
+      <h2 class="sb-h2">Monospace</h2>
+      <div style="font-family:var(--t-font-mono);font-size:var(--t-text-sm);background:var(--t-surface-2);padding:var(--t-space-3);border-radius:var(--t-radius-md)">const token = '--t-interactive-default';<br>const value = getComputedStyle(el).getPropertyValue(token);</div>
+    </section>
+
+    <!-- SPACING -->
+    <section class="story" id="story-spacing">
+      <h1 class="story__title">Spacing</h1>
+      <p class="story__desc">4px base unit. Geometric scale. No magic numbers — all spacing uses token references.</p>
+      <div class="story__meta"><span class="t-badge t-badge--neutral">4px base</span><span class="t-badge t-badge--neutral">geometric scale</span></div>
+      <div id="spacing-bars"></div>
+    </section>
+
+    <!-- BUTTON -->
+    <section class="story" id="story-button">
+      <h1 class="story__title">Button</h1>
+      <p class="story__desc">The primary interactive primitive. Triggers actions. JTBD: When I need to trigger an action, I want a clearly interactive element that communicates its purpose and responds to my input.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">primitive</span></div>
+      <h2 class="sb-h2">Variants</h2>
+      <div class="canvas">
+        <div class="canvas__label">All variants</div>
+        <div class="canvas__row">
+          <button class="t-btn t-btn--primary">Primary</button>
+          <button class="t-btn t-btn--secondary">Secondary</button>
+          <button class="t-btn t-btn--ghost">Ghost</button>
+          <button class="t-btn t-btn--danger">Danger</button>
+          <button class="t-btn t-btn--success">Success</button>
+        </div>
+      </div>
+      <h2 class="sb-h2">Sizes</h2>
+      <div class="canvas">
+        <div class="canvas__label">All sizes</div>
+        <div class="canvas__row" style="align-items:center">
+          <button class="t-btn t-btn--primary t-btn--sm">Small</button>
+          <button class="t-btn t-btn--primary">Default</button>
+          <button class="t-btn t-btn--primary t-btn--lg">Large</button>
+        </div>
+      </div>
+      <h2 class="sb-h2">States</h2>
+      <div class="canvas">
+        <div class="canvas__label">Disabled + loading</div>
+        <div class="canvas__row">
+          <button class="t-btn t-btn--primary" disabled>Disabled</button>
+          <button class="t-btn t-btn--primary t-btn--loading">Loading</button>
+          <button class="t-btn t-btn--secondary" disabled>Disabled</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUT -->
+    <section class="story" id="story-input">
+      <h1 class="story__title">Input</h1>
+      <p class="story__desc">Text input primitive. JTBD: When I need to capture user text, I want a clearly labeled field that communicates its state and validates my input.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">primitive</span></div>
+      <h2 class="sb-h2">States</h2>
+      <div class="canvas">
+        <div class="canvas__label">Default, error, success, disabled</div>
+        <div style="display:flex;flex-direction:column;gap:var(--t-space-3);max-width:400px">
+          <div class="t-input-group">
+            <label class="t-label" for="inp-default">Component name</label>
+            <input class="t-input" id="inp-default" type="text" placeholder="e.g. DatePicker">
+            <span class="t-helper">Enter the component's display name</span>
+          </div>
+          <div class="t-input-group">
+            <label class="t-label" for="inp-error">JTBD statement</label>
+            <input class="t-input t-input--error" id="inp-error" type="text" value="looks good" aria-invalid="true" aria-describedby="inp-error-msg">
+            <span class="t-helper t-helper--error" id="inp-error-msg">JTBD must start with "When I…"</span>
+          </div>
+          <div class="t-input-group">
+            <label class="t-label" for="inp-success">Token name</label>
+            <input class="t-input t-input--success" id="inp-success" type="text" value="--t-interactive-default">
+            <span class="t-helper">Token name is valid</span>
+          </div>
+          <div class="t-input-group">
+            <label class="t-label" for="inp-disabled">Disabled field</label>
+            <input class="t-input" id="inp-disabled" type="text" value="Read only" disabled>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGE -->
+    <section class="story" id="story-badge">
+      <h1 class="story__title">Badge</h1>
+      <p class="story__desc">Status and metadata labels. JTBD: When I need to communicate status or categorize content, I want a compact label that conveys meaning through color and text.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">primitive</span></div>
+      <h2 class="sb-h2">Semantic Variants</h2>
+      <div class="canvas">
+        <div class="canvas__row">
+          <span class="t-badge t-badge--neutral">Neutral</span>
+          <span class="t-badge t-badge--brand">Brand</span>
+          <span class="t-badge t-badge--success">Success</span>
+          <span class="t-badge t-badge--warning">Warning</span>
+          <span class="t-badge t-badge--danger">Danger</span>
+        </div>
+      </div>
+      <h2 class="sb-h2">Maturity Badges</h2>
+      <div class="canvas">
+        <div class="canvas__row">
+          <span class="t-badge t-badge--draft">Draft</span>
+          <span class="t-badge t-badge--candidate">Candidate</span>
+          <span class="t-badge t-badge--stable">Stable</span>
+          <span class="t-badge t-badge--deprecated">Deprecated</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVATAR -->
+    <section class="story" id="story-avatar">
+      <h1 class="story__title">Avatar</h1>
+      <p class="story__desc">User identity representation. JTBD: When I need to represent a user or entity, I want a compact visual that communicates identity at a glance.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">primitive</span></div>
+      <h2 class="sb-h2">Sizes</h2>
+      <div class="canvas">
+        <div class="canvas__row" style="align-items:center">
+          <div class="t-avatar t-avatar--xs">ZD</div>
+          <div class="t-avatar t-avatar--sm">ZD</div>
+          <div class="t-avatar">ZD</div>
+          <div class="t-avatar t-avatar--lg">ZD</div>
+          <div class="t-avatar t-avatar--xl">ZD</div>
+        </div>
+      </div>
+      <h2 class="sb-h2">Group</h2>
+      <div class="canvas">
+        <div class="t-avatar-group">
+          <div class="t-avatar t-avatar--sm">DS</div>
+          <div class="t-avatar t-avatar--sm">TS</div>
+          <div class="t-avatar t-avatar--sm">AG</div>
+          <div class="t-avatar t-avatar--sm">PL</div>
+          <div class="t-avatar t-avatar--sm">CA</div>
+        </div>
+        <p style="font-size:var(--t-text-xs);color:var(--t-fg-tertiary);margin-top:var(--t-space-2)">The five domain agents</p>
+      </div>
+    </section>
+
+    <!-- TOGGLE -->
+    <section class="story" id="story-toggle">
+      <h1 class="story__title">Toggle</h1>
+      <p class="story__desc">Binary on/off control for immediate-effect settings. JTBD: When I need to enable or disable a setting, I want a control that communicates two discrete states clearly and applies the change immediately.</p>
+      <div class="story__meta">
+        <span class="t-badge t-badge--candidate">Candidate</span>
+        <span class="t-badge t-badge--neutral">primitive</span>
+        <span class="t-badge t-badge--neutral">Workshop</span>
+      </div>
+
+      <h2 class="sb-h2">Live Demo</h2>
+      <div class="canvas">
+        <div class="canvas__label">Toggle states</div>
+        <div style="display:flex;flex-direction:column;gap:var(--t-space-3)">
+          <label class="t-toggle">
+            <input class="t-toggle__input" type="checkbox" role="switch" aria-checked="false">
+            <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+            <span class="t-toggle__label">Dark mode</span>
+          </label>
+          <label class="t-toggle">
+            <input class="t-toggle__input" type="checkbox" role="switch" aria-checked="true" checked>
+            <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+            <span class="t-toggle__label">Notifications enabled</span>
+          </label>
+          <label class="t-toggle">
+            <input class="t-toggle__input" type="checkbox" role="switch" disabled>
+            <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+            <span class="t-toggle__label">Feature flag (disabled)</span>
+          </label>
+        </div>
+      </div>
+
+      <h2 class="sb-h2">Governance Journey</h2>
+      <div class="journey">
+        <div class="journey__step journey__step--active">
+          <div class="journey__zone">Nursery</div>
+          <div class="journey__detail">All 5 agents in Builder mode. Found: 2 primitive token refs (--t-raw-neutral-300, --t-raw-neutral-0), missing prefers-reduced-motion. No rejections — Nursery rules enforced.<div class="journey__verdict">5/5 observing</div></div>
+        </div>
+        <div class="journey__step journey__step--current">
+          <div class="journey__zone">Workshop</div>
+          <div class="journey__detail">Ready for real agent reviews. Click "Run Governance Review" to trigger live Anthropic API reviews from all 5 agents.<div class="journey__verdict">Awaiting review</div></div>
+        </div>
+        <div class="journey__step">
+          <div class="journey__zone">Canopy</div>
+          <div class="journey__detail">Unanimous approval required. AG absolute veto active.<div class="journey__verdict">Not yet reached</div></div>
+        </div>
+        <div class="journey__step">
+          <div class="journey__zone">Stable</div>
+          <div class="journey__detail">Production-ready. All agents approved. Gardener sign-off required.<div class="journey__verdict">Not yet reached</div></div>
+        </div>
+      </div>
+
+      <hr class="sb-hr">
+      <h2 class="sb-h2">Run Governance Review</h2>
+      <p style="font-size:var(--t-text-sm);color:var(--t-fg-secondary);margin-bottom:var(--t-space-3)">Trigger real Anthropic API reviews from all 5 domain agents. Each agent evaluates Toggle against their domain expertise and the Workshop zone rules.</p>
+      <button class="t-btn t-btn--primary" onclick="runGovernanceReview('toggle')" id="btn-review-toggle">Run Governance Review</button>
+      <div id="review-results-toggle" style="margin-top:var(--t-space-4)"></div>
+
+      <hr class="sb-hr">
+      <h2 class="sb-h2">Known Issues (Nursery findings)</h2>
+      <div style="display:flex;flex-direction:column;gap:var(--t-space-2)">
+        <div class="t-toast t-toast--warning" style="position:relative;animation:none">
+          <div class="t-toast__content"><div class="t-toast__title">Primitive token refs</div>--t-raw-neutral-300 (track off-state) and --t-raw-neutral-0 (thumb fill) must be replaced with semantic tokens before Nursery exit.</div>
+        </div>
+        <div class="t-toast t-toast--warning" style="position:relative;animation:none">
+          <div class="t-toast__content"><div class="t-toast__title">Missing reduced-motion</div>Thumb slide and track color transitions not yet wrapped in @media (prefers-reduced-motion: reduce).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARD -->
+    <section class="story" id="story-card">
+      <h1 class="story__title">Card</h1>
+      <p class="story__desc">Content container composite. JTBD: When I need to group related content, I want a visually distinct container that communicates hierarchy and optionally invites interaction.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">composite</span></div>
+      <h2 class="sb-h2">Variants</h2>
+      <div class="canvas">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--t-space-3)">
+          <div class="t-card">
+            <div class="t-card__header"><strong>Default Card</strong></div>
+            <div class="t-card__body">Standard content container with header, body, and footer sections.</div>
+            <div class="t-card__footer"><button class="t-btn t-btn--ghost t-btn--sm">Action</button></div>
+          </div>
+          <div class="t-card t-card--elevated">
+            <div class="t-card__header"><strong>Elevated Card</strong></div>
+            <div class="t-card__body">Higher elevation shadow for modal-like prominence.</div>
+            <div class="t-card__footer"><button class="t-btn t-btn--ghost t-btn--sm">Action</button></div>
+          </div>
+          <div class="t-card t-card--interactive" tabindex="0" role="button" aria-label="Interactive card example">
+            <div class="t-card__header"><strong>Interactive Card</strong></div>
+            <div class="t-card__body">Hover to see elevation change. Entire card is clickable.</div>
+            <div class="t-card__footer"><span class="t-badge t-badge--brand">Click me</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIALOG -->
+    <section class="story" id="story-dialog">
+      <h1 class="story__title">Dialog</h1>
+      <p class="story__desc">Modal overlay composite. JTBD: When I need to focus user attention on a critical decision or form, I want a modal that traps focus and requires explicit dismissal.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">composite</span></div>
+      <h2 class="sb-h2">Demo</h2>
+      <div class="canvas">
+        <button class="t-btn t-btn--primary" onclick="openDialog()">Open Dialog</button>
+      </div>
+      <div id="dialog-demo" style="display:none">
+        <div class="t-dialog-backdrop" onclick="closeDialog()" role="presentation">
+          <div class="t-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" onclick="event.stopPropagation()">
+            <div class="t-dialog__header">
+              <span class="t-dialog__title" id="dialog-title">Governance Decision</span>
+              <button class="t-dialog__close" onclick="closeDialog()" aria-label="Close dialog">✕</button>
+            </div>
+            <div class="t-dialog__body">
+              <p style="margin-bottom:var(--t-space-3)">The Accessibility Guardian has flagged a potential WCAG 2.2 AA violation in the proposed Toggle component.</p>
+              <div class="t-toast t-toast--warning" style="position:relative;animation:none">
+                <div class="t-toast__content"><div class="t-toast__title">AG Finding</div>Touch target on track is 36px — below the 44px minimum required by WCAG 2.5.8.</div>
+              </div>
+            </div>
+            <div class="t-dialog__footer">
+              <button class="t-btn t-btn--ghost" onclick="closeDialog()">Dismiss</button>
+              <button class="t-btn t-btn--primary" onclick="closeDialog()">Acknowledge</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="sb-h2">Accessibility</h2>
+      <table class="spec-table">
+        <thead><tr><th>Criterion</th><th>Implementation</th></tr></thead>
+        <tbody>
+          <tr><td>ARIA Role</td><td><code>role="dialog"</code> + <code>aria-modal="true"</code></td></tr>
+          <tr><td>Label</td><td><code>aria-labelledby</code> pointing to dialog title</td></tr>
+          <tr><td>Focus trap</td><td>Tab cycles within dialog only</td></tr>
+          <tr><td>Escape</td><td>Closes dialog, returns focus to trigger</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TOAST -->
+    <section class="story" id="story-toast">
+      <h1 class="story__title">Toast</h1>
+      <p class="story__desc">The first component to complete the full terarrium lifecycle. Non-blocking feedback about system actions that auto-dismisses without interrupting workflow.</p>
+      <div class="story__meta">
+        <span class="t-badge t-badge--stable">Stable</span>
+        <span class="t-badge t-badge--neutral">composite</span>
+        <span class="t-badge t-badge--neutral">COMP-001</span>
+      </div>
+
+      <h2 class="sb-h2">Live Demo</h2>
+      <div class="canvas">
+        <div class="canvas__label">Click to trigger</div>
+        <div class="canvas__row">
+          <button class="t-btn t-btn--secondary t-btn--sm" onclick="showToast('info','Info','Component submitted to Nursery for review.')">Info</button>
+          <button class="t-btn t-btn--primary t-btn--sm" onclick="showToast('success','Success','Toast promoted to Stable. The system wore its own output.')">Success</button>
+          <button class="t-btn t-btn--secondary t-btn--sm" onclick="showToast('warning','Warning','Spec documentation has fallen behind CSS implementation.')">Warning</button>
+          <button class="t-btn t-btn--danger t-btn--sm" onclick="showToast('error','Error','Accessibility Guardian exercised absolute veto.')">Error</button>
+        </div>
+      </div>
+
+      <h2 class="sb-h2">All Severity Variants</h2>
+      <div style="display:flex;flex-direction:column;gap:var(--t-space-3);margin-bottom:var(--t-space-4)">
+        <div class="t-toast t-toast--info" role="status" aria-live="polite" style="position:relative;animation:none">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div class="t-toast__content"><div class="t-toast__title">Info</div>Component submitted to Nursery. All agents in Builder mode.</div>
+        </div>
+        <div class="t-toast t-toast--success" role="status" aria-live="polite" style="position:relative;animation:none">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="t-toast__content"><div class="t-toast__title">Success</div>Toast graduated to Stable. Unanimous 5/5 approval at Canopy.</div>
+        </div>
+        <div class="t-toast t-toast--warning" role="alert" aria-live="assertive" style="position:relative;animation:none">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="t-toast__content"><div class="t-toast__title">Warning</div>Pattern Librarian requests spec-sync work before approval.</div>
+        </div>
+        <div class="t-toast t-toast--error" role="alert" aria-live="assertive" style="position:relative;animation:none">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div class="t-toast__content"><div class="t-toast__title">Error</div>Primitive token --t-raw-red-600 detected. Use semantic tokens only.</div>
+          <button class="t-toast__dismiss" aria-label="Dismiss notification" onclick="this.closest('.t-toast').remove()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <h2 class="sb-h2">Governance Journey</h2>
+      <p style="font-size:var(--t-text-sm);color:var(--t-fg-secondary);margin-bottom:var(--t-space-3)">Three review cycles. Fifteen agent evaluations. Zero overrides. Zero vetoes.</p>
+      <div class="journey">
+        <div class="journey__step"><div class="journey__zone">Spark</div><div class="journey__detail">SPARK-001: Toast identified as the primary feedback mechanism across all governance workflows.<div class="journey__verdict">Pre-Nursery signal</div></div></div>
+        <div class="journey__step journey__step--active"><div class="journey__zone">Nursery</div><div class="journey__detail">All 5 agents in Builder mode. Found: 4 primitive token refs, missing reduced-motion, undersized touch target, spec/CSS mismatch. No rejections — Nursery rules enforced.<div class="journey__verdict">DEC-nursery-toast-001 · 5/5 observing</div></div></div>
+        <div class="journey__step journey__step--active"><div class="journey__zone">Workshop</div><div class="journey__detail">Primitive tokens replaced with semantic tokens + fallbacks. Reduced-motion added. Touch target fixed. 4/5 approve, Pattern Librarian requests spec sync.<div class="journey__verdict">DEC-workshop-toast-001 · 4/5 approve · majority</div></div></div>
+        <div class="journey__step journey__step--active"><div class="journey__zone">Canopy</div><div class="journey__detail">Spec synced (29 tokens verified). Full three-dimension evaluation. AG did not exercise veto. Unanimous approval.<div class="journey__verdict">DEC-canopy-toast-001 · 5/5 approve · unanimous</div></div></div>
+        <div class="journey__step journey__step--active"><div class="journey__zone">Stable</div><div class="journey__detail">First component to complete the full terarrium lifecycle. The system wore its own output and it held.<div class="journey__verdict">COMP-001 · shielded</div></div></div>
+      </div>
+
+      <hr class="sb-hr">
+      <h2 class="sb-h2">Tokens Used <span class="t-badge t-badge--neutral">29</span></h2>
+      <p style="font-size:var(--t-text-sm);color:var(--t-fg-secondary);margin-bottom:var(--t-space-2)">Zero primitive references. All semantic. Dark mode coverage verified.</p>
+      <div class="token-list">
+        <span class="token-badge">--t-surface-2</span><span class="token-badge">--t-border-default</span><span class="token-badge">--t-border-info</span><span class="token-badge">--t-border-success</span><span class="token-badge">--t-border-warning</span><span class="token-badge">--t-border-danger</span><span class="token-badge">--t-radius-lg</span><span class="token-badge">--t-radius-sm</span><span class="token-badge">--t-shadow-3</span><span class="token-badge">--t-text-sm</span><span class="token-badge">--t-leading-normal</span><span class="token-badge">--t-fg-primary</span><span class="token-badge">--t-fg-tertiary</span><span class="token-badge">--t-fg-success</span><span class="token-badge">--t-fg-warning</span><span class="token-badge">--t-fg-danger</span><span class="token-badge">--t-icon-lg</span><span class="token-badge">--t-weight-semibold</span><span class="token-badge">--t-space-1</span><span class="token-badge">--t-space-2</span><span class="token-badge">--t-space-3</span><span class="token-badge">--t-space-4</span><span class="token-badge">--t-space-6</span><span class="token-badge">--t-bg-secondary</span><span class="token-badge">--t-touch-min</span><span class="token-badge">--t-z-toast</span><span class="token-badge">--t-duration-slow</span><span class="token-badge">--t-ease-spring</span><span class="token-badge">--t-interactive-default</span>
+      </div>
+    </section>
+
+    <!-- TABS -->
+    <section class="story" id="story-tabs">
+      <h1 class="story__title">Tabs</h1>
+      <p class="story__desc">Tabbed navigation composite. JTBD: When I need to organize related content into discrete views, I want a tab interface that communicates the active state and supports keyboard navigation.</p>
+      <div class="story__meta"><span class="t-badge t-badge--stable">Stable</span><span class="t-badge t-badge--neutral">composite</span></div>
+      <h2 class="sb-h2">Demo</h2>
+      <div class="canvas">
+        <div class="t-tabs">
+          <div class="t-tab-list" role="tablist" aria-label="Component sections">
+            <button class="t-tab t-tab--active" role="tab" aria-selected="true" aria-controls="tab-panel-1" id="tab-1" onclick="switchTab(this,'tab-panel-1')">Overview</button>
+            <button class="t-tab" role="tab" aria-selected="false" aria-controls="tab-panel-2" id="tab-2" onclick="switchTab(this,'tab-panel-2')">Spec</button>
+            <button class="t-tab" role="tab" aria-selected="false" aria-controls="tab-panel-3" id="tab-3" onclick="switchTab(this,'tab-panel-3')">Tokens</button>
+          </div>
+          <div class="t-tab-panel" id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
+            <p style="padding:var(--t-space-3);font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Overview content. Tabs use WAI-ARIA tablist/tab/tabpanel pattern. Arrow keys navigate between tabs.</p>
+          </div>
+          <div class="t-tab-panel" id="tab-panel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+            <p style="padding:var(--t-space-3);font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Spec content. Full component specification including anatomy, variants, and accessibility requirements.</p>
+          </div>
+          <div class="t-tab-panel" id="tab-panel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+            <p style="padding:var(--t-space-3);font-size:var(--t-text-sm);color:var(--t-fg-secondary)">Token content. All CSS custom properties consumed by this component.</p>
+          </div>
+        </div>
+      </div>
+      <h2 class="sb-h2">Keyboard Navigation</h2>
+      <table class="spec-table">
+        <thead><tr><th>Key</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><code>Tab</code></td><td>Move focus to tab list, then to tab panel</td></tr>
+          <tr><td><code>Arrow Left/Right</code></td><td>Navigate between tabs</td></tr>
+          <tr><td><code>Enter / Space</code></td><td>Activate focused tab</td></tr>
+          <tr><td><code>Home / End</code></td><td>Jump to first / last tab</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- ═══ GOVERNANCE CHAT PANEL (shell__panel — 3rd grid column) ═══════ -->
+  <aside class="shell__panel" id="gov-panel" aria-label="Governance chat">
+    <div class="panel-section" style="display:flex;align-items:center;justify-content:space-between;padding:var(--t-space-3) var(--t-space-3)">
+      <span style="font-size:var(--t-text-sm);font-weight:var(--t-weight-semibold);color:var(--t-fg-primary)">Governance Chat</span>
+      <span class="t-badge t-badge--neutral" id="api-status-badge">checking…</span>
+    </div>
+    <div id="gov-messages" style="flex:1;overflow-y:auto;padding:var(--t-space-3);display:flex;flex-direction:column;gap:var(--t-space-2);min-height:0">
+      <div class="gov-msg gov-msg--system">Ask about any component, governance rule, or agent. I can also trigger reviews.</div>
+    </div>
+    <div style="padding:var(--t-space-3);border-top:1px solid var(--t-border-default);background:var(--t-surface-0);flex-shrink:0">
+      <textarea class="gov-panel__textarea" id="gov-input" placeholder="e.g. What does the Token Steward think about Toggle?" rows="2" style="width:100%;resize:none;font-family:var(--t-font-sans);font-size:var(--t-text-sm);color:var(--t-fg-primary);background:var(--t-surface-1);border:1px solid var(--t-border-default);border-radius:var(--t-radius-md);padding:var(--t-space-2) var(--t-space-3);margin-bottom:var(--t-space-2);box-sizing:border-box;outline:none"></textarea>
+      <div style="display:flex;align-items:center;gap:var(--t-space-2)">
+        <button class="t-btn t-btn--primary t-btn--sm" onclick="sendChat()" id="btn-chat-send">Send</button>
+        <span style="font-size:11px;color:var(--t-fg-tertiary);flex:1" id="gov-status"></span>
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /shell -->
+
+<!-- Toast container -->
+<div class="t-toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<script src="storybook.js"></script>
+</body>
+</html>

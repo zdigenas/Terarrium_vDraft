@@ -1,0 +1,215 @@
+{
+  "nursery": [
+    {
+      "id": "COMP-003",
+      "name": "Button",
+      "type": "primitive",
+      "description": "Submit actions, trigger operations, and navigate between views. The primary interactive element for user-initiated actions. JTBD: When I need to perform an action, I want a clearly interactive element that responds to my click/tap, so I can trigger operations with confidence.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.618Z",
+      "movedAt": "2026-02-26T06:10:47.618Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-004",
+      "name": "Input",
+      "type": "primitive",
+      "description": "Capture user text input with real-time validation feedback. The foundational form element for data entry. JTBD: When I need to enter text data, I want a clearly writable field with validation feedback, so I can submit correct information without guessing.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.618Z",
+      "movedAt": "2026-02-26T06:10:47.618Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-005",
+      "name": "Badge",
+      "type": "primitive",
+      "description": "Convey status, category, or count at a glance. A compact visual indicator that communicates metadata without requiring interaction. JTBD: When I need to understand the state of an item, I want a visible status indicator, so I can assess priority without reading details.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.618Z",
+      "movedAt": "2026-02-26T06:10:47.618Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-006",
+      "name": "Avatar",
+      "type": "primitive",
+      "description": "Represent a person or entity visually. Display a profile image, initials fallback, or placeholder icon at consistent sizes. JTBD: When I see a user reference, I want a visual representation, so I can quickly identify who is involved.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.619Z",
+      "movedAt": "2026-02-26T06:10:47.619Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-007",
+      "name": "Card",
+      "type": "composite",
+      "description": "Group related content with clear visual boundaries. A container that establishes content hierarchy through elevation and structure. JTBD: When I encounter related information, I want it visually grouped, so I can process it as a unit without cognitive overhead.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.619Z",
+      "movedAt": "2026-02-26T06:10:47.619Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-008",
+      "name": "Dialog",
+      "type": "composite",
+      "description": "Focus user attention on a critical decision or information that requires acknowledgment. Trap keyboard focus within the dialog until dismissed. JTBD: When the system needs my decision, I want focused attention on the choice, so I can respond without distraction.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.619Z",
+      "movedAt": "2026-02-26T06:10:47.619Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-009",
+      "name": "Tabs",
+      "type": "composite",
+      "description": "Organize content into switchable views within a single context. Allow users to navigate between related content sections without leaving the page. JTBD: When I have multiple related content sections, I want to switch between them in place, so I can explore without losing context.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.619Z",
+      "movedAt": "2026-02-26T06:10:47.619Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-010",
+      "name": "Tooltip",
+      "type": "primitive",
+      "description": "Provide supplementary information about an element on hover or focus. Non-essential context that helps but is not required for the primary task. JTBD: When I am unsure what an element does, I want on-demand clarification, so I can proceed with confidence.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.619Z",
+      "movedAt": "2026-02-26T06:10:47.620Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    },
+    {
+      "id": "COMP-011",
+      "name": "Dropdown",
+      "type": "composite",
+      "description": "Present a list of options on demand. Allow users to select from a set of actions or choices without cluttering the interface. JTBD: When I need to choose from multiple options, I want them presented on demand, so the interface stays clean until I need them.",
+      "zone": "nursery",
+      "maturity": "draft",
+      "createdAt": "2026-02-26T06:10:47.620Z",
+      "movedAt": "2026-02-26T06:10:47.620Z",
+      "agentReviews": {},
+      "proposals": [],
+      "shielded": false
+    }
+  ],
+  "workshop": [
+    {
+      "id": "COMP-002",
+      "name": "Toggle",
+      "type": "primitive",
+      "description": "Binary on/off control that immediately applies a setting change without requiring a separate submit action. JTBD: When I need to enable or disable a setting, I want a control that communicates two discrete states clearly and applies the change immediately, so I can see the effect without submitting a form.",
+      "zone": "workshop",
+      "maturity": "candidate",
+      "createdAt": "2026-02-26T04:42:00.000Z",
+      "movedAt": "2026-02-26T05:00:00.000Z",
+      "agentReviews": {
+        "ts": {
+          "verdict": "needs-work",
+          "score": 62,
+          "analysis": "Two primitive token references found in toggle.css: --t-raw-neutral-300 (track off-state) and --t-raw-neutral-0 (thumb fill). These must be replaced with semantic tokens before Nursery exit. Suggested mappings: --t-border-strong for track off-state, --t-fg-inverse for thumb fill.",
+          "conditionalApproval": "Replace --t-raw-neutral-300 with --t-border-strong and --t-raw-neutral-0 with --t-fg-inverse. Add prefers-reduced-motion media query.",
+          "timestamp": "2026-02-26T04:50:00.000Z"
+        },
+        "ag": {
+          "verdict": "needs-work",
+          "score": 70,
+          "analysis": "Toggle spec correctly identifies role=switch and aria-checked requirements. Native checkbox approach is sound — keyboard behavior is inherited. Missing: prefers-reduced-motion not applied to thumb slide or track color transitions. Touch target needs verification against --t-touch-min.",
+          "conditionalApproval": "Add @media (prefers-reduced-motion: reduce) to disable thumb slide and track color transitions. Verify touch target meets 44px minimum.",
+          "timestamp": "2026-02-26T04:50:00.000Z"
+        },
+        "pl": {
+          "verdict": "approved",
+          "score": 78,
+          "analysis": "Toggle is a well-understood primitive with clear differentiation from Checkbox. The switch metaphor is distinct — immediate effect vs. form submission. No duplication risk. Spec is present and covers anatomy, variants, and known issues honestly.",
+          "conditionalApproval": null,
+          "timestamp": "2026-02-26T04:50:00.000Z"
+        },
+        "ca": {
+          "verdict": "needs-work",
+          "score": 68,
+          "analysis": "BEM structure is correct: .t-toggle, .t-toggle__input, .t-toggle__track, .t-toggle__thumb, .t-toggle__label. Native checkbox as visually-hidden input is the right architectural choice — avoids custom keyboard handling. Missing size variants (sm/lg) noted in spec as future consideration — acceptable for Workshop.",
+          "conditionalApproval": "Ensure .t-toggle__input is visually hidden but not display:none (must remain in accessibility tree). Verify focus ring appears on the track, not the hidden input.",
+          "timestamp": "2026-02-26T04:50:00.000Z"
+        },
+        "px": {
+          "verdict": "approved",
+          "score": 75,
+          "analysis": "Toggle has clear adoption signal — settings panels, feature flags, and preference toggles are common across product surfaces. The immediate-effect semantic (vs. checkbox in a form) is a real distinction teams need. 2+ teams have expressed need for this pattern.",
+          "conditionalApproval": null,
+          "timestamp": "2026-02-26T04:50:00.000Z"
+        }
+      },
+      "proposals": [],
+      "shielded": false
+    }
+  ],
+  "canopy": [],
+  "stable": [
+    {
+      "id": "COMP-001",
+      "name": "Toast",
+      "type": "composite",
+      "description": "Non-blocking feedback about system actions (success, error, warning, info) that auto-dismisses without interrupting workflow. JTBD: When I perform an action, I want immediate confirmation that the system responded, so I can continue my task with confidence.",
+      "zone": "stable",
+      "maturity": "stable",
+      "createdAt": "2026-02-25T21:35:00.000Z",
+      "movedAt": "2026-02-26T04:30:00.000Z",
+      "agentReviews": {
+        "ts": {
+          "verdict": "approved",
+          "score": 95,
+          "timestamp": "2026-02-26T04:00:00.000Z"
+        },
+        "ag": {
+          "verdict": "approved",
+          "score": 92,
+          "timestamp": "2026-02-26T04:00:00.000Z"
+        },
+        "pl": {
+          "verdict": "approved",
+          "score": 90,
+          "timestamp": "2026-02-26T04:00:00.000Z"
+        },
+        "ca": {
+          "verdict": "approved",
+          "score": 88,
+          "timestamp": "2026-02-26T04:00:00.000Z"
+        },
+        "px": {
+          "verdict": "approved",
+          "score": 91,
+          "timestamp": "2026-02-26T04:00:00.000Z"
+        }
+      },
+      "proposals": [],
+      "shielded": true
+    }
+  ],
+  "nextId": 12
+}

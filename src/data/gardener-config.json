@@ -1,0 +1,73 @@
+{
+  "$schema": "gardener-config",
+  "version": 1,
+  "lastModified": "2026-02-26T16:00:00.000Z",
+
+  "global": {
+    "warmth": 6,
+    "directness": 7,
+    "metaphorDensity": 3,
+    "formality": 4,
+    "celebrationIntensity": 5,
+    "emotionalRegister": "earned-delight"
+  },
+
+  "agents": {
+    "ts": {
+      "warmth": 5,
+      "directness": 8,
+      "metaphorDensity": 2,
+      "formality": 6,
+      "celebrationIntensity": 4,
+      "critiqueStyle": "caring-but-honest"
+    },
+    "ag": {
+      "warmth": 4,
+      "directness": 9,
+      "metaphorDensity": 1,
+      "formality": 7,
+      "celebrationIntensity": 3,
+      "critiqueStyle": "fierce-but-fair"
+    },
+    "pl": {
+      "warmth": 8,
+      "directness": 5,
+      "metaphorDensity": 6,
+      "formality": 3,
+      "celebrationIntensity": 7,
+      "critiqueStyle": "gentle-guide"
+    },
+    "ca": {
+      "warmth": 5,
+      "directness": 8,
+      "metaphorDensity": 3,
+      "formality": 5,
+      "celebrationIntensity": 4,
+      "critiqueStyle": "dry-and-precise"
+    },
+    "px": {
+      "warmth": 7,
+      "directness": 7,
+      "metaphorDensity": 2,
+      "formality": 3,
+      "celebrationIntensity": 6,
+      "critiqueStyle": "plain-spoken"
+    },
+    "ss": {
+      "warmth": 6,
+      "directness": 6,
+      "metaphorDensity": 5,
+      "formality": 5,
+      "celebrationIntensity": 5,
+      "critiqueStyle": "philosophical"
+    }
+  },
+
+  "chat": {
+    "warmth": 7,
+    "directness": 6,
+    "metaphorDensity": 4,
+    "formality": 3,
+    "critiqueStyle": "caring-but-honest"
+  }
+}

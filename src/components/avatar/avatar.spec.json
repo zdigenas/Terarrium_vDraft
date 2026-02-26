@@ -1,0 +1,63 @@
+{
+  "name": "Avatar",
+  "id": "avatar",
+  "type": "primitive",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Represent a person or entity visually. Display a profile image, initials fallback, or placeholder icon at consistent sizes.",
+    "affordance": "Circular image or initials on a colored background. Users immediately recognize this as representing a person. Size variants communicate hierarchy (small in lists, large in profiles).",
+    "emotional": "Humanizes the interface. Seeing a face or initials creates personal connection and trust."
+  },
+  "anatomy": {
+    "avatar": ".t-avatar — Circular container with overflow hidden, flex-centered for initials",
+    "image": ".t-avatar > img — Profile image, object-fit cover",
+    "initials": ".t-avatar > span — Text initials fallback when no image",
+    "group": ".t-avatar-group — Overlapping row of avatars with negative margin"
+  },
+  "variants": {
+    "size": {
+      "xs": ".t-avatar--xs — 24px, for dense lists and metadata.",
+      "sm": ".t-avatar--sm — 32px, for compact UI elements.",
+      "md": ".t-avatar--md — 40px, default size for most contexts.",
+      "lg": ".t-avatar--lg — 48px, for cards and detail views.",
+      "xl": ".t-avatar--xl — 64px, for profile headers."
+    },
+    "content": {
+      "image": "img element inside .t-avatar — primary representation.",
+      "initials": "Text node inside .t-avatar — fallback when no image available.",
+      "group": ".t-avatar-group — Multiple avatars overlapping, shows team/group."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-2",
+      "--t-radius-full",
+      "--t-font-sans", "--t-text-xs", "--t-text-sm", "--t-text-base", "--t-text-md",
+      "--t-weight-semibold",
+      "--t-bg-brand", "--t-bg-primary",
+      "--t-fg-inverse",
+      "--t-avatar-xs", "--t-avatar-sm", "--t-avatar-md", "--t-avatar-lg", "--t-avatar-xl"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "img (when displaying a person)",
+    "ariaLabel": "Must have alt text on img or aria-label on container describing the person",
+    "screenReader": "Image alt or aria-label announces person's name. Group announces count.",
+    "decorative": "If avatar is purely decorative (next to visible name), use alt='' or aria-hidden='true'"
+  },
+  "knownIssues": [
+    "No loading/skeleton state for image loading",
+    "No error fallback when image fails to load (requires JS)",
+    "Avatar group overlap uses negative margin — may cause layout issues in flex containers"
+  ],
+  "futureConsiderations": [
+    "Status indicator overlay (online/offline dot)",
+    "Avatar with badge count overlay",
+    "Skeleton loading state",
+    "Image error fallback to initials (requires JS)"
+  ],
+  "relatedComponents": ["badge", "card"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

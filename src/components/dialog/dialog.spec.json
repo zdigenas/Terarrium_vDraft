@@ -1,0 +1,63 @@
+{
+  "name": "Dialog",
+  "id": "dialog",
+  "type": "composite",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Focus user attention on a critical decision or information that requires acknowledgment. Trap keyboard focus within the dialog until dismissed.",
+    "affordance": "Centered overlay with backdrop dimming. Users immediately recognize this as a modal requiring their attention. Header/body/footer structure communicates purpose and available actions.",
+    "emotional": "Communicates importance without alarm. The backdrop blur and scale-in animation signal 'this needs your attention' without feeling aggressive."
+  },
+  "anatomy": {
+    "backdrop": ".t-dialog-backdrop — Fixed overlay covering the viewport with dimmed background",
+    "dialog": ".t-dialog — Centered content container with max-width and scroll",
+    "header": ".t-dialog__header — Title and close button area",
+    "title": ".t-dialog__title — Dialog heading text",
+    "body": ".t-dialog__body — Main content area with secondary text color",
+    "footer": ".t-dialog__footer — Action buttons aligned to the right"
+  },
+  "variants": {
+    "size": {
+      "default": "max-width: 560px — standard dialog for most use cases"
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-2", "--t-space-4", "--t-space-6",
+      "--t-radius-xl",
+      "--t-surface-0",
+      "--t-overlay-bg",
+      "--t-shadow-4",
+      "--t-fg-primary", "--t-fg-secondary",
+      "--t-text-base", "--t-text-lg",
+      "--t-weight-semibold", "--t-leading-tight", "--t-leading-normal",
+      "--t-z-modal",
+      "--t-duration-normal", "--t-duration-slow",
+      "--t-ease-entrance", "--t-ease-spring"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "dialog",
+    "ariaModal": "true — indicates content behind is inert",
+    "ariaLabelledby": "Points to .t-dialog__title element",
+    "keyboard": "Escape closes. Tab cycles within dialog (focus trap). Initial focus on first focusable element or close button.",
+    "focusTrap": "Focus must not escape the dialog while open. On close, focus returns to the trigger element.",
+    "screenReader": "Dialog title announced on open. Close button must have accessible name."
+  },
+  "knownIssues": [
+    "Focus trap requires JavaScript — CSS cannot enforce",
+    "No size variants (sm, lg, fullscreen)",
+    "Backdrop click-to-close requires JavaScript",
+    "No nested dialog support"
+  ],
+  "futureConsiderations": [
+    "Size variants: sm (400px), lg (720px), fullscreen",
+    "Confirmation dialog preset with danger action",
+    "Sheet variant (slides from edge instead of center)",
+    "Non-modal dialog variant (no backdrop, no focus trap)"
+  ],
+  "relatedComponents": ["button", "toast", "dropdown"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

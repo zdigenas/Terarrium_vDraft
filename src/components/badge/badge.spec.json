@@ -1,0 +1,65 @@
+{
+  "name": "Badge",
+  "id": "badge",
+  "type": "primitive",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Convey status, category, or count at a glance. A compact visual indicator that communicates metadata without requiring interaction.",
+    "affordance": "Pill-shaped label with color coding. Users immediately recognize this as a status indicator — not interactive, purely informational.",
+    "emotional": "Provides at-a-glance confidence about state. Maturity badges (draft/candidate/stable/deprecated) are a novel contribution — they signal the governance state of components within the terrarium itself."
+  },
+  "anatomy": {
+    "badge": ".t-badge — Inline-flex pill with icon + text, full-radius border",
+    "icon": ".t-badge > svg — Optional leading icon (status indicator)"
+  },
+  "variants": {
+    "semantic": {
+      "neutral": ".t-badge--neutral — Default, muted background.",
+      "brand": ".t-badge--brand — Brand-colored for primary categorization.",
+      "success": ".t-badge--success — Green for positive states.",
+      "warning": ".t-badge--warning — Amber for caution states.",
+      "danger": ".t-badge--danger — Red for error/critical states."
+    },
+    "maturity": {
+      "draft": ".t-badge--draft — Dashed amber border. Signals hypothesis stage.",
+      "candidate": ".t-badge--candidate — Solid blue border. Signals validation stage.",
+      "stable": ".t-badge--stable — Solid green border. Signals proven solution.",
+      "deprecated": ".t-badge--deprecated — Muted with strikethrough. Signals composting."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-1", "--t-space-2",
+      "--t-font-sans", "--t-text-xs", "--t-weight-medium",
+      "--t-leading-tight", "--t-tracking-wide",
+      "--t-radius-full",
+      "--t-bg-tertiary", "--t-bg-info", "--t-bg-success", "--t-bg-warning", "--t-bg-danger",
+      "--t-fg-primary", "--t-fg-brand", "--t-fg-success", "--t-fg-warning", "--t-fg-danger",
+      "--t-badge-draft-bg", "--t-badge-draft-fg", "--t-badge-draft-border",
+      "--t-badge-candidate-bg", "--t-badge-candidate-fg", "--t-badge-candidate-border",
+      "--t-badge-stable-bg", "--t-badge-stable-fg", "--t-badge-stable-border",
+      "--t-badge-deprecated-bg", "--t-badge-deprecated-fg", "--t-badge-deprecated-border"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "status (for dynamic badges) or none (for static labels)",
+    "ariaLabel": "Badge text should be descriptive. Avoid color-only meaning — text must convey the status.",
+    "screenReader": "Badge content announced as inline text. No special ARIA needed for static badges.",
+    "contrast": "All badge variants meet 4.5:1 text contrast in both light and dark themes."
+  },
+  "knownIssues": [
+    "No count/number variant (e.g., notification count)",
+    "No dot-only variant for minimal status indication",
+    "Maturity badges are a novel pattern — no established WAI-ARIA precedent"
+  ],
+  "futureConsiderations": [
+    "Count badge variant with max display (99+)",
+    "Dot badge for minimal status (online/offline)",
+    "Removable badge with dismiss button",
+    "Badge as overlay on Avatar or Icon"
+  ],
+  "relatedComponents": ["avatar", "toast", "card"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

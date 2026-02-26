@@ -1,0 +1,74 @@
+{
+    "name": "Toggle",
+    "id": "toggle",
+    "type": "primitive",
+    "maturity": "draft",
+    "zone": "nursery",
+    "jtbd": {
+        "functional": "Provide a binary on/off control that immediately applies a setting change without requiring a separate submit action.",
+        "affordance": "Recognizable switch metaphor — track + sliding thumb communicates two discrete states. Users immediately understand this is a toggle, not a checkbox.",
+        "emotional": "Gives users a sense of direct control. The animated thumb slide confirms the action was registered and the state changed."
+    },
+    "anatomy": {
+        "container": ".t-toggle — Outer label element acting as the interactive wrapper; positions input, track, and label in a row",
+        "input": ".t-toggle__input — Visually hidden native checkbox; carries all ARIA state (checked, disabled) and keyboard behavior",
+        "track": ".t-toggle__track — Pill-shaped background that changes color between off (neutral) and on (brand) states",
+        "thumb": ".t-toggle__thumb — Circular indicator that slides within the track to signal current state",
+        "label": ".t-toggle__label — Optional visible text label; can appear before or after the track"
+    },
+    "variants": {
+        "default": "Track + thumb only, no visible label. Use when context makes the purpose clear.",
+        "label-trailing": "Label appears to the right of the track (default label position). Use for most form contexts.",
+        "label-leading": "Label appears to the left of the track. Use when label-first reading order is required.",
+        "disabled": "Non-interactive state. Track and thumb at 50% opacity, cursor not-allowed."
+    },
+    "tokens": {
+        "uses": [
+            "--t-space-2",
+            "--t-space-3",
+            "--t-radius-full",
+            "--t-shadow-1",
+            "--t-duration-normal",
+            "--t-ease-default",
+            "--t-ease-spring",
+            "--t-interactive-default",
+            "--t-focus-ring",
+            "--t-text-sm",
+            "--t-weight-medium",
+            "--t-fg-primary",
+            "--t-fg-inverse",
+            "--t-border-strong"
+        ],
+        "primitiveRefs": [
+            "--t-raw-neutral-300 (track off-state — should be --t-border-strong)",
+            "--t-raw-neutral-0 (thumb fill — should be --t-fg-inverse)"
+        ]
+    },
+    "accessibility": {
+        "role": "switch",
+        "ariaChecked": "true (on) or false (off) — must be set by JS or via native checkbox checked state",
+        "keyboard": "Space to toggle; Tab to focus; native checkbox handles all keyboard interaction",
+        "screenReader": "Label text announced with switch role and checked state. Ensure visible label or aria-label is always present.",
+        "motionReduced": "Thumb slide transition and track color transition should be disabled under prefers-reduced-motion: reduce"
+    },
+    "knownIssues": [
+        "Two primitive token refs in CSS: --t-raw-neutral-300 (track off-state) and --t-raw-neutral-0 (thumb fill) — must be replaced with semantic tokens before Nursery exit",
+        "No size variants (sm/lg) — only one size currently implemented",
+        "No indeterminate/loading state for async toggle operations",
+        "prefers-reduced-motion not yet applied to thumb slide or track color transitions",
+        "ARIA role=switch requires JS or native checkbox — CSS cannot enforce this"
+    ],
+    "futureConsiderations": [
+        "Size variants: sm (36×20px) and lg (52×28px) to match button size scale",
+        "Icon inside thumb (e.g. check/x) for additional state clarity",
+        "Toggle group / fieldset pattern for mutually exclusive settings",
+        "Loading/pending state for async operations (spinner in thumb)",
+        "Color variants beyond brand (e.g. success-colored track for 'enabled' states)"
+    ],
+    "relatedComponents": [
+        "checkbox",
+        "button",
+        "input"
+    ],
+    "createdAt": "2026-02-26T04:42:00.000Z"
+}

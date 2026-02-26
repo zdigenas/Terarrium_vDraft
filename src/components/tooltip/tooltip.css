@@ -11,7 +11,7 @@
 
 .t-tooltip {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + var(--t-space-2));
   left: 50%;
   transform: translateX(-50%);
 

@@ -1,0 +1,64 @@
+{
+  "name": "Input",
+  "id": "input",
+  "type": "primitive",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Capture user text input with real-time validation feedback. The foundational form element for data entry.",
+    "affordance": "Bordered rectangle with placeholder text signals 'type here'. Error/success states use color + helper text to communicate validation without requiring the user to submit first.",
+    "emotional": "Reduces form anxiety. Clear validation states and helpful error messages make users confident they're entering data correctly."
+  },
+  "anatomy": {
+    "group": ".t-input-group — Vertical flex container grouping label, input, and helper text",
+    "label": ".t-label — Form label with optional required indicator (.t-label--required)",
+    "input": ".t-input — The text input element with full token coverage",
+    "helper": ".t-helper — Helper/error/success text below the input"
+  },
+  "variants": {
+    "state": {
+      "default": "No modifier — neutral border, placeholder visible.",
+      "error": ".t-input--error — Danger border color, paired with .t-helper--error.",
+      "success": ".t-input--success — Success border color, paired with .t-helper--success.",
+      "disabled": ".t-input:disabled — Muted background, not-allowed cursor."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-1", "--t-space-2", "--t-space-3",
+      "--t-font-sans", "--t-text-xs", "--t-text-sm", "--t-text-base",
+      "--t-weight-regular", "--t-weight-medium", "--t-leading-tight", "--t-leading-normal",
+      "--t-tracking-wide",
+      "--t-radius-md", "--t-touch-min",
+      "--t-surface-0", "--t-bg-primary", "--t-bg-secondary",
+      "--t-fg-primary", "--t-fg-secondary", "--t-fg-tertiary", "--t-fg-danger", "--t-fg-success", "--t-fg-disabled",
+      "--t-border-default", "--t-border-strong", "--t-border-danger", "--t-border-success", "--t-border-focus",
+      "--t-focus-ring",
+      "--t-duration-fast", "--t-ease-default"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "textbox (native <input> element)",
+    "ariaDescribedby": "Helper text linked via aria-describedby for screen reader context",
+    "ariaInvalid": "Set aria-invalid='true' when in error state",
+    "ariaRequired": "Set aria-required='true' when required (in addition to visual indicator)",
+    "keyboard": "Standard text input keyboard behavior. Tab to focus, type to enter.",
+    "screenReader": "Label announced on focus. Error/helper text announced via aria-describedby.",
+    "contrast": "Border meets 3:1 non-text contrast. Error state uses color + text (not color alone)."
+  },
+  "knownIssues": [
+    "No textarea variant — only single-line input",
+    "No input masking or formatting (phone, currency) — requires JS",
+    "Error focus ring uses hardcoded box-shadow values for danger color"
+  ],
+  "futureConsiderations": [
+    "Textarea variant with auto-resize",
+    "Input with leading/trailing addons (icons, buttons)",
+    "Search input variant with clear button",
+    "Number input with increment/decrement controls",
+    "Password input with visibility toggle"
+  ],
+  "relatedComponents": ["button", "dropdown", "dialog"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

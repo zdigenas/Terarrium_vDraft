@@ -9,13 +9,21 @@
     "lint:js": "eslint 'src/**/*.mjs' 'scripts/**/*.mjs'",
     "lint": "npm run lint:css && npm run lint:js",
     "serve": "http-server src/library -p 3000 -c-1 --cors",
+    "server": "node src/server/proxy.mjs",
+    "dev": "node src/server/proxy.mjs",
     "test": "node --test src/**/*.test.mjs"
   },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.2"
+  },
   "devDependencies": {
+    "eslint": "^9.0.0",
+    "http-server": "^14.0.0",
     "stylelint": "^16.0.0",
     "stylelint-config-standard": "^37.0.0",
-    "stylelint-selector-bem-pattern": "^4.0.0",
-    "eslint": "^9.0.0",
-    "http-server": "^14.0.0"
+    "stylelint-selector-bem-pattern": "^4.0.0"
   }
 }

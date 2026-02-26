@@ -1,0 +1,60 @@
+{
+  "name": "Card",
+  "id": "card",
+  "type": "composite",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Group related content with clear visual boundaries. A container that establishes content hierarchy through elevation and structure.",
+    "affordance": "Bordered or elevated rectangle with header/body/footer slots. Users recognize this as a self-contained content unit. Interactive variant communicates clickability through hover elevation.",
+    "emotional": "Creates visual order. Cards reduce cognitive load by chunking information into digestible units."
+  },
+  "anatomy": {
+    "card": ".t-card — Outer container with border, radius, and overflow hidden",
+    "header": ".t-card__header — Top section for title and actions",
+    "body": ".t-card__body — Main content area",
+    "footer": ".t-card__footer — Bottom section for actions and metadata",
+    "media": ".t-card__media — Full-width image/video slot with 16:9 aspect ratio"
+  },
+  "variants": {
+    "elevation": {
+      "default": "No modifier — flat with border.",
+      "elevated": ".t-card--elevated — Surface-1 background with shadow-1.",
+      "elevated-2": ".t-card--elevated-2 — Surface-1 background with shadow-2."
+    },
+    "interaction": {
+      "static": "No modifier — non-interactive content container.",
+      "interactive": ".t-card--interactive — Clickable with hover/active states."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-2", "--t-space-4",
+      "--t-radius-lg",
+      "--t-surface-0", "--t-surface-1",
+      "--t-border-default", "--t-border-strong",
+      "--t-shadow-1", "--t-shadow-2",
+      "--t-duration-normal", "--t-ease-default"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "article (for standalone content) or region with aria-label (for grouped content)",
+    "interactive": "Interactive cards should use <a> or <button> as the root, or have a clickable child that covers the card area",
+    "keyboard": "Interactive cards must be focusable and activatable via Enter/Space",
+    "screenReader": "Card heading should be a proper heading level. Content structure should be semantic HTML."
+  },
+  "knownIssues": [
+    "Interactive card uses transform scale on active — may cause layout shift",
+    "No loading/skeleton variant",
+    "Media slot has fixed 16:9 aspect ratio — no flexibility for other ratios"
+  ],
+  "futureConsiderations": [
+    "Horizontal card layout variant",
+    "Card with selectable state (checkbox-like)",
+    "Skeleton loading variant",
+    "Card group with consistent spacing"
+  ],
+  "relatedComponents": ["button", "badge", "avatar", "dialog"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

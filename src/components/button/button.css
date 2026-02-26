@@ -68,7 +68,7 @@
   background-color: var(--t-bg-info);
 }
 .t-btn--secondary:active {
-  background-color: var(--t-raw-blue-100);
+  background-color: var(--t-bg-info);
 }
 
 /* --- Button: Ghost (minimal) --- */
@@ -86,17 +86,17 @@
 
 /* --- Button: Danger --- */
 .t-btn--danger {
-  background-color: var(--t-raw-red-600);
+  background-color: var(--t-interactive-danger);
   color: var(--t-fg-inverse);
-  border-color: var(--t-raw-red-600);
+  border-color: var(--t-interactive-danger);
 }
 .t-btn--danger:hover {
-  background-color: var(--t-raw-red-700);
-  border-color: var(--t-raw-red-700);
+  background-color: var(--t-interactive-danger-hover);
+  border-color: var(--t-interactive-danger-hover);
 }
 .t-btn--danger:active {
-  background-color: var(--t-raw-red-800);
-  border-color: var(--t-raw-red-800);
+  background-color: var(--t-interactive-danger-active);
+  border-color: var(--t-interactive-danger-active);
 }
 
 /* --- Button: Sizes --- */

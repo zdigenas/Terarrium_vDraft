@@ -1,0 +1,65 @@
+{
+  "name": "Dropdown",
+  "id": "dropdown",
+  "type": "composite",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Present a list of options on demand. Allow users to select from a set of actions or choices without cluttering the interface with all options visible at once.",
+    "affordance": "Floating panel that appears below a trigger element. Users recognize this as a menu of options — each item is clearly interactive with hover states. Dividers group related options.",
+    "emotional": "Keeps the interface clean. Options are available when needed but hidden when not, reducing visual noise and decision fatigue."
+  },
+  "anatomy": {
+    "dropdown": ".t-dropdown — Relative-positioned container for trigger + menu",
+    "menu": ".t-dropdown__menu — Absolutely positioned floating panel with border and shadow",
+    "item": ".t-dropdown__item — Individual option with hover/focus/active states",
+    "divider": ".t-dropdown__divider — Horizontal separator between option groups"
+  },
+  "variants": {
+    "item": {
+      "default": "Standard option — primary text color.",
+      "active": ".t-dropdown__item--active — Highlighted/selected option with brand background."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-1", "--t-space-2", "--t-space-3",
+      "--t-radius-md", "--t-radius-lg",
+      "--t-surface-0",
+      "--t-border-default",
+      "--t-shadow-3",
+      "--t-fg-primary", "--t-fg-brand",
+      "--t-bg-secondary", "--t-bg-info",
+      "--t-text-sm", "--t-weight-medium",
+      "--t-touch-min",
+      "--t-z-dropdown",
+      "--t-focus-ring-inset",
+      "--t-duration-fast", "--t-ease-entrance"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "menu (container), menuitem (each option)",
+    "ariaExpanded": "Trigger button uses aria-expanded to communicate open/closed state",
+    "ariaHaspopup": "Trigger button uses aria-haspopup='menu'",
+    "keyboard": "Enter/Space opens menu. Arrow Down/Up navigates items. Enter selects. Escape closes. Home/End for first/last item.",
+    "focusManagement": "Focus moves to first item on open. On close, focus returns to trigger.",
+    "screenReader": "Menu role announced on open. Each item announced with its label. Active item announced with aria-current."
+  },
+  "knownIssues": [
+    "Open/close behavior requires JavaScript — CSS cannot toggle visibility",
+    "No typeahead search within menu items",
+    "No sub-menu/nested dropdown support",
+    "No multi-select variant",
+    "Collision detection (menu overflowing viewport) not handled"
+  ],
+  "futureConsiderations": [
+    "Typeahead search within menu items",
+    "Sub-menu/nested dropdown support",
+    "Multi-select dropdown with checkboxes",
+    "Combobox variant (searchable dropdown)",
+    "Viewport collision detection and auto-repositioning"
+  ],
+  "relatedComponents": ["button", "input", "tooltip"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

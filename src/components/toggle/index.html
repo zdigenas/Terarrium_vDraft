@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terarrium — Toggle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../library/terrarium.css">
+    <style>
+        /* Two-panel layout */
+        body {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            min-height: 100vh;
+        }
+
+        /* Left panel — component showcase */
+        .page {
+            max-width: 720px;
+            padding: var(--t-space-6) var(--t-space-4);
+            overflow-y: auto;
+        }
+
+        .page__header {
+            margin-bottom: var(--t-space-6);
+        }
+
+        .page__title {
+            font-size: var(--t-text-2xl);
+            font-weight: var(--t-weight-bold);
+            color: var(--t-fg-primary);
+            margin-bottom: var(--t-space-2);
+        }
+
+        .page__subtitle {
+            font-size: var(--t-text-base);
+            color: var(--t-fg-secondary);
+            line-height: var(--t-leading-normal);
+        }
+
+        .section {
+            margin-bottom: var(--t-space-6);
+        }
+
+        .section__title {
+            font-size: var(--t-text-lg);
+            font-weight: var(--t-weight-semibold);
+            color: var(--t-fg-primary);
+            margin-bottom: var(--t-space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--t-space-2);
+        }
+
+        .section__desc {
+            font-size: var(--t-text-sm);
+            color: var(--t-fg-secondary);
+            line-height: var(--t-leading-normal);
+            margin-bottom: var(--t-space-4);
+        }
+
+        .demo-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--t-space-4);
+            align-items: center;
+        }
+
+        .demo-row {
+            display: flex;
+            flex-direction: column;
+            gap: var(--t-space-3);
+        }
+
+        .demo-row__item {
+            display: flex;
+            align-items: center;
+            gap: var(--t-space-4);
+            padding: var(--t-space-3) var(--t-space-4);
+            background: var(--t-surface-1);
+            border-radius: var(--t-radius-md);
+            border: 1px solid var(--t-border-default);
+        }
+
+        .demo-row__label {
+            font-size: var(--t-text-sm);
+            color: var(--t-fg-tertiary);
+            min-width: 120px;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--t-text-sm);
+        }
+
+        .spec-table th,
+        .spec-table td {
+            text-align: left;
+            padding: var(--t-space-2) var(--t-space-3);
+            border-bottom: 1px solid var(--t-border-default);
+        }
+
+        .spec-table th {
+            font-weight: var(--t-weight-semibold);
+            color: var(--t-fg-tertiary);
+            font-size: var(--t-text-xs);
+            letter-spacing: var(--t-tracking-wide);
+            text-transform: uppercase;
+        }
+
+        .spec-table td {
+            color: var(--t-fg-primary);
+        }
+
+        .spec-table code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--t-text-xs);
+            background: var(--t-bg-tertiary);
+            padding: 2px 6px;
+            border-radius: var(--t-radius-sm);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--t-space-4);
+            right: calc(360px + var(--t-space-4));
+            z-index: 2000;
+        }
+
+        .issue-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--t-space-2);
+        }
+
+        .issue-list__item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--t-space-2);
+            font-size: var(--t-text-sm);
+            color: var(--t-fg-secondary);
+            line-height: var(--t-leading-normal);
+        }
+
+        .issue-list__item::before {
+            content: '⚠';
+            color: var(--t-fg-warning);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Right panel — chat */
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            border-left: 1px solid var(--t-border-default);
+            background: var(--t-surface-0);
+        }
+
+        .chat-panel__header {
+            padding: var(--t-space-3) var(--t-space-4);
+            border-bottom: 1px solid var(--t-border-default);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .chat-panel__title {
+            font-size: var(--t-text-sm);
+            font-weight: var(--t-weight-semibold);
+            color: var(--t-fg-primary);
+        }
+
+        .chat-panel__messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--t-space-3);
+            display: flex;
+            flex-direction: column;
+            gap: var(--t-space-3);
+        }
+
+        .chat-msg {
+            max-width: 90%;
+            padding: var(--t-space-2) var(--t-space-3);
+            border-radius: var(--t-radius-lg);
+            font-size: var(--t-text-sm);
+            line-height: var(--t-leading-normal);
+            word-break: break-word;
+        }
+
+        .chat-msg--user {
+            align-self: flex-end;
+            background: var(--t-bg-info);
+            color: var(--t-fg-primary);
+        }
+
+        .chat-msg--llm {
+            align-self: flex-start;
+            background: var(--t-surface-2);
+            color: var(--t-fg-primary);
+        }
+
+        .chat-msg--system {
+            align-self: center;
+            background: transparent;
+            color: var(--t-fg-tertiary);
+            font-size: var(--t-text-xs);
+            font-style: italic;
+        }
+
+        .chat-msg--error {
+            align-self: center;
+            background: var(--t-bg-danger);
+            color: var(--t-fg-danger);
+            font-size: var(--t-text-xs);
+        }
+
+        .chat-msg code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--t-text-xs);
+        }
+
+        .chat-panel__input-area {
+            padding: var(--t-space-3);
+            border-top: 1px solid var(--t-border-default);
+            display: flex;
+            flex-direction: column;
+            gap: var(--t-space-2);
+            flex-shrink: 0;
+        }
+
+        .chat-panel__textarea {
+            width: 100%;
+            min-height: 60px;
+            max-height: 120px;
+            resize: vertical;
+            padding: var(--t-space-2) var(--t-space-3);
+            border: 1px solid var(--t-border-default);
+            border-radius: var(--t-radius-md);
+            background: var(--t-surface-1);
+            color: var(--t-fg-primary);
+            font-family: var(--t-font-sans);
+            font-size: var(--t-text-sm);
+            line-height: var(--t-leading-normal);
+        }
+
+        .chat-panel__textarea:focus {
+            outline: none;
+            border-color: var(--t-border-focus);
+            box-shadow: var(--t-focus-ring);
+        }
+
+        .chat-panel__textarea::placeholder {
+            color: var(--t-fg-tertiary);
+        }
+
+        .chat-panel__actions {
+            display: flex;
+            gap: var(--t-space-2);
+        }
+
+        .chat-panel__status {
+            font-size: var(--t-text-xs);
+            color: var(--t-fg-tertiary);
+            padding: 0 var(--t-space-1);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Theme toggle -->
+    <div class="theme-toggle">
+        <button class="t-btn t-btn--secondary t-btn--sm" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <span id="theme-icon">&#9790;</span>
+        </button>
+    </div>
+
+    <!-- Left panel: editable showcase -->
+    <main id="editable-zone" class="page">
+        <!-- Header -->
+        <header class="page__header">
+            <h1 class="page__title">Toggle <span class="t-badge t-badge--draft">Draft</span></h1>
+            <p class="page__subtitle">Binary on/off control that immediately applies a setting change. Uses the native
+                checkbox for full keyboard and screen reader support, with a custom track + thumb visual layer.</p>
+        </header>
+
+        <!-- Live Demo -->
+        <section class="section">
+            <h2 class="section__title">Live Demo</h2>
+            <p class="section__desc">Interact with each toggle. State is reflected immediately — no submit required. Tab
+                to focus, Space to toggle.</p>
+            <div class="demo-grid">
+                <label class="t-toggle">
+                    <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Notifications">
+                    <span class="t-toggle__track">
+                        <span class="t-toggle__thumb"></span>
+                    </span>
+                    <span class="t-toggle__label">Notifications</span>
+                </label>
+
+                <label class="t-toggle">
+                    <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Dark mode" checked>
+                    <span class="t-toggle__track">
+                        <span class="t-toggle__thumb"></span>
+                    </span>
+                    <span class="t-toggle__label">Dark mode</span>
+                </label>
+
+                <label class="t-toggle">
+                    <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Auto-save" disabled>
+                    <span class="t-toggle__track">
+                        <span class="t-toggle__thumb"></span>
+                    </span>
+                    <span class="t-toggle__label" style="opacity: 0.5;">Auto-save (disabled)</span>
+                </label>
+
+                <label class="t-toggle">
+                    <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Beta features" disabled
+                        checked>
+                    <span class="t-toggle__track">
+                        <span class="t-toggle__thumb"></span>
+                    </span>
+                    <span class="t-toggle__label" style="opacity: 0.5;">Beta features (disabled on)</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- All Variants -->
+        <section class="section">
+            <h2 class="section__title">All States</h2>
+            <div class="demo-row">
+                <div class="demo-row__item">
+                    <span class="demo-row__label">Off (default)</span>
+                    <label class="t-toggle">
+                        <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Off state example">
+                        <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+                    </label>
+                </div>
+                <div class="demo-row__item">
+                    <span class="demo-row__label">On (checked)</span>
+                    <label class="t-toggle">
+                        <input type="checkbox" class="t-toggle__input" role="switch" aria-label="On state example"
+                            checked>
+                        <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+                    </label>
+                </div>
+                <div class="demo-row__item">
+                    <span class="demo-row__label">Disabled off</span>
+                    <label class="t-toggle">
+                        <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Disabled off example"
+                            disabled>
+                        <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+                    </label>
+                </div>
+                <div class="demo-row__item">
+                    <span class="demo-row__label">Disabled on</span>
+                    <label class="t-toggle">
+                        <input type="checkbox" class="t-toggle__input" role="switch" aria-label="Disabled on example"
+                            disabled checked>
+                        <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+                    </label>
+                </div>
+                <div class="demo-row__item">
+                    <span class="demo-row__label">Label trailing</span>
+                    <label class="t-toggle">
+                        <input type="checkbox" class="t-toggle__input" role="switch">
+                        <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+                        <span class="t-toggle__label">Enable feature</span>
+                    </label>
+                </div>
+                <div class="demo-row__item">
+                    <span class="demo-row__label">Label leading</span>
+                    <label class="t-toggle" style="flex-direction: row-reverse; justify-content: flex-end;">
+                        <input type="checkbox" class="t-toggle__input" role="switch">
+                        <span class="t-toggle__track"><span class="t-toggle__thumb"></span></span>
+                        <span class="t-toggle__label">Enable feature</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Anatomy -->
+        <section class="section">
+            <h2 class="section__title">Anatomy</h2>
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Part</th>
+                        <th>Selector</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Container</td>
+                        <td><code>.t-toggle</code></td>
+                        <td>Outer <code>&lt;label&gt;</code> wrapper; positions all parts in a row, handles
+                            click-to-toggle</td>
+                    </tr>
+                    <tr>
+                        <td>Input</td>
+                        <td><code>.t-toggle__input</code></td>
+                        <td>Visually hidden native checkbox; carries ARIA state and all keyboard behavior</td>
+                    </tr>
+                    <tr>
+                        <td>Track</td>
+                        <td><code>.t-toggle__track</code></td>
+                        <td>Pill-shaped background; changes from neutral (off) to brand (on)</td>
+                    </tr>
+                    <tr>
+                        <td>Thumb</td>
+                        <td><code>.t-toggle__thumb</code></td>
+                        <td>Circular indicator that slides within the track to signal current state</td>
+                    </tr>
+                    <tr>
+                        <td>Label</td>
+                        <td><code>.t-toggle__label</code></td>
+                        <td>Optional visible text; can appear before or after the track</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- JTBD -->
+        <section class="section">
+            <h2 class="section__title">Jobs to Be Done</h2>
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Statement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Functional</strong></td>
+                        <td>Provide a binary on/off control that immediately applies a setting change without requiring
+                            a separate submit action.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Affordance</strong></td>
+                        <td>Recognizable switch metaphor — track + sliding thumb communicates two discrete states. Users
+                            immediately understand this is a toggle, not a checkbox.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Emotional</strong></td>
+                        <td>Gives users a sense of direct control. The animated thumb slide confirms the action was
+                            registered and the state changed.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Accessibility -->
+        <section class="section">
+            <h2 class="section__title">Accessibility</h2>
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Implementation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ARIA Role</td>
+                        <td><code>role="switch"</code> on the hidden input</td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td>Native <code>checked</code> attribute maps to <code>aria-checked="true/false"</code>
+                            automatically</td>
+                    </tr>
+                    <tr>
+                        <td>Keyboard</td>
+                        <td><kbd>Tab</kbd> to focus, <kbd>Space</kbd> to toggle — handled natively by the checkbox</td>
+                    </tr>
+                    <tr>
+                        <td>Label</td>
+                        <td>Visible <code>.t-toggle__label</code> or <code>aria-label</code> on the input — always
+                            required</td>
+                    </tr>
+                    <tr>
+                        <td>Touch target</td>
+                        <td>Track is 44×24px; full <code>.t-toggle</code> label element is the click target</td>
+                    </tr>
+                    <tr>
+                        <td>Motion</td>
+                        <td>Thumb slide and track color transitions disabled under
+                            <code>prefers-reduced-motion: reduce</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Known Issues -->
+        <section class="section">
+            <h2 class="section__title">Known Issues <span class="t-badge t-badge--warning">Nursery</span></h2>
+            <div class="issue-list">
+                <div class="issue-list__item">Two primitive token refs replaced with semantic + fallback — pending Token
+                    Steward sign-off: <code>--t-border-strong</code> (track off), <code>--t-fg-inverse</code> (thumb
+                    fill)</div>
+                <div class="issue-list__item">No size variants (sm/lg) — only one size currently implemented</div>
+                <div class="issue-list__item">No indeterminate/loading state for async toggle operations</div>
+                <div class="issue-list__item">ARIA <code>role="switch"</code> must be set in markup — CSS cannot enforce
+                    this</div>
+            </div>
+        </section>
+
+        <!-- Token Usage -->
+        <section class="section">
+            <h2 class="section__title">Tokens Used <span class="t-badge t-badge--neutral">14</span></h2>
+            <p class="section__desc">Two primitive fallbacks remain pending Token Steward review. All others are
+                semantic.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--t-space-1); margin-bottom: var(--t-space-3);">
+                <code class="t-badge t-badge--neutral">--t-space-2</code>
+                <code class="t-badge t-badge--neutral">--t-space-3</code>
+                <code class="t-badge t-badge--neutral">--t-radius-full</code>
+                <code class="t-badge t-badge--neutral">--t-shadow-1</code>
+                <code class="t-badge t-badge--neutral">--t-duration-normal</code>
+                <code class="t-badge t-badge--neutral">--t-ease-default</code>
+                <code class="t-badge t-badge--neutral">--t-ease-spring</code>
+                <code class="t-badge t-badge--neutral">--t-interactive-default</code>
+                <code class="t-badge t-badge--neutral">--t-focus-ring</code>
+                <code class="t-badge t-badge--neutral">--t-text-sm</code>
+                <code class="t-badge t-badge--neutral">--t-weight-medium</code>
+                <code class="t-badge t-badge--neutral">--t-fg-primary</code>
+                <code class="t-badge t-badge--warning">--t-fg-inverse ⚠ fallback</code>
+                <code class="t-badge t-badge--warning">--t-border-strong ⚠ fallback</code>
+            </div>
+        </section>
+    </main>
+
+    <!-- Right panel: chat with lfm2 -->
+    <aside id="chat-panel" class="chat-panel">
+        <div class="chat-panel__header">
+            <span class="chat-panel__title">Live Editor</span>
+            <span class="t-badge t-badge--neutral">lfm2</span>
+        </div>
+        <div id="chat-messages" class="chat-panel__messages">
+            <div class="chat-msg chat-msg--system">Describe changes to the showcase. lfm2 will update the page live.
+            </div>
+        </div>
+        <div class="chat-panel__input-area">
+            <textarea id="chat-input" class="chat-panel__textarea"
+                placeholder="e.g. Add a toggle group showing mutually exclusive options..." rows="3"></textarea>
+            <div class="chat-panel__actions">
+                <button id="btn-send" class="t-btn t-btn--primary t-btn--sm" onclick="handleSend()">Send</button>
+                <button id="btn-reset" class="t-btn t-btn--danger t-btn--sm" onclick="handleReset()">Reset</button>
+            </div>
+            <div id="chat-status" class="chat-panel__status"></div>
+        </div>
+    </aside>
+
+    <!-- Live toast container (for feedback) -->
+    <div class="t-toast-container" id="toast-container" role="status" aria-live="polite"></div>
+
+    <script>
+        // ── Theme toggle ────────────────────────────────────────────────────
+        function toggleTheme() {
+            document.documentElement.classList.toggle('t-dark');
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = document.documentElement.classList.contains('t-dark') ? '\u2600' : '\u263E';
+        }
+
+        // ── Toast helper (for feedback) ─────────────────────────────────────
+        function showToast(severity, title, message) {
+            const ICONS = {
+                info: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+                success: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                warning: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                error: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+            };
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `t-toast t-toast--${severity}`;
+            toast.innerHTML = `
+        ${ICONS[severity]}
+        <div class="t-toast__content">
+          <div class="t-toast__title">${title}</div>
+          ${message}
+        </div>
+        <button class="t-toast__dismiss" aria-label="Dismiss notification" onclick="this.parentElement.remove()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.transition = 'opacity 200ms, transform 200ms';
+                    setTimeout(() => toast.remove(), 200);
+                }
+            }, 5000);
+        }
+
+        // ── Live Editor — Ollama/lfm2 integration ────────────────────────────
+
+        const OLLAMA_URL = 'http://localhost:11434/api/chat';
+        const MODEL = 'lfm2:latest';
+
+        // Snapshot original HTML on load for reset
+        const originalHTML = document.getElementById('editable-zone').innerHTML;
+
+        // Conversation history for context continuity
+        let conversationHistory = [];
+
+        const SYSTEM_PROMPT = `You are a live editor for the Terarrium design system showcase page. The user will give you the current HTML of the editable zone and feedback about what to change.
+
+RULES:
+- Respond with ONLY the updated HTML, wrapped in \`\`\`html fences.
+- Use ONLY existing Terarrium CSS classes and semantic tokens. Never add inline styles with raw color/size values.
+- Do NOT add <script> tags or JavaScript. Only HTML markup.
+- Preserve all existing content unless the user explicitly asks to remove something.
+
+AVAILABLE COMPONENTS (BEM classes):
+- Button: .t-btn, .t-btn--primary, .t-btn--secondary, .t-btn--ghost, .t-btn--danger, .t-btn--sm, .t-btn--lg, .t-btn--icon
+- Input: .t-input-group, .t-label, .t-input, .t-input--error, .t-input--success, .t-helper, .t-helper--error
+- Badge: .t-badge, .t-badge--neutral, .t-badge--brand, .t-badge--success, .t-badge--warning, .t-badge--danger, .t-badge--draft, .t-badge--candidate, .t-badge--stable, .t-badge--deprecated
+- Avatar: .t-avatar, .t-avatar--xs/sm/md/lg/xl, .t-avatar-group
+- Card: .t-card, .t-card--elevated, .t-card--interactive, .t-card__header, .t-card__body, .t-card__footer
+- Toast: .t-toast, .t-toast--info/success/warning/error, .t-toast__icon, .t-toast__content, .t-toast__title, .t-toast__dismiss
+- Tabs: .t-tabs, .t-tab-list, .t-tab, .t-tab--active, .t-tab-panel
+- Toggle: .t-toggle, .t-toggle__input, .t-toggle__track, .t-toggle__thumb, .t-toggle__label
+- Dialog: .t-dialog-backdrop, .t-dialog, .t-dialog__header, .t-dialog__title, .t-dialog__body, .t-dialog__footer
+- Tooltip: .t-tooltip-wrapper, .t-tooltip
+- Dropdown: .t-dropdown, .t-dropdown__menu, .t-dropdown__item
+
+AVAILABLE TOKENS (use via var(--t-*)):
+- Surfaces: --t-surface-0 through --t-surface-4
+- Backgrounds: --t-bg-primary, --t-bg-secondary, --t-bg-tertiary, --t-bg-inverse, --t-bg-brand, --t-bg-danger, --t-bg-success, --t-bg-warning, --t-bg-info
+- Foregrounds: --t-fg-primary, --t-fg-secondary, --t-fg-tertiary, --t-fg-inverse, --t-fg-brand, --t-fg-danger, --t-fg-success, --t-fg-warning, --t-fg-link
+- Borders: --t-border-default, --t-border-strong, --t-border-brand, --t-border-danger, --t-border-success, --t-border-focus
+- Spacing: --t-space-0 through --t-space-20 (0,1,2,3,4,5,6,8,10,12,16,20)
+- Radius: --t-radius-none, --t-radius-sm, --t-radius-md, --t-radius-lg, --t-radius-xl, --t-radius-2xl, --t-radius-full
+- Text sizes: --t-text-xs, --t-text-sm, --t-text-base, --t-text-md, --t-text-lg, --t-text-xl, --t-text-2xl, --t-text-3xl
+- Weights: --t-weight-regular, --t-weight-medium, --t-weight-semibold, --t-weight-bold
+- Shadows: --t-shadow-0 through --t-shadow-4
+
+PAGE-SPECIFIC CLASSES (used in the showcase layout):
+- .page__header, .page__title, .page__subtitle
+- .section, .section__title, .section__desc
+- .demo-grid, .demo-row, .demo-row__item, .demo-row__label
+- .spec-table (with th/td)
+- .issue-list, .issue-list__item
+
+TOGGLE SPEC CONTEXT:
+- Toggle is Terarrium's second component under test (Draft maturity, entering Nursery)
+- Anatomy: .t-toggle (label wrapper) > .t-toggle__input (hidden checkbox) + .t-toggle__track > .t-toggle__thumb + .t-toggle__label (optional)
+- States: off (default), on (checked), disabled-off, disabled-on
+- ARIA: role="switch" on the input; aria-checked is handled by native checked attribute
+- Keyboard: Tab to focus, Space to toggle — native checkbox behavior
+- Two pending token issues: --t-border-strong (track off-state), --t-fg-inverse (thumb fill) — both have primitive fallbacks`;
+
+        // ── Chat UI helpers ─────────────────────────────────────────────────
+
+        function addMessage(role, text) {
+            const messages = document.getElementById('chat-messages');
+            const msg = document.createElement('div');
+            msg.className = `chat-msg chat-msg--${role}`;
+            msg.textContent = text;
+            messages.appendChild(msg);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function setStatus(text) {
+            document.getElementById('chat-status').textContent = text;
+        }
+
+        function setLoading(on) {
+            const btn = document.getElementById('btn-send');
+            const input = document.getElementById('chat-input');
+            btn.disabled = on;
+            input.disabled = on;
+            if (on) {
+                btn.textContent = 'Thinking...';
+                btn.classList.add('t-btn--loading');
+            } else {
+                btn.textContent = 'Send';
+                btn.classList.remove('t-btn--loading');
+            }
+        }
+
+        // ── Ollama communication (streaming) ─────────────────────────────────
+
+        function extractHTML(response) {
+            const fenceMatch = response.match(/```html\s*\n?([\s\S]*?)```/);
+            if (fenceMatch) return fenceMatch[1].trim();
+            const genericMatch = response.match(/```\s*\n?([\s\S]*?)```/);
+            if (genericMatch) return genericMatch[1].trim();
+            const trimmed = response.trim();
+            if (trimmed.startsWith('<')) return trimmed;
+            return null;
+        }
+
+        function addStreamingMessage() {
+            const messages = document.getElementById('chat-messages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-msg chat-msg--llm';
+            msg.textContent = '';
+            messages.appendChild(msg);
+            return {
+                append(text) {
+                    msg.textContent += text;
+                    messages.scrollTop = messages.scrollHeight;
+                },
+                getText() { return msg.textContent; },
+                remove() { msg.remove(); }
+            };
+        }
+
+        // ── Event handlers ──────────────────────────────────────────────────
+
+        async function handleSend() {
+            const input = document.getElementById('chat-input');
+            const userMessage = input.value.trim();
+            if (!userMessage) return;
+
+            addMessage('user', userMessage);
+            input.value = '';
+            setLoading(true);
+            setStatus('Connecting to lfm2...');
+
+            const currentHTML = document.getElementById('editable-zone').innerHTML;
+
+            const requestMessages = [
+                { role: 'system', content: SYSTEM_PROMPT },
+                ...conversationHistory,
+                {
+                    role: 'user',
+                    content: `Current HTML of the editable zone:\n\`\`\`html\n${currentHTML}\n\`\`\`\n\nRequested change: ${userMessage}`
+                }
+            ];
+
+            try {
+                const response = await fetch(OLLAMA_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: MODEL,
+                        stream: true,
+                        messages: requestMessages
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Ollama returned ${response.status}: ${response.statusText}`);
+                }
+
+                const stream = addStreamingMessage();
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullResponse = '';
+                let tokenCount = 0;
+
+                setStatus('Streaming...');
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n').filter(l => l.trim());
+
+                    for (const line of lines) {
+                        try {
+                            const json = JSON.parse(line);
+                            if (json.message && json.message.content) {
+                                const token = json.message.content;
+                                fullResponse += token;
+                                stream.append(token);
+                                tokenCount++;
+                                if (tokenCount % 10 === 0) {
+                                    setStatus(`Streaming... ${tokenCount} tokens`);
+                                }
+                            }
+                        } catch (e) {
+                            // Skip malformed chunks
+                        }
+                    }
+                }
+
+                setStatus(`Done. ${tokenCount} tokens.`);
+
+                conversationHistory.push(
+                    { role: 'user', content: userMessage },
+                    { role: 'assistant', content: fullResponse }
+                );
+
+                const newHTML = extractHTML(fullResponse);
+
+                if (newHTML) {
+                    document.getElementById('editable-zone').innerHTML = newHTML;
+                    stream.remove();
+                    addMessage('system', 'Page updated.');
+                    const textOnly = fullResponse
+                        .replace(/```html[\s\S]*?```/g, '')
+                        .replace(/```[\s\S]*?```/g, '')
+                        .trim();
+                    if (textOnly) {
+                        addMessage('llm', textOnly);
+                    }
+                    showToast('success', 'Updated', 'Showcase updated by lfm2.');
+                }
+
+                setTimeout(() => setStatus(''), 3000);
+            } catch (err) {
+                addMessage('error', `Error: ${err.message}`);
+                showToast('error', 'Error', err.message);
+                setStatus('');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function handleReset() {
+            document.getElementById('editable-zone').innerHTML = originalHTML;
+            conversationHistory = [];
+            addMessage('system', 'Page reset to original state.');
+            setStatus('');
+        }
+
+        // ── Keyboard shortcut: Ctrl/Cmd+Enter to send ───────────────────────
+        document.getElementById('chat-input').addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+    </script>
+</body>
+
+</html>

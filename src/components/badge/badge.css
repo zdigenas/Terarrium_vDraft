@@ -44,23 +44,23 @@
 
 /* Maturity badges — agent-state signaling (Novel) */
 .t-badge--draft {
-  background-color: var(--t-raw-amber-100);
-  color: var(--t-raw-amber-800);
-  border: 1px dashed var(--t-raw-amber-400);
+  background-color: var(--t-badge-draft-bg);
+  color: var(--t-badge-draft-fg);
+  border: 1px dashed var(--t-badge-draft-border);
 }
 .t-badge--candidate {
-  background-color: var(--t-raw-blue-100);
-  color: var(--t-raw-blue-800);
-  border: 1px solid var(--t-raw-blue-300);
+  background-color: var(--t-badge-candidate-bg);
+  color: var(--t-badge-candidate-fg);
+  border: 1px solid var(--t-badge-candidate-border);
 }
 .t-badge--stable {
-  background-color: var(--t-raw-green-100);
-  color: var(--t-raw-green-800);
-  border: 1px solid var(--t-raw-green-400);
+  background-color: var(--t-badge-stable-bg);
+  color: var(--t-badge-stable-fg);
+  border: 1px solid var(--t-badge-stable-border);
 }
 .t-badge--deprecated {
-  background-color: var(--t-raw-neutral-200);
-  color: var(--t-raw-neutral-600);
-  border: 1px solid var(--t-raw-neutral-400);
+  background-color: var(--t-badge-deprecated-bg);
+  color: var(--t-badge-deprecated-fg);
+  border: 1px solid var(--t-badge-deprecated-border);
   text-decoration: line-through;
 }

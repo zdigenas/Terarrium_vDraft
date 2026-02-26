@@ -1,0 +1,61 @@
+{
+  "name": "Tabs",
+  "id": "tabs",
+  "type": "composite",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Organize content into switchable views within a single context. Allow users to navigate between related content sections without leaving the page.",
+    "affordance": "Horizontal row of labeled tabs with an active indicator (underline). Users immediately recognize this as a content switcher — click a tab, see its content. The active tab is visually distinct.",
+    "emotional": "Reduces overwhelm. Instead of showing everything at once, tabs let users focus on one section at a time while knowing other sections are accessible."
+  },
+  "anatomy": {
+    "tabs": ".t-tabs — Outer flex-column container",
+    "tabList": ".t-tab-list — Horizontal row of tab buttons with bottom border",
+    "tab": ".t-tab — Individual tab button with underline indicator",
+    "tabPanel": ".t-tab-panel — Content area associated with a tab"
+  },
+  "variants": {
+    "state": {
+      "default": "Inactive tab — secondary text color, no underline.",
+      "active": ".t-tab--active or [aria-selected='true'] — Brand color text and underline.",
+      "hover": "Primary text color on hover."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-2", "--t-space-3", "--t-space-4",
+      "--t-font-sans", "--t-text-sm",
+      "--t-weight-medium", "--t-weight-semibold",
+      "--t-touch-min",
+      "--t-fg-primary", "--t-fg-secondary",
+      "--t-interactive-default",
+      "--t-border-default",
+      "--t-duration-fast", "--t-ease-default"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "tablist (container), tab (each tab), tabpanel (each panel)",
+    "ariaSelected": "true on active tab, false on others",
+    "ariaControls": "Each tab points to its panel via aria-controls",
+    "keyboard": "Arrow Left/Right to navigate between tabs. Home/End for first/last. Tab key moves focus into the panel content.",
+    "screenReader": "Tab role announced with selected state. Panel content announced when tab is activated.",
+    "focusManagement": "Only the active tab is in the tab order. Arrow keys move between tabs (roving tabindex pattern)."
+  },
+  "knownIssues": [
+    "Arrow key navigation requires JavaScript — CSS cannot enforce",
+    "No vertical tab variant",
+    "Overflow behavior (scrollable tab list) needs testing on narrow viewports",
+    "No lazy loading of tab panel content"
+  ],
+  "futureConsiderations": [
+    "Vertical tabs variant for sidebar navigation",
+    "Closeable tabs with dismiss button",
+    "Tab with icon + label",
+    "Tab with badge count",
+    "Lazy-loaded tab panels"
+  ],
+  "relatedComponents": ["button", "card"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

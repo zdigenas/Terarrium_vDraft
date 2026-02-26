@@ -1,0 +1,57 @@
+{
+  "name": "Tooltip",
+  "id": "tooltip",
+  "type": "primitive",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Provide supplementary information about an element on hover or focus. Non-essential context that helps but isn't required for the primary task.",
+    "affordance": "Small dark label that appears above the trigger element. Users recognize this as supplementary info — it appears on demand and disappears when attention moves away.",
+    "emotional": "Reduces uncertainty. When users aren't sure what an icon or abbreviated label means, the tooltip provides reassurance without cluttering the interface."
+  },
+  "anatomy": {
+    "wrapper": ".t-tooltip-wrapper — Relative-positioned container around the trigger element",
+    "tooltip": ".t-tooltip — Absolutely positioned label with arrow, appears on hover/focus",
+    "arrow": ".t-tooltip::after — CSS triangle pointing toward the trigger element"
+  },
+  "variants": {
+    "position": {
+      "top": "Default — tooltip appears above the trigger (bottom: calc(100% + var(--t-space-2)))"
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-1", "--t-space-2",
+      "--t-radius-sm",
+      "--t-bg-inverse",
+      "--t-fg-inverse",
+      "--t-text-xs", "--t-weight-medium", "--t-leading-tight",
+      "--t-z-tooltip",
+      "--t-duration-fast", "--t-ease-default"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "tooltip",
+    "ariaDescribedby": "Trigger element should reference tooltip via aria-describedby",
+    "keyboard": "Tooltip must appear on focus (not just hover) for keyboard users",
+    "screenReader": "Tooltip content announced via aria-describedby relationship",
+    "escapeKey": "Pressing Escape should dismiss the tooltip (requires JS)",
+    "timing": "Tooltip should not appear instantly — slight delay prevents accidental triggers"
+  },
+  "knownIssues": [
+    "Only top position implemented — no bottom, left, right variants",
+    "No collision detection (tooltip may overflow viewport)",
+    "Arrow border color uses hardcoded reference to --t-bg-inverse",
+    "No delay on show/hide — appears instantly on hover",
+    "Escape key dismiss requires JavaScript"
+  ],
+  "futureConsiderations": [
+    "Position variants: bottom, left, right with auto-flip",
+    "Rich tooltip with formatted content",
+    "Delay configuration (show/hide timing)",
+    "Viewport collision detection and auto-repositioning"
+  ],
+  "relatedComponents": ["button", "badge"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

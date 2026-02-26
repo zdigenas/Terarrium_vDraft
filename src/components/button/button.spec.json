@@ -1,0 +1,71 @@
+{
+  "name": "Button",
+  "id": "button",
+  "type": "primitive",
+  "maturity": "draft",
+  "zone": "nursery",
+  "jtbd": {
+    "functional": "Submit actions, trigger operations, and navigate between views. The primary interactive element for user-initiated actions.",
+    "affordance": "Universally recognized interactive element — filled, outlined, or ghost variants communicate hierarchy. Users immediately understand this is clickable and will produce an action.",
+    "emotional": "Confidence through responsiveness. The active-state scale and loading spinner confirm the system received the action."
+  },
+  "anatomy": {
+    "button": ".t-btn — The button element itself. Inline-flex container with centered content, density-aware padding.",
+    "icon": ".t-btn > svg/img — Optional leading or trailing icon, sized to match text",
+    "label": ".t-btn > span — Button text label, semibold weight, tight leading"
+  },
+  "variants": {
+    "visual": {
+      "primary": ".t-btn--primary — Filled with brand color. Use for primary actions (1 per view).",
+      "secondary": ".t-btn--secondary — Outlined with brand border. Use for secondary actions.",
+      "ghost": ".t-btn--ghost — No background or border. Use for tertiary/inline actions.",
+      "danger": ".t-btn--danger — Filled with danger color. Use for destructive actions."
+    },
+    "size": {
+      "sm": ".t-btn--sm — Compact size for dense UIs (reduced padding, xs text).",
+      "default": "No modifier — standard 44px min-height, sm text.",
+      "lg": ".t-btn--lg — Large size for hero CTAs (increased padding, base text)."
+    },
+    "state": {
+      "disabled": ".t-btn:disabled or .t-btn[aria-disabled='true'] — Non-interactive, muted colors.",
+      "loading": ".t-btn--loading — Spinner replaces content, pointer-events disabled.",
+      "icon-only": ".t-btn--icon — Square button with icon only, equal padding."
+    }
+  },
+  "tokens": {
+    "uses": [
+      "--t-space-1", "--t-space-2", "--t-space-3", "--t-space-4", "--t-space-6",
+      "--t-font-sans", "--t-text-xs", "--t-text-sm", "--t-text-base",
+      "--t-weight-semibold", "--t-leading-tight", "--t-tracking-wide",
+      "--t-radius-md", "--t-radius-full",
+      "--t-touch-min", "--t-density-scale",
+      "--t-interactive-default", "--t-interactive-hover", "--t-interactive-active", "--t-interactive-disabled",
+      "--t-interactive-danger", "--t-interactive-danger-hover", "--t-interactive-danger-active",
+      "--t-fg-inverse", "--t-fg-disabled",
+      "--t-border-brand", "--t-bg-info", "--t-bg-secondary", "--t-bg-tertiary",
+      "--t-duration-fast", "--t-ease-default"
+    ],
+    "primitiveRefs": []
+  },
+  "accessibility": {
+    "role": "button (native <button> element preferred)",
+    "ariaDisabled": "Use aria-disabled='true' instead of disabled attribute when button should remain in tab order",
+    "keyboard": "Enter and Space activate. Tab navigates. No keyboard trap.",
+    "screenReader": "Button label announced with role. Loading state should announce via aria-live or aria-busy.",
+    "touchTarget": "44px minimum height enforced via --t-touch-min",
+    "motionReduced": "Active-state scale and loading spinner animation disabled under prefers-reduced-motion"
+  },
+  "knownIssues": [
+    "Loading spinner uses currentcolor which may not be visible on all variants",
+    "No aria-busy attribute set during loading state — requires JS",
+    "Icon-only variant needs aria-label — CSS cannot enforce"
+  ],
+  "futureConsiderations": [
+    "Button group component for related actions",
+    "Split button variant (action + dropdown)",
+    "Toggle button variant with aria-pressed",
+    "Polymorphic rendering (as <a> for navigation)"
+  ],
+  "relatedComponents": ["input", "dialog", "dropdown"],
+  "createdAt": "2026-02-26T06:05:00.000Z"
+}

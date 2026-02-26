@@ -4,8 +4,8 @@
    ============================================================ */
 
 /* ========== SHELL LAYOUT ========== */
-.shell { display: grid; grid-template-columns: 240px 1fr 320px; grid-template-rows: auto 1fr; min-height: 100vh; }
-.shell--panel-closed { grid-template-columns: 240px 1fr 0; }
+.shell { display: grid; grid-template-columns: 240px 1fr 0; grid-template-rows: auto 1fr; min-height: 100vh; }
+.shell--panel-open { grid-template-columns: 240px 1fr 320px; }
 .shell__header { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; padding: var(--t-space-2) var(--t-space-4); background: var(--t-surface-0); border-bottom: 1px solid var(--t-border-default); position: sticky; top: 0; z-index: 100; }
 .shell__brand { display: flex; align-items: center; gap: var(--t-space-2); }
 .shell__logo { width: 28px; height: 28px; background: linear-gradient(135deg, var(--t-raw-green-500), var(--t-raw-blue-500)); border-radius: var(--t-radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; }
@@ -39,9 +39,17 @@
 .canvas__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--t-space-3); }
 .canvas__edit-hint { position: absolute; top: 8px; right: 12px; font-size: 10px; color: var(--t-fg-tertiary); opacity: 0.6; }
 
-/* ========== RIGHT PANEL (editor) ========== */
-.shell__panel { background: var(--t-surface-1); border-left: 1px solid var(--t-border-default); overflow-y: auto; height: calc(100vh - 44px); position: sticky; top: 44px; transition: width 0.2s; }
-.shell--panel-closed .shell__panel { overflow: hidden; width: 0; padding: 0; }
+/* ========== RIGHT PANEL (governance chat) ========== */
+.shell__panel { background: var(--t-surface-1); border-left: 1px solid var(--t-border-default); height: calc(100vh - 44px); position: sticky; top: 44px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.2s; }
+.shell:not(.shell--panel-open) .shell__panel { width: 0; border-left: none; }
+
+/* ── Governance chat messages ── */
+.gov-msg { padding: var(--t-space-2) var(--t-space-3); border-radius: var(--t-radius-md); font-size: var(--t-text-sm); line-height: 1.5; max-width: 100%; word-break: break-word; }
+.gov-msg--system { background: var(--t-surface-2); color: var(--t-fg-secondary); font-style: italic; text-align: center; border-radius: var(--t-radius-sm); }
+.gov-msg--user { background: var(--t-interactive-default); color: var(--t-fg-inverse); align-self: flex-end; max-width: 85%; border-radius: var(--t-radius-md) var(--t-radius-md) 2px var(--t-radius-md); }
+.gov-msg--assistant { background: var(--t-surface-0); color: var(--t-fg-primary); border: 1px solid var(--t-border-subtle); align-self: flex-start; max-width: 95%; border-radius: 2px var(--t-radius-md) var(--t-radius-md) var(--t-radius-md); }
+.gov-msg--error { background: color-mix(in srgb, var(--t-raw-red-500) 10%, var(--t-surface-0)); color: var(--t-raw-red-600); border: 1px solid color-mix(in srgb, var(--t-raw-red-500) 25%, transparent); }
+[data-theme="dark"] .gov-msg--error { color: var(--t-raw-red-400); }
 .panel-section { padding: var(--t-space-3) var(--t-space-3); border-bottom: 1px solid var(--t-border-default); }
 .panel-section__title { font-size: 10px; font-weight: var(--t-weight-semibold); color: var(--t-fg-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: var(--t-space-2); display: flex; align-items: center; justify-content: space-between; }
 .panel-section__title button { background: none; border: none; color: var(--t-fg-tertiary); cursor: pointer; font-size: 12px; }

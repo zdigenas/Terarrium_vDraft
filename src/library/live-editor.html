@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terarrium — Live Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="terrarium.css">
+  <style>
+    /* Two-panel layout */
+    body {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      min-height: 100vh;
+    }
+
+    /* Left panel — component showcase */
+    .page {
+      max-width: 720px;
+      padding: var(--t-space-6) var(--t-space-4);
+      overflow-y: auto;
+    }
+    .page__header {
+      margin-bottom: var(--t-space-6);
+    }
+    .page__title {
+      font-size: var(--t-text-2xl);
+      font-weight: var(--t-weight-bold);
+      color: var(--t-fg-primary);
+      margin-bottom: var(--t-space-2);
+    }
+    .page__subtitle {
+      font-size: var(--t-text-base);
+      color: var(--t-fg-secondary);
+      line-height: var(--t-leading-normal);
+    }
+    .section {
+      margin-bottom: var(--t-space-6);
+    }
+    .section__title {
+      font-size: var(--t-text-lg);
+      font-weight: var(--t-weight-semibold);
+      color: var(--t-fg-primary);
+      margin-bottom: var(--t-space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--t-space-2);
+    }
+    .section__desc {
+      font-size: var(--t-text-sm);
+      color: var(--t-fg-secondary);
+      line-height: var(--t-leading-normal);
+      margin-bottom: var(--t-space-4);
+    }
+    .demo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--t-space-3);
+    }
+    .static-toasts {
+      display: flex;
+      flex-direction: column;
+      gap: var(--t-space-3);
+      margin-bottom: var(--t-space-4);
+    }
+    .static-toasts .t-toast {
+      animation: none;
+      position: relative;
+    }
+    .journey {
+      display: flex;
+      flex-direction: column;
+      gap: var(--t-space-3);
+    }
+    .journey__step {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--t-space-3);
+      padding: var(--t-space-3) var(--t-space-4);
+      background: var(--t-surface-1);
+      border-radius: var(--t-radius-md);
+      border-left: 3px solid var(--t-border-default);
+    }
+    .journey__step--active {
+      border-left-color: var(--t-fg-success);
+      background: var(--t-bg-success);
+    }
+    .journey__zone {
+      font-weight: var(--t-weight-semibold);
+      font-size: var(--t-text-sm);
+      min-width: 80px;
+    }
+    .journey__detail {
+      font-size: var(--t-text-sm);
+      color: var(--t-fg-secondary);
+      line-height: var(--t-leading-normal);
+    }
+    .journey__verdict {
+      font-size: var(--t-text-xs);
+      color: var(--t-fg-tertiary);
+      margin-top: var(--t-space-1);
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--t-text-sm);
+    }
+    .spec-table th,
+    .spec-table td {
+      text-align: left;
+      padding: var(--t-space-2) var(--t-space-3);
+      border-bottom: 1px solid var(--t-border-default);
+    }
+    .spec-table th {
+      font-weight: var(--t-weight-semibold);
+      color: var(--t-fg-tertiary);
+      font-size: var(--t-text-xs);
+      letter-spacing: var(--t-tracking-wide);
+      text-transform: uppercase;
+    }
+    .spec-table td {
+      color: var(--t-fg-primary);
+    }
+    .spec-table code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: var(--t-text-xs);
+      background: var(--t-bg-tertiary);
+      padding: 2px 6px;
+      border-radius: var(--t-radius-sm);
+    }
+    .theme-toggle {
+      position: fixed;
+      top: var(--t-space-4);
+      right: calc(360px + var(--t-space-4));
+      z-index: 2000;
+    }
+
+    /* Right panel — chat */
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      border-left: 1px solid var(--t-border-default);
+      background: var(--t-surface-0);
+    }
+    .chat-panel__header {
+      padding: var(--t-space-3) var(--t-space-4);
+      border-bottom: 1px solid var(--t-border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .chat-panel__title {
+      font-size: var(--t-text-sm);
+      font-weight: var(--t-weight-semibold);
+      color: var(--t-fg-primary);
+    }
+    .chat-panel__messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--t-space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--t-space-3);
+    }
+    .chat-msg {
+      max-width: 90%;
+      padding: var(--t-space-2) var(--t-space-3);
+      border-radius: var(--t-radius-lg);
+      font-size: var(--t-text-sm);
+      line-height: var(--t-leading-normal);
+      word-break: break-word;
+    }
+    .chat-msg--user {
+      align-self: flex-end;
+      background: var(--t-bg-info);
+      color: var(--t-fg-primary);
+    }
+    .chat-msg--llm {
+      align-self: flex-start;
+      background: var(--t-surface-2);
+      color: var(--t-fg-primary);
+    }
+    .chat-msg--system {
+      align-self: center;
+      background: transparent;
+      color: var(--t-fg-tertiary);
+      font-size: var(--t-text-xs);
+      font-style: italic;
+    }
+    .chat-msg--error {
+      align-self: center;
+      background: var(--t-bg-danger);
+      color: var(--t-fg-danger);
+      font-size: var(--t-text-xs);
+    }
+    .chat-msg code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: var(--t-text-xs);
+    }
+    .chat-panel__input-area {
+      padding: var(--t-space-3);
+      border-top: 1px solid var(--t-border-default);
+      display: flex;
+      flex-direction: column;
+      gap: var(--t-space-2);
+      flex-shrink: 0;
+    }
+    .chat-panel__textarea {
+      width: 100%;
+      min-height: 60px;
+      max-height: 120px;
+      resize: vertical;
+      padding: var(--t-space-2) var(--t-space-3);
+      border: 1px solid var(--t-border-default);
+      border-radius: var(--t-radius-md);
+      background: var(--t-surface-1);
+      color: var(--t-fg-primary);
+      font-family: var(--t-font-sans);
+      font-size: var(--t-text-sm);
+      line-height: var(--t-leading-normal);
+    }
+    .chat-panel__textarea:focus {
+      outline: none;
+      border-color: var(--t-border-focus);
+      box-shadow: var(--t-focus-ring);
+    }
+    .chat-panel__textarea::placeholder {
+      color: var(--t-fg-tertiary);
+    }
+    .chat-panel__actions {
+      display: flex;
+      gap: var(--t-space-2);
+    }
+    .chat-panel__status {
+      font-size: var(--t-text-xs);
+      color: var(--t-fg-tertiary);
+      padding: 0 var(--t-space-1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme toggle -->
+  <div class="theme-toggle">
+    <button class="t-btn t-btn--secondary t-btn--sm" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="theme-icon">&#9790;</span>
+    </button>
+  </div>
+
+  <!-- Left panel: editable showcase -->
+  <main id="editable-zone" class="page">
+    <!-- Header -->
+    <header class="page__header">
+      <h1 class="page__title">Toast <span class="t-badge t-badge--stable">Stable</span></h1>
+      <p class="page__subtitle">The first component to complete the full terarrium lifecycle. Non-blocking feedback about system actions that auto-dismisses without interrupting workflow.</p>
+    </header>
+
+    <!-- Live Demo -->
+    <section class="section">
+      <h2 class="section__title">Live Demo</h2>
+      <p class="section__desc">Click a button to trigger a toast. Each severity level uses semantic tokens with fallbacks. Auto-dismisses after 5 seconds.</p>
+      <div class="demo-grid">
+        <button class="t-btn t-btn--secondary t-btn--sm" onclick="showToast('info', 'Info', 'Component submitted to Nursery for review.')">
+          Info
+        </button>
+        <button class="t-btn t-btn--primary t-btn--sm" onclick="showToast('success', 'Success', 'Toast promoted to Stable. The system wore its own output.')">
+          Success
+        </button>
+        <button class="t-btn t-btn--secondary t-btn--sm" onclick="showToast('warning', 'Warning', 'Spec documentation has fallen behind CSS implementation.')">
+          Warning
+        </button>
+        <button class="t-btn t-btn--danger t-btn--sm" onclick="showToast('error', 'Error', 'Accessibility Guardian exercised absolute veto.')">
+          Error
+        </button>
+      </div>
+    </section>
+
+    <!-- Static Variants -->
+    <section class="section">
+      <h2 class="section__title">All Severity Variants</h2>
+      <div class="static-toasts">
+        <div class="t-toast t-toast--info" role="status" aria-live="polite">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div class="t-toast__content">
+            <div class="t-toast__title">Info</div>
+            Component submitted to Nursery. All agents in Builder mode.
+          </div>
+        </div>
+
+        <div class="t-toast t-toast--success" role="status" aria-live="polite">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="t-toast__content">
+            <div class="t-toast__title">Success</div>
+            Toast graduated to Stable. Unanimous 5/5 approval at Canopy.
+          </div>
+        </div>
+
+        <div class="t-toast t-toast--warning" role="alert" aria-live="assertive">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="t-toast__content">
+            <div class="t-toast__title">Warning</div>
+            Pattern Librarian requests spec-sync work before approval.
+          </div>
+        </div>
+
+        <div class="t-toast t-toast--error" role="alert" aria-live="assertive">
+          <svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div class="t-toast__content">
+            <div class="t-toast__title">Error</div>
+            Primitive token --t-raw-red-600 detected. Use semantic tokens only.
+          </div>
+          <button class="t-toast__dismiss" aria-label="Dismiss notification">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Anatomy -->
+    <section class="section">
+      <h2 class="section__title">Anatomy</h2>
+      <table class="spec-table">
+        <thead>
+          <tr><th>Part</th><th>Selector</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Container</td><td><code>.t-toast-container</code></td><td>Fixed position shell, stacks toasts in reverse column order</td></tr>
+          <tr><td>Toast</td><td><code>.t-toast</code></td><td>Individual notification with slide-in animation</td></tr>
+          <tr><td>Icon</td><td><code>.t-toast__icon</code></td><td>Status icon, severity-neutral color</td></tr>
+          <tr><td>Content</td><td><code>.t-toast__content</code></td><td>Message body area</td></tr>
+          <tr><td>Title</td><td><code>.t-toast__title</code></td><td>Optional bold title line</td></tr>
+          <tr><td>Dismiss</td><td><code>.t-toast__dismiss</code></td><td>Close button, 44px touch target</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- JTBD -->
+    <section class="section">
+      <h2 class="section__title">Jobs to Be Done</h2>
+      <table class="spec-table">
+        <thead>
+          <tr><th>Dimension</th><th>Statement</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Functional</strong></td><td>Provide non-blocking feedback about system actions (success, error, warning, info) that auto-dismisses without interrupting the user's workflow.</td></tr>
+          <tr><td><strong>Affordance</strong></td><td>Recognizable notification pattern — appears at screen edge, contains icon + message + optional dismiss action.</td></tr>
+          <tr><td><strong>Emotional</strong></td><td>Confirms the system responded to their action. Reduces anxiety about whether an operation succeeded.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Governance Journey -->
+    <section class="section">
+      <h2 class="section__title">Governance Journey</h2>
+      <p class="section__desc">Three review cycles. Fifteen agent evaluations. Zero overrides. Zero vetoes.</p>
+      <div class="journey">
+        <div class="journey__step">
+          <div class="journey__zone">Spark</div>
+          <div class="journey__detail">
+            Pre-Nursery signal captured. Toast identified as the primary feedback mechanism across all governance workflows.
+            <div class="journey__verdict">SPARK-001</div>
+          </div>
+        </div>
+        <div class="journey__step">
+          <div class="journey__zone">Nursery</div>
+          <div class="journey__detail">
+            All 5 agents in Builder mode. Found: 4 primitive token refs, missing reduced-motion, undersized touch target, spec/CSS mismatch. No rejections — Nursery rules enforced.
+            <div class="journey__verdict">DEC-nursery-toast-001 &middot; 5/5 observing</div>
+          </div>
+        </div>
+        <div class="journey__step">
+          <div class="journey__zone">Workshop</div>
+          <div class="journey__detail">
+            Primitive tokens replaced with semantic tokens + fallbacks. Reduced-motion added. Touch target fixed. 4/5 approve, Pattern Librarian requests spec sync.
+            <div class="journey__verdict">DEC-workshop-toast-001 &middot; 4/5 approve &middot; majority</div>
+          </div>
+        </div>
+        <div class="journey__step">
+          <div class="journey__zone">Canopy</div>
+          <div class="journey__detail">
+            Spec synced (29 tokens verified). Full three-dimension evaluation. AG did not exercise veto. Unanimous approval.
+            <div class="journey__verdict">DEC-canopy-toast-001 &middot; 5/5 approve &middot; unanimous</div>
+          </div>
+        </div>
+        <div class="journey__step journey__step--active">
+          <div class="journey__zone">Stable</div>
+          <div class="journey__detail">
+            First component to complete the full terarrium lifecycle. The system wore its own output and it held.
+            <div class="journey__verdict">COMP-001 &middot; shielded</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accessibility -->
+    <section class="section">
+      <h2 class="section__title">Accessibility</h2>
+      <table class="spec-table">
+        <thead>
+          <tr><th>Criterion</th><th>Implementation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ARIA Role</td><td><code>role="status"</code> (info/success) or <code>role="alert"</code> (warning/error)</td></tr>
+          <tr><td>Live Region</td><td><code>aria-live="polite"</code> or <code>aria-live="assertive"</code></td></tr>
+          <tr><td>Keyboard</td><td>Dismiss button focusable, 44px touch target via <code>--t-touch-min</code></td></tr>
+          <tr><td>Motion</td><td>Slide-in animation disabled under <code>prefers-reduced-motion: reduce</code></td></tr>
+          <tr><td>Dismiss Label</td><td><code>aria-label="Dismiss notification"</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Token Usage -->
+    <section class="section">
+      <h2 class="section__title">Tokens Used <span class="t-badge t-badge--neutral">29</span></h2>
+      <p class="section__desc">Zero primitive references. All semantic. Dark mode coverage verified.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--t-space-1); margin-bottom: var(--t-space-3);">
+        <code class="t-badge t-badge--neutral">--t-surface-2</code>
+        <code class="t-badge t-badge--neutral">--t-border-default</code>
+        <code class="t-badge t-badge--neutral">--t-border-info</code>
+        <code class="t-badge t-badge--neutral">--t-border-success</code>
+        <code class="t-badge t-badge--neutral">--t-border-warning</code>
+        <code class="t-badge t-badge--neutral">--t-border-danger</code>
+        <code class="t-badge t-badge--neutral">--t-radius-lg</code>
+        <code class="t-badge t-badge--neutral">--t-radius-sm</code>
+        <code class="t-badge t-badge--neutral">--t-shadow-3</code>
+        <code class="t-badge t-badge--neutral">--t-text-sm</code>
+        <code class="t-badge t-badge--neutral">--t-leading-normal</code>
+        <code class="t-badge t-badge--neutral">--t-fg-primary</code>
+        <code class="t-badge t-badge--neutral">--t-fg-tertiary</code>
+        <code class="t-badge t-badge--neutral">--t-fg-success</code>
+        <code class="t-badge t-badge--neutral">--t-fg-warning</code>
+        <code class="t-badge t-badge--neutral">--t-fg-danger</code>
+        <code class="t-badge t-badge--neutral">--t-icon-lg</code>
+        <code class="t-badge t-badge--neutral">--t-weight-semibold</code>
+        <code class="t-badge t-badge--neutral">--t-space-1</code>
+        <code class="t-badge t-badge--neutral">--t-space-2</code>
+        <code class="t-badge t-badge--neutral">--t-space-3</code>
+        <code class="t-badge t-badge--neutral">--t-space-4</code>
+        <code class="t-badge t-badge--neutral">--t-space-6</code>
+        <code class="t-badge t-badge--neutral">--t-bg-secondary</code>
+        <code class="t-badge t-badge--neutral">--t-touch-min</code>
+        <code class="t-badge t-badge--neutral">--t-z-toast</code>
+        <code class="t-badge t-badge--neutral">--t-duration-slow</code>
+        <code class="t-badge t-badge--neutral">--t-ease-spring</code>
+        <code class="t-badge t-badge--neutral">--t-interactive-default</code>
+      </div>
+    </section>
+  </main>
+
+  <!-- Right panel: chat with lfm2 -->
+  <aside id="chat-panel" class="chat-panel">
+    <div class="chat-panel__header">
+      <span class="chat-panel__title">Live Editor</span>
+      <span class="t-badge t-badge--neutral">lfm2</span>
+    </div>
+    <div id="chat-messages" class="chat-panel__messages">
+      <div class="chat-msg chat-msg--system">Describe changes to the showcase. lfm2 will update the page live.</div>
+    </div>
+    <div class="chat-panel__input-area">
+      <textarea
+        id="chat-input"
+        class="chat-panel__textarea"
+        placeholder="e.g. Add a new toast variant with a custom icon..."
+        rows="3"
+      ></textarea>
+      <div class="chat-panel__actions">
+        <button id="btn-send" class="t-btn t-btn--primary t-btn--sm" onclick="handleSend()">Send</button>
+        <button id="btn-reset" class="t-btn t-btn--danger t-btn--sm" onclick="handleReset()">Reset</button>
+      </div>
+      <div id="chat-status" class="chat-panel__status"></div>
+    </div>
+  </aside>
+
+  <!-- Live toast container -->
+  <div class="t-toast-container" id="toast-container" role="status" aria-live="polite"></div>
+
+  <script>
+    // ── Toast demo (unchanged) ──────────────────────────────────────────
+    const ICONS = {
+      info: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+      success: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+      warning: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      error: '<svg class="t-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+    };
+
+    function showToast(severity, title, message) {
+      const container = document.getElementById('toast-container');
+      if (severity === 'warning' || severity === 'error') {
+        container.setAttribute('role', 'alert');
+        container.setAttribute('aria-live', 'assertive');
+      } else {
+        container.setAttribute('role', 'status');
+        container.setAttribute('aria-live', 'polite');
+      }
+      const toast = document.createElement('div');
+      toast.className = `t-toast t-toast--${severity}`;
+      toast.innerHTML = `
+        ${ICONS[severity]}
+        <div class="t-toast__content">
+          <div class="t-toast__title">${title}</div>
+          ${message}
+        </div>
+        <button class="t-toast__dismiss" aria-label="Dismiss notification" onclick="this.parentElement.remove()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(100%)';
+          toast.style.transition = 'opacity 200ms, transform 200ms';
+          setTimeout(() => toast.remove(), 200);
+        }
+      }, 5000);
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('t-dark');
+      const icon = document.getElementById('theme-icon');
+      icon.textContent = document.documentElement.classList.contains('t-dark') ? '\u2600' : '\u263E';
+    }
+
+    // ── Live Editor — Ollama/lfm2 integration ────────────────────────────
+
+    const OLLAMA_URL = 'http://localhost:11434/api/chat';
+    const MODEL = 'lfm2:latest';
+
+    // Snapshot original HTML on load for reset
+    const originalHTML = document.getElementById('editable-zone').innerHTML;
+
+    // Conversation history for context continuity
+    let conversationHistory = [];
+
+    const SYSTEM_PROMPT = `You are a live editor for the Terarrium design system showcase page. The user will give you the current HTML of the editable zone and feedback about what to change.
+
+RULES:
+- Respond with ONLY the updated HTML, wrapped in \`\`\`html fences.
+- Use ONLY existing Terarrium CSS classes and semantic tokens. Never add inline styles with raw color/size values.
+- Do NOT add <script> tags or JavaScript. Only HTML markup.
+- Preserve all existing content unless the user explicitly asks to remove something.
+
+AVAILABLE COMPONENTS (BEM classes):
+- Button: .t-btn, .t-btn--primary, .t-btn--secondary, .t-btn--ghost, .t-btn--danger, .t-btn--sm, .t-btn--lg, .t-btn--icon
+- Input: .t-input-group, .t-label, .t-input, .t-input--error, .t-input--success, .t-helper, .t-helper--error
+- Badge: .t-badge, .t-badge--neutral, .t-badge--brand, .t-badge--success, .t-badge--warning, .t-badge--danger, .t-badge--draft, .t-badge--candidate, .t-badge--stable, .t-badge--deprecated
+- Avatar: .t-avatar, .t-avatar--xs/sm/md/lg/xl, .t-avatar-group
+- Card: .t-card, .t-card--elevated, .t-card--interactive, .t-card__header, .t-card__body, .t-card__footer
+- Toast: .t-toast, .t-toast--info/success/warning/error, .t-toast__icon, .t-toast__content, .t-toast__title, .t-toast__dismiss
+- Tabs: .t-tabs, .t-tab-list, .t-tab, .t-tab--active, .t-tab-panel
+- Toggle: .t-toggle, .t-toggle__input, .t-toggle__track, .t-toggle__thumb, .t-toggle__label
+- Dialog: .t-dialog-backdrop, .t-dialog, .t-dialog__header, .t-dialog__title, .t-dialog__body, .t-dialog__footer
+- Tooltip: .t-tooltip-wrapper, .t-tooltip
+- Dropdown: .t-dropdown, .t-dropdown__menu, .t-dropdown__item
+
+AVAILABLE TOKENS (use via var(--t-*)):
+- Surfaces: --t-surface-0 through --t-surface-4
+- Backgrounds: --t-bg-primary, --t-bg-secondary, --t-bg-tertiary, --t-bg-inverse, --t-bg-brand, --t-bg-danger, --t-bg-success, --t-bg-warning, --t-bg-info
+- Foregrounds: --t-fg-primary, --t-fg-secondary, --t-fg-tertiary, --t-fg-inverse, --t-fg-brand, --t-fg-danger, --t-fg-success, --t-fg-warning, --t-fg-link
+- Borders: --t-border-default, --t-border-strong, --t-border-brand, --t-border-danger, --t-border-success, --t-border-focus
+- Spacing: --t-space-0 through --t-space-20 (0,1,2,3,4,5,6,8,10,12,16,20)
+- Radius: --t-radius-none, --t-radius-sm, --t-radius-md, --t-radius-lg, --t-radius-xl, --t-radius-2xl, --t-radius-full
+- Text sizes: --t-text-xs, --t-text-sm, --t-text-base, --t-text-md, --t-text-lg, --t-text-xl, --t-text-2xl, --t-text-3xl
+- Weights: --t-weight-regular, --t-weight-medium, --t-weight-semibold, --t-weight-bold
+- Shadows: --t-shadow-0 through --t-shadow-4
+
+PAGE-SPECIFIC CLASSES (used in the showcase layout):
+- .page__header, .page__title, .page__subtitle
+- .section, .section__title, .section__desc
+- .demo-grid, .static-toasts
+- .journey, .journey__step, .journey__step--active, .journey__zone, .journey__detail, .journey__verdict
+- .spec-table (with th/td)
+
+TOAST SPEC CONTEXT:
+- Toast is Terarrium's first Stable component (COMP-001)
+- Severities: info, success, warning, error
+- Anatomy: container > toast > icon + content (title + message) + dismiss button
+- JTBD order: Functional > Affordance > Emotional (immutable)
+- ARIA: role="status" + aria-live="polite" for info/success; role="alert" + aria-live="assertive" for warning/error
+- Touch target: 44px minimum on dismiss button`;
+
+    // ── Chat UI helpers ─────────────────────────────────────────────────
+
+    function addMessage(role, text) {
+      const messages = document.getElementById('chat-messages');
+      const msg = document.createElement('div');
+      msg.className = `chat-msg chat-msg--${role}`;
+      msg.textContent = text;
+      messages.appendChild(msg);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function setStatus(text) {
+      document.getElementById('chat-status').textContent = text;
+    }
+
+    function setLoading(on) {
+      const btn = document.getElementById('btn-send');
+      const input = document.getElementById('chat-input');
+      btn.disabled = on;
+      input.disabled = on;
+      if (on) {
+        btn.textContent = 'Thinking...';
+        btn.classList.add('t-btn--loading');
+      } else {
+        btn.textContent = 'Send';
+        btn.classList.remove('t-btn--loading');
+      }
+    }
+
+    // ── Ollama communication (streaming) ─────────────────────────────────
+
+    function extractHTML(response) {
+      // Try to extract from ```html ... ``` fences
+      const fenceMatch = response.match(/```html\s*\n?([\s\S]*?)```/);
+      if (fenceMatch) return fenceMatch[1].trim();
+
+      // Try generic ``` fences
+      const genericMatch = response.match(/```\s*\n?([\s\S]*?)```/);
+      if (genericMatch) return genericMatch[1].trim();
+
+      // If response looks like HTML (starts with <), use it directly
+      const trimmed = response.trim();
+      if (trimmed.startsWith('<')) return trimmed;
+
+      // Otherwise return null — it's a text-only response
+      return null;
+    }
+
+    // Create a live-updating message bubble and return an update function
+    function addStreamingMessage() {
+      const messages = document.getElementById('chat-messages');
+      const msg = document.createElement('div');
+      msg.className = 'chat-msg chat-msg--llm';
+      msg.textContent = '';
+      messages.appendChild(msg);
+
+      return {
+        append(text) {
+          msg.textContent += text;
+          messages.scrollTop = messages.scrollHeight;
+        },
+        getText() {
+          return msg.textContent;
+        },
+        remove() {
+          msg.remove();
+        }
+      };
+    }
+
+    // ── Event handlers ──────────────────────────────────────────────────
+
+    async function handleSend() {
+      const input = document.getElementById('chat-input');
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      // Show user message and clear input
+      addMessage('user', userMessage);
+      input.value = '';
+      setLoading(true);
+      setStatus('Connecting to lfm2...');
+
+      const currentHTML = document.getElementById('editable-zone').innerHTML;
+
+      const requestMessages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...conversationHistory,
+        {
+          role: 'user',
+          content: `Current HTML of the editable zone:\n\`\`\`html\n${currentHTML}\n\`\`\`\n\nRequested change: ${userMessage}`
+        }
+      ];
+
+      try {
+        const response = await fetch(OLLAMA_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: MODEL,
+            stream: true,
+            messages: requestMessages
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Ollama returned ${response.status}: ${response.statusText}`);
+        }
+
+        // Stream tokens into a live chat bubble
+        const stream = addStreamingMessage();
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+        let tokenCount = 0;
+
+        setStatus('Streaming...');
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          // Ollama streams newline-delimited JSON objects
+          const lines = chunk.split('\n').filter(l => l.trim());
+
+          for (const line of lines) {
+            try {
+              const json = JSON.parse(line);
+              if (json.message && json.message.content) {
+                const token = json.message.content;
+                fullResponse += token;
+                stream.append(token);
+                tokenCount++;
+                // Update status with token count
+                if (tokenCount % 10 === 0) {
+                  setStatus(`Streaming... ${tokenCount} tokens`);
+                }
+              }
+            } catch (e) {
+              // Skip malformed chunks
+            }
+          }
+        }
+
+        setStatus(`Done. ${tokenCount} tokens.`);
+
+        // Store in conversation history
+        conversationHistory.push(
+          { role: 'user', content: userMessage },
+          { role: 'assistant', content: fullResponse }
+        );
+
+        // Try to extract and apply HTML
+        const newHTML = extractHTML(fullResponse);
+
+        if (newHTML) {
+          document.getElementById('editable-zone').innerHTML = newHTML;
+          // Replace the streaming bubble with a cleaner summary
+          stream.remove();
+          addMessage('system', 'Page updated.');
+          // Show non-HTML text if lfm2 added commentary
+          const textOnly = fullResponse
+            .replace(/```html[\s\S]*?```/g, '')
+            .replace(/```[\s\S]*?```/g, '')
+            .trim();
+          if (textOnly) {
+            addMessage('llm', textOnly);
+          }
+        }
+        // If no HTML was found, the streaming bubble already shows the full text response
+
+        setTimeout(() => setStatus(''), 3000);
+      } catch (err) {
+        addMessage('error', `Error: ${err.message}`);
+        setStatus('');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function handleReset() {
+      document.getElementById('editable-zone').innerHTML = originalHTML;
+      conversationHistory = [];
+      addMessage('system', 'Page reset to original state.');
+      setStatus('');
+    }
+
+    // ── Keyboard shortcut: Ctrl/Cmd+Enter to send ───────────────────────
+    document.getElementById('chat-input').addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -115,6 +115,12 @@ body {
   --t-raw-amber-800: #F08C00;
   --t-raw-amber-900: #E67700;
 
+  /* Dark-specific primitives (no light equivalent) */
+  --t-raw-red-950:    #3D1515;
+  --t-raw-amber-950:  #3D2E08;
+  --t-raw-blue-950:   #152A3D;
+  --t-raw-green-950:  #152D1B;
+
   /* --- COLOR: Semantic (USE THESE) --- */
   --t-bg-primary:    var(--t-raw-neutral-0);
   --t-bg-secondary:  var(--t-raw-neutral-50);
@@ -148,6 +154,32 @@ body {
   --t-interactive-hover:    var(--t-raw-blue-700);
   --t-interactive-active:   var(--t-raw-blue-800);
   --t-interactive-disabled: var(--t-raw-neutral-300);
+
+  /* --- COLOR: Danger Interactive (semantic aliases for destructive actions) --- */
+  --t-interactive-danger:        var(--t-raw-red-600);
+  --t-interactive-danger-hover:  var(--t-raw-red-700);
+  --t-interactive-danger-active: var(--t-raw-red-800);
+
+  /* --- COLOR: Overlay --- */
+  --t-overlay-bg: rgb(0 0 0 / 40%);
+
+  /* --- COLOR: Border extras --- */
+  --t-border-warning: var(--t-raw-amber-500);
+  --t-border-info:    var(--t-raw-blue-400);
+
+  /* --- COLOR: Maturity Badge Semantics (agent-state signaling) --- */
+  --t-badge-draft-bg:         var(--t-raw-amber-100);
+  --t-badge-draft-fg:         var(--t-raw-amber-800);
+  --t-badge-draft-border:     var(--t-raw-amber-400);
+  --t-badge-candidate-bg:     var(--t-raw-blue-100);
+  --t-badge-candidate-fg:     var(--t-raw-blue-800);
+  --t-badge-candidate-border: var(--t-raw-blue-300);
+  --t-badge-stable-bg:        var(--t-raw-green-100);
+  --t-badge-stable-fg:        var(--t-raw-green-800);
+  --t-badge-stable-border:    var(--t-raw-green-400);
+  --t-badge-deprecated-bg:    var(--t-raw-neutral-200);
+  --t-badge-deprecated-fg:    var(--t-raw-neutral-600);
+  --t-badge-deprecated-border:var(--t-raw-neutral-400);
 
   /* --- COLOR: Tonal Surfaces (Material 3 inspired, novel implementation) --- */
   --t-surface-0: var(--t-raw-neutral-0);
@@ -228,10 +260,10 @@ body {
 
   /* --- ELEVATION (shadow + tonal surface combined) --- */
   --t-shadow-0: none;
-  --t-shadow-1: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.10);
-  --t-shadow-2: 0 2px 4px -1px rgba(0,0,0,0.06), 0 4px 6px -1px rgba(0,0,0,0.10);
-  --t-shadow-3: 0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
-  --t-shadow-4: 0 20px 25px -5px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.10);
+  --t-shadow-1: 0 1px 2px rgb(0 0 0 / 5%), 0 1px 3px rgb(0 0 0 / 10%);
+  --t-shadow-2: 0 2px 4px -1px rgb(0 0 0 / 6%), 0 4px 6px -1px rgb(0 0 0 / 10%);
+  --t-shadow-3: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+  --t-shadow-4: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
   /* --- MOTION --- */
   --t-duration-instant: 0ms;
@@ -283,10 +315,10 @@ body {
   --t-bg-tertiary:   var(--t-raw-neutral-700);
   --t-bg-inverse:    var(--t-raw-neutral-0);
   --t-bg-brand:      var(--t-raw-blue-500);
-  --t-bg-danger:     #3D1515;
-  --t-bg-success:    #152D1B;
-  --t-bg-warning:    #3D2E08;
-  --t-bg-info:       #152A3D;
+  --t-bg-danger:     var(--t-raw-red-950);
+  --t-bg-success:    var(--t-raw-green-950);
+  --t-bg-warning:    var(--t-raw-amber-950);
+  --t-bg-info:       var(--t-raw-blue-950);
 
   --t-fg-primary:    var(--t-raw-neutral-100);
   --t-fg-secondary:  var(--t-raw-neutral-400);
@@ -311,16 +343,38 @@ body {
   --t-interactive-active:   var(--t-raw-blue-300);
   --t-interactive-disabled: var(--t-raw-neutral-700);
 
+  --t-interactive-danger:        var(--t-raw-red-500);
+  --t-interactive-danger-hover:  var(--t-raw-red-400);
+  --t-interactive-danger-active: var(--t-raw-red-300);
+
+  --t-overlay-bg: rgb(0 0 0 / 60%);
+
+  --t-border-warning: var(--t-raw-amber-400);
+  --t-border-info:    var(--t-raw-blue-500);
+
+  --t-badge-draft-bg:         var(--t-raw-amber-950);
+  --t-badge-draft-fg:         var(--t-raw-amber-300);
+  --t-badge-draft-border:     var(--t-raw-amber-600);
+  --t-badge-candidate-bg:     var(--t-raw-blue-950);
+  --t-badge-candidate-fg:     var(--t-raw-blue-300);
+  --t-badge-candidate-border: var(--t-raw-blue-600);
+  --t-badge-stable-bg:        var(--t-raw-green-950);
+  --t-badge-stable-fg:        var(--t-raw-green-300);
+  --t-badge-stable-border:    var(--t-raw-green-600);
+  --t-badge-deprecated-bg:    var(--t-raw-neutral-800);
+  --t-badge-deprecated-fg:    var(--t-raw-neutral-400);
+  --t-badge-deprecated-border:var(--t-raw-neutral-600);
+
   --t-surface-0: var(--t-raw-neutral-900);
   --t-surface-1: var(--t-raw-neutral-800);
   --t-surface-2: var(--t-raw-neutral-700);
   --t-surface-3: var(--t-raw-neutral-600);
   --t-surface-4: var(--t-raw-neutral-500);
 
-  --t-shadow-1: 0 1px 2px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.35);
-  --t-shadow-2: 0 2px 4px -1px rgba(0,0,0,0.30), 0 4px 6px -1px rgba(0,0,0,0.35);
-  --t-shadow-3: 0 10px 15px -3px rgba(0,0,0,0.35), 0 4px 6px -4px rgba(0,0,0,0.30);
-  --t-shadow-4: 0 20px 25px -5px rgba(0,0,0,0.40), 0 8px 10px -6px rgba(0,0,0,0.35);
+  --t-shadow-1: 0 1px 2px rgb(0 0 0 / 25%), 0 1px 3px rgb(0 0 0 / 35%);
+  --t-shadow-2: 0 2px 4px -1px rgb(0 0 0 / 30%), 0 4px 6px -1px rgb(0 0 0 / 35%);
+  --t-shadow-3: 0 10px 15px -3px rgb(0 0 0 / 35%), 0 4px 6px -4px rgb(0 0 0 / 30%);
+  --t-shadow-4: 0 20px 25px -5px rgb(0 0 0 / 40%), 0 8px 10px -6px rgb(0 0 0 / 35%);
 
   --t-focus-ring: 0 0 0 2px var(--t-bg-primary), 0 0 0 4px var(--t-border-focus);
 }

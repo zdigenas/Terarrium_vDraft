@@ -28,23 +28,3 @@
 {"timestamp":"2026-02-26T04:42:00.000Z","action":"submitted","componentId":"COMP-002","componentName":"Toggle","actor":"gardener","detail":"Toggle entered Nursery as primitive draft. JTBD: Binary on/off control for immediate-effect settings. Spec present with known issues documented honestly."}
 {"timestamp":"2026-02-26T04:50:00.000Z","action":"nursery-review-complete","componentId":"COMP-002","componentName":"Toggle","actor":"orchestrator","detail":"Toggle Nursery review complete. Issues: 2 primitive token refs (--t-raw-neutral-300, --t-raw-neutral-0), missing prefers-reduced-motion, focus ring placement needs verification. 3/5 needs-work, 2/5 approved. Nursery rules: no rejection."}
 {"timestamp":"2026-02-26T05:00:00.000Z","action":"promoted","componentId":"COMP-002","componentName":"Toggle","actor":"gardener","detail":"Toggle moved from nursery to workshop. Nursery issues documented. Ready for Workshop review cycle with real agent reviews."}
-{"timestamp":"2026-02-26T06:10:47.618Z","action":"submitted","componentId":"COMP-003","componentName":"Button","actor":"gardener","detail":"Entered Nursery as primitive draft"}
-{"timestamp":"2026-02-26T06:10:47.618Z","action":"submitted","componentId":"COMP-004","componentName":"Input","actor":"gardener","detail":"Entered Nursery as primitive draft"}
-{"timestamp":"2026-02-26T06:10:47.619Z","action":"submitted","componentId":"COMP-005","componentName":"Badge","actor":"gardener","detail":"Entered Nursery as primitive draft"}
-{"timestamp":"2026-02-26T06:10:47.619Z","action":"submitted","componentId":"COMP-006","componentName":"Avatar","actor":"gardener","detail":"Entered Nursery as primitive draft"}
-{"timestamp":"2026-02-26T06:10:47.619Z","action":"submitted","componentId":"COMP-007","componentName":"Card","actor":"gardener","detail":"Entered Nursery as composite draft"}
-{"timestamp":"2026-02-26T06:10:47.619Z","action":"submitted","componentId":"COMP-008","componentName":"Dialog","actor":"gardener","detail":"Entered Nursery as composite draft"}
-{"timestamp":"2026-02-26T06:10:47.619Z","action":"submitted","componentId":"COMP-009","componentName":"Tabs","actor":"gardener","detail":"Entered Nursery as composite draft"}
-{"timestamp":"2026-02-26T06:10:47.620Z","action":"submitted","componentId":"COMP-010","componentName":"Tooltip","actor":"gardener","detail":"Entered Nursery as primitive draft"}
-{"timestamp":"2026-02-26T06:10:47.620Z","action":"submitted","componentId":"COMP-011","componentName":"Dropdown","actor":"gardener","detail":"Entered Nursery as composite draft"}
-{"timestamp":"2026-02-26T06:10:47.622Z","action":"promoted","componentId":"COMP-003","componentName":"Button","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.622Z","action":"promoted","componentId":"COMP-004","componentName":"Input","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.622Z","action":"promoted","componentId":"COMP-005","componentName":"Badge","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.622Z","action":"promoted","componentId":"COMP-006","componentName":"Avatar","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-007","componentName":"Card","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-008","componentName":"Dialog","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-009","componentName":"Tabs","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-010","componentName":"Tooltip","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.623Z","action":"promoted","componentId":"COMP-011","componentName":"Dropdown","actor":"gardener","detail":"Moved from nursery to workshop"}
-{"timestamp":"2026-02-26T06:10:47.627Z","action":"governance-review","componentId":"COMP-002","componentName":"Toggle","actor":"orchestrator","detail":"workshop review complete: failed — Majority required: 0/5 (need 3)"}
-{"timestamp":"2026-02-26T12:49:47.314Z","action":"governance-review","componentId":"COMP-002","componentName":"Toggle","actor":"orchestrator","detail":"workshop review complete: failed — Majority required: 2/5 (need 3)"}
